@@ -10,7 +10,7 @@ It is possible that some data is still transmitted(but down to a minimum) this i
 # inox-patchset
 If you are looking for a complete package there is a source(inox) and binary(inox-bin) version hosted for Arch linux in AUR[1,2].
 These patches are tested and functional on Arch Linux x86_64.
-Some Chromium features are also disabled via build flags during build (See below)
+Some Chromium features are also disabled via build flags during build (See below).
 
 #### disable-instant-extended-api.patch
 Disabled Google's Instant Extended API.
@@ -21,11 +21,11 @@ This has the effect that the old "New Tab" is in place without Google Search bar
 
 
 #### add-duckduckgo-seaarch-engine.patch
-Added DuckDuckGo as default search engine
+Added DuckDuckGo as default search engine.
 
 
 #### disable-default-extensions.patch
-Enabled user-modification for all extensions
+Enabled user-modification for all extensions.
 Disabled extensions:
 * Hotword (incl. Shared Module)
 * Google Now
@@ -37,7 +37,7 @@ Disabled extensions:
 
 
 #### disable-autofill-download-manager.patch
-Disabled form AutoFill data transmission
+Disabled form AutoFill data transmission.
 
 
 #### disable-google-url-tracker.patch
@@ -85,7 +85,7 @@ Disabled Google Cloud Messaging status probes.
 
 ## Build flags
 The packages hosted on AUR[1,2] are configured to use following build config.
-If you want to see how to apply a config search for Chromium LinuxBuildInstructions[3]
+If you want to see how to apply a config search for Chromium LinuxBuildInstructions[3].
 
 Feature | Build config
 --- | ---
