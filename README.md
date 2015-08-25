@@ -106,7 +106,7 @@ Disable Chrome build |               google_chrome_build=0
 ## How to install extensions from Google WebStore?
 Since there is no WebStore plugin, you cannot install extensions directly from the store, but you can download and install any extension manually.
 
-    https://clients2.google.com/service/update2/crx?response=redirect&prodversion=38.0&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc
+    https://clients2.google.com/service/update2/crx?response=redirect&prodversion=44.0&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc
 
 To download a extension just replace [EXTENSION_ID] with the extension-id from the WebStore.
 (For example gighmmpiobklfepjocnamgkkbiglidom is the extension id from AdBlock)
