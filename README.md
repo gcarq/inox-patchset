@@ -1,6 +1,6 @@
 ## What is this about?
 Inox patchset is applied on the chromium source code and tries to prevent data transmission to Google Servers. So to say to remove Chromium from the cloud. The patches are split up based on features, so it's easy to patch only a subset of features.
-The current patchset is applied on top of Chromium 44.0.2403.89.
+The current patchset is applied on top of Chromium 45.0.2454.85.
 
 
 ## Warning
@@ -69,9 +69,9 @@ PromptForDownload | true
 SafeBrowsingEnabled | false
 EnableTranslate | false
 
-#### disable-notification-promo-fetch.patch
-Disabled promo notification fetching. 
-This feature loads data from a web server to modify the appearance of NTP(New Tab Page).
+#### restore-classic-ntp.patch
+Restores old NTP (New Tab Page) and disables Google Login Menu.
+The default NTP loads data from a web server to modify the appearance and inject a Google Search bar.
 
 
 #### disable-google-ipv6-probes.patch
@@ -106,7 +106,7 @@ Disable Chrome build |               google_chrome_build=0
 ## How to install extensions from Google WebStore?
 Since there is no WebStore plugin, you cannot install extensions directly from the store, but you can download and install any extension manually.
 
-    https://clients2.google.com/service/update2/crx?response=redirect&prodversion=38.0&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc
+    https://clients2.google.com/service/update2/crx?response=redirect&prodversion=45.0&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc
 
 To download a extension just replace [EXTENSION_ID] with the extension-id from the WebStore.
 (For example gighmmpiobklfepjocnamgkkbiglidom is the extension id from AdBlock)
