@@ -1,5 +1,5 @@
---- ./components/autofill/core/browser/autofill_download_manager.cc	2015-05-14 00:35:46.000000000 +0200
-+++ ./components/autofill/core/browser/autofill_download_manager.cc.new	2015-07-23 03:58:13.640789314 +0200
+--- ./components/autofill/core/browser/autofill_download_manager.cc
++++ ./components/autofill/core/browser/autofill_download_manager.cc.new
 @@ -44,11 +44,6 @@
    return std::string();
  }
@@ -12,7 +12,7 @@
  }  // namespace
  
  struct AutofillDownloadManager::FormRequestData {
-@@ -170,28 +165,6 @@
+@@ -167,33 +167,6 @@
  bool AutofillDownloadManager::StartRequest(
      const std::string& form_xml,
      const FormRequestData& request_data) {
@@ -32,6 +32,11 @@
 -  fetcher->SetUploadData("text/plain", form_xml);
 -  fetcher->SetLoadFlags(net::LOAD_DO_NOT_SAVE_COOKIES |
 -                        net::LOAD_DO_NOT_SEND_COOKIES);
+-  // Add Chrome experiment state to the request headers.
+-  net::HttpRequestHeaders headers;
+-  variations::VariationsHttpHeaderProvider::GetInstance()->AppendHeaders(
+-      fetcher->GetOriginalURL(), driver_->IsOffTheRecord(), false, &headers);
+-  fetcher->SetExtraRequestHeaders(headers.ToString());
 -  fetcher->Start();
 -
 -  VLOG(1) << "Sending AutofillDownloadManager "
@@ -40,4 +45,5 @@
 -
    return true;
  }
+ 
 

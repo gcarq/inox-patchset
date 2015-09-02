@@ -1,6 +1,6 @@
 --- ./chrome/browser/extensions/external_component_loader.cc
 +++ ./chrome/browser/extensions/external_component_loader.cc.new
-@@ -37,67 +37,11 @@
+@@ -38,51 +38,10 @@
  
  // static
  bool ExternalComponentLoader::IsModifiable(const Extension* extension) {
@@ -13,68 +13,49 @@
 -    return SimpleFeature::IsIdInArray(
 -        extension->id(), kEnhancedExtensions, arraysize(kEnhancedExtensions));
 -  }
--  return false;
-+
+   return false;
  }
  
  void ExternalComponentLoader::StartLoading() {
-   prefs_.reset(new base::DictionaryValue());
--  std::string app_id = extension_misc::kInAppPaymentsSupportAppId;
--  prefs_->SetString(app_id + ".external_update_url",
--                    extension_urls::GetWebstoreUpdateUrl().spec());
+-  prefs_.reset(new base::DictionaryValue());
+-  AddExternalExtension(extension_misc::kInAppPaymentsSupportAppId);
 -
--  if (HotwordServiceFactory::IsHotwordAllowed(profile_)) {
--    std::string hotword_id = extension_misc::kHotwordSharedModuleId;
--    prefs_->SetString(hotword_id + ".external_update_url",
--                      extension_urls::GetWebstoreUpdateUrl().spec());
--  }
+-  if (HotwordServiceFactory::IsHotwordAllowed(profile_))
+-    AddExternalExtension(extension_misc::kHotwordSharedModuleId);
 -
 -  {
 -    std::string extension_id;
--    if (IsEnhancedBookmarksEnabled(&extension_id)) {
--      prefs_->SetString(extension_id + ".external_update_url",
--                        extension_urls::GetWebstoreUpdateUrl().spec());
--    }
+-    if (IsEnhancedBookmarksEnabled(&extension_id))
+-      AddExternalExtension(extension_id);
 -  }
 -
 -#if defined(OS_CHROMEOS)
 -  {
 -    base::CommandLine* const command_line =
 -        base::CommandLine::ForCurrentProcess();
--    if (!command_line->HasSwitch(chromeos::switches::kDisableNewZIPUnpacker)) {
--      const std::string extension_id = extension_misc::kZIPUnpackerExtensionId;
--      prefs_->SetString(extension_id + ".external_update_url",
--                        extension_urls::GetWebstoreUpdateUrl().spec());
--    }
+-    if (!command_line->HasSwitch(chromeos::switches::kDisableNewZIPUnpacker))
+-      AddExternalExtension(extension_misc::kZIPUnpackerExtensionId);
 -  }
 -#endif
 -
--
--#if defined(ENABLE_MEDIA_ROUTER)
--  if (switches::MediaRouterEnabled()) {
--    std::string media_router_extension_id(
--        extension_misc::kMediaRouterStableExtensionId);
--    prefs_->SetString(media_router_extension_id + ".external_update_url",
--                      extension_urls::GetWebstoreUpdateUrl().spec());
--  }
--#endif  // defined(ENABLE_MEDIA_ROUTER)
+-#if defined(ENABLE_MEDIA_ROUTER) && defined(GOOGLE_CHROME_BUILD)
+-  if (switches::MediaRouterEnabled())
+-    AddExternalExtension(extension_misc::kMediaRouterStableExtensionId);
+-#endif  // defined(ENABLE_MEDIA_ROUTER) && defined(GOOGLE_CHROME_BUILD)
 -
 -#if defined(ENABLE_APP_LIST) && defined(OS_CHROMEOS)
 -  std::string google_now_extension_id;
--  if (GetGoogleNowExtensionId(&google_now_extension_id)) {
--    prefs_->SetString(google_now_extension_id + ".external_update_url",
--                      extension_urls::GetWebstoreUpdateUrl().spec());
--  }
+-  if (GetGoogleNowExtensionId(&google_now_extension_id))
+-    AddExternalExtension(google_now_extension_id);
 -#endif
- 
+-
    LoadFinished();
  }
-
-
+ 
 
 --- ./chrome/browser/extensions/component_loader.cc
 +++ ./chrome/browser/extensions/component_loader.cc.new
-@@ -327,24 +327,12 @@
+@@ -350,24 +350,12 @@
  }
  
  void ComponentLoader::AddHangoutServicesExtension() {
@@ -92,66 +73,17 @@
  }
  
  void ComponentLoader::AddHotwordHelperExtension() {
--  if (HotwordServiceFactory::IsHotwordAllowed(browser_context_)) {
+-  if (HotwordServiceFactory::IsHotwordAllowed(profile_)) {
 -    Add(IDR_HOTWORD_MANIFEST,
 -        base::FilePath(FILE_PATH_LITERAL("hotword")));
 -  }
  }
  
  void ComponentLoader::AddImageLoaderExtension() {
-@@ -355,8 +343,6 @@
+@@ -383,43 +371,6 @@
  }
  
- void ComponentLoader::AddNetworkSpeechSynthesisExtension() {
--  Add(IDR_NETWORK_SPEECH_SYNTHESIS_MANIFEST,
--      base::FilePath(FILE_PATH_LITERAL("network_speech_synthesis")));
- }
- 
- #if defined(OS_CHROMEOS)
-@@ -442,15 +428,6 @@
- }
- 
- void ComponentLoader::AddWebStoreApp() {
--#if defined(OS_CHROMEOS)
--  if (!IsNormalSession())
--    return;
--#endif
--
--  AddWithNameAndDescription(IDR_WEBSTORE_MANIFEST,
--                            base::FilePath(FILE_PATH_LITERAL("web_store")),
--                            IDS_WEBSTORE_NAME_STORE,
--                            IDS_WEBSTORE_APP_DESCRIPTION);
- }
- 
- // static
-@@ -488,9 +465,6 @@
-   DCHECK(!skip_session_components);
-   Add(IDR_BOOKMARKS_MANIFEST,
-       base::FilePath(FILE_PATH_LITERAL("bookmark_manager")));
--  // Cloud Print component app. Not required on Chrome OS.
--  Add(IDR_CLOUDPRINT_MANIFEST,
--      base::FilePath(FILE_PATH_LITERAL("cloud_print")));
- #endif
- 
-   if (!skip_session_components) {
-@@ -550,13 +524,6 @@
-     AddHotwordHelperExtension();
-     AddImageLoaderExtension();
- 
--    bool install_feedback = enable_background_extensions_during_testing;
--#if defined(GOOGLE_CHROME_BUILD)
--    install_feedback = true;
--#endif  // defined(GOOGLE_CHROME_BUILD)
--    if (install_feedback)
--      Add(IDR_FEEDBACK_MANIFEST, base::FilePath(FILE_PATH_LITERAL("feedback")));
--
- #if defined(ENABLE_SETTINGS_APP)
-     Add(IDR_SETTINGS_APP_MANIFEST,
-         base::FilePath(FILE_PATH_LITERAL("settings_app")));
-@@ -601,36 +568,6 @@
-   }
- #endif  // defined(OS_CHROMEOS)
- 
+ void ComponentLoader::AddGoogleNowExtension() {
 -#if defined(ENABLE_GOOGLE_NOW)
 -  const char kEnablePrefix[] = "Enable";
 -  const char kFieldTrialName[] = "GoogleNow";
@@ -166,7 +98,11 @@
 -  bool enabled_via_trunk_build =
 -      chrome::VersionInfo::GetChannel() == chrome::VersionInfo::CHANNEL_UNKNOWN;
 -
--  bool enabled = enabled_via_field_trial || enabled_via_trunk_build;
+-  bool is_authenticated =
+-      SigninManagerFactory::GetForProfile(profile_)->IsAuthenticated();
+-
+-  bool enabled =
+-      (enabled_via_field_trial && is_authenticated) || enabled_via_trunk_build;
 -
 -#if defined(ENABLE_APP_LIST) && defined(OS_CHROMEOS)
 -  // Don't load if newer trial is running (== new extension id is available).
@@ -174,15 +110,47 @@
 -  if (GetGoogleNowExtensionId(&ignored_extension_id)) {
 -    enabled = false;
 -  }
--#endif
+-#endif  // defined(ENABLE_APP_LIST) && defined(OS_CHROMEOS)
 -
--  if (!skip_session_components && enabled) {
--    Add(IDR_GOOGLE_NOW_MANIFEST,
--        base::FilePath(FILE_PATH_LITERAL("google_now")));
+-  const int google_now_manifest_id = IDR_GOOGLE_NOW_MANIFEST;
+-  const base::FilePath root_directory =
+-      base::FilePath(FILE_PATH_LITERAL("google_now"));
+-  if (enabled) {
+-    Add(google_now_manifest_id, root_directory);
+-  } else {
+-    DeleteData(google_now_manifest_id, root_directory);
 -  }
+-#endif  // defined(ENABLE_GOOGLE_NOW)
+ }
+ 
+ #if defined(OS_CHROMEOS)
+@@ -495,15 +446,6 @@
+ }
+ 
+ void ComponentLoader::AddWebStoreApp() {
+-#if defined(OS_CHROMEOS)
+-  if (!IsNormalSession())
+-    return;
 -#endif
 -
- #if defined(GOOGLE_CHROME_BUILD)
- #if !defined(OS_CHROMEOS)  // http://crbug.com/314799
-   AddNetworkSpeechSynthesisExtension();
-
+-  AddWithNameAndDescription(
+-      IDR_WEBSTORE_MANIFEST, base::FilePath(FILE_PATH_LITERAL("web_store")),
+-      l10n_util::GetStringUTF8(IDS_WEBSTORE_NAME_STORE),
+-      l10n_util::GetStringUTF8(IDS_WEBSTORE_APP_DESCRIPTION));
+ }
+ 
+ scoped_refptr<const Extension> ComponentLoader::CreateExtension(
+@@ -629,13 +571,6 @@
+     AddImageLoaderExtension();
+     AddGoogleNowExtension();
+ 
+-    bool install_feedback = enable_background_extensions_during_testing;
+-#if defined(GOOGLE_CHROME_BUILD)
+-    install_feedback = true;
+-#endif  // defined(GOOGLE_CHROME_BUILD)
+-    if (install_feedback)
+-      Add(IDR_FEEDBACK_MANIFEST, base::FilePath(FILE_PATH_LITERAL("feedback")));
+-
+ #if defined(ENABLE_SETTINGS_APP)
+     Add(IDR_SETTINGS_APP_MANIFEST,
+         base::FilePath(FILE_PATH_LITERAL("settings_app")));
