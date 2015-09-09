@@ -1,23 +1,9 @@
 --- ./chrome/browser/extensions/external_component_loader.cc
 +++ ./chrome/browser/extensions/external_component_loader.cc.new
-@@ -38,51 +38,10 @@
- 
- // static
- bool ExternalComponentLoader::IsModifiable(const Extension* extension) {
--  if (extension->location() == Manifest::EXTERNAL_COMPONENT) {
--    static const char* const kEnhancedExtensions[] = {
--        "D5736E4B5CF695CB93A2FB57E4FDC6E5AFAB6FE2",  // http://crbug.com/312900
--        "D57DE394F36DC1C3220E7604C575D29C51A6C495",  // http://crbug.com/319444
--        "3F65507A3B39259B38C8173C6FFA3D12DF64CCE9"   // http://crbug.com/371562
--    };
--    return SimpleFeature::IsIdInArray(
--        extension->id(), kEnhancedExtensions, arraysize(kEnhancedExtensions));
--  }
-   return false;
- }
+@@ -52,37 +52,6 @@
  
  void ExternalComponentLoader::StartLoading() {
--  prefs_.reset(new base::DictionaryValue());
+   prefs_.reset(new base::DictionaryValue());
 -  AddExternalExtension(extension_misc::kInAppPaymentsSupportAppId);
 -
 -  if (HotwordServiceFactory::IsHotwordAllowed(profile_))
@@ -140,6 +126,18 @@
  }
  
  scoped_refptr<const Extension> ComponentLoader::CreateExtension(
+ @@ -496,9 +496,6 @@
+   DCHECK(!skip_session_components);
+   Add(IDR_BOOKMARKS_MANIFEST,
+       base::FilePath(FILE_PATH_LITERAL("bookmark_manager")));
+-  // Cloud Print component app. Not required on Chrome OS.
+-  Add(IDR_CLOUDPRINT_MANIFEST,
+-      base::FilePath(FILE_PATH_LITERAL("cloud_print")));
+ #endif
+ 
+   if (!skip_session_components) {
+ 
+ 
 @@ -629,13 +571,6 @@
      AddImageLoaderExtension();
      AddGoogleNowExtension();
