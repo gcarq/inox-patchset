@@ -15,7 +15,7 @@
 -        // Use the local New Tab otherwise.
 -        return NewTabURLDetails(local_url, state);
 -    }
-+    return NewTabURLDetails(GURL(), state);
++    return NewTabURLDetails(local_url, state);
    }
  
    GURL url;
@@ -41,3 +41,4 @@
  
    // Don't show sync status if setup is not complete.
    if (!sync_service_->HasSyncSetupCompleted()) {
+
