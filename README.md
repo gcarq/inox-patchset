@@ -20,8 +20,8 @@ This has the effect that the old "New Tab" is in place without Google Search bar
 
 
 
-#### add-duckduckgo-seaarch-engine.patch
-Added DuckDuckGo as default search engine.
+#### add-duckduckgo-search-engine.patch
+Adds DuckDuckGo as default search engine, it's still changeable in settings.
 
 
 #### disable-default-extensions.patch
@@ -37,16 +37,16 @@ Disabled extensions:
 
 
 #### disable-autofill-download-manager.patch
-Disabled form AutoFill data transmission.
+Disables HTML-Form AutoFill data transmission. 
 
 
 #### disable-google-url-tracker.patch
-Disabled URLTracker, which checks in which country you are to provide the closest google server for search lookups. 
+Disables URLTracker, which checks in which country you are to provide the closest google server for search lookups. 
 I know this class has a bad naming, but nevertheless it connects to Google.
 
 
 #### modify-default-prefs.patch
-Modified following default settings (can be changed anytime):
+Modifies following default settings (can be changed anytime):
 
 User setting | new value
 --- | ---
@@ -70,17 +70,17 @@ SafeBrowsingEnabled | false
 EnableTranslate | false
 
 #### restore-classic-ntp.patch
-Restores old NTP (New Tab Page) and disables Google Login Menu.
-The default NTP loads data from a web server to modify the appearance and inject a Google Search bar.
+Restores old NTP (New Tab Page) and disables Google's new Avatar Menu.
+The default NTP loads data from a web server to modify the appearance and inject a Google Search bar with a unique identifier.
 
 
 #### disable-google-ipv6-probes.patch
-Disabled ipv6 probes to Google servers.
+Disables ipv6 probes to Google servers.
 Google pings its own DNS server to check if ipv6 is available. Changed this to RIPE NCC k.root-servers.net. 2001:7fd::1 (anycasted).
 
 
 ####disable-gcm-status-check.patch
-Disabled Google Cloud Messaging status probes.
+Disables Google Cloud-Messaging status probes. GCM provides an interface to send messages directly to single devices, groups of devices, or devices subscribed to topics.
 
 
 ## Build flags
@@ -124,3 +124,6 @@ To install it, just drag and drop the downloaded file into a chrome://extensions
 
 Some patches are inspired from the Iridium Browser team. Thanks!
 
+
+
+Bitcoin donations are welcome: 1PLEDfDsEiay6BMbcMjuGHA4B6z8KTNu1o
