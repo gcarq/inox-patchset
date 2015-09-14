@@ -83,6 +83,14 @@ Google pings its own DNS server to check if ipv6 is available. Changed this to R
 Disables Google Cloud-Messaging status probes. GCM provides an interface to send messages directly to single devices, groups of devices, or devices subscribed to topics.
 
 
+####disable-missing-key-warning.patch
+Disables warning dialog about missing Google API key.
+This key is usually set on compile time and unique per distribution. 
+See [ArchLinux chromium PKGBUILD](https://projects.archlinux.org/svntogit/packages.git/tree/trunk/PKGBUILD?h=packages/chromium#n37) on how it's applied or this [HOWTO](https://www.chromium.org/developers/how-tos/api-keys) for an in-depth API key explanation.
+
+Since we don't want to use these APIs at all, the keys are not set (at least for inox package on AUR).
+
+
 ## Build flags
 The packages hosted on AUR[1,2] are configured to use following build config.
 If you want to see how to apply a config search for Chromium LinuxBuildInstructions[3].
