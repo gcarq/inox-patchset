@@ -256,3 +256,17 @@
        base::CommandLine::ForCurrentProcess()->HasSwitch(
            switches::kDisableNewProfileManagement);
 
+
+--- ./chrome/browser/ui/webui/local_discovery/local_discovery_ui.cc
++++ ./chrome/browser/ui/webui/local_discovery/local_discovery_ui.cc.new
+@@ -140,10 +140,6 @@ void LocalDiscoveryUI::RegisterProfilePrefs(
+     user_prefs::PrefRegistrySyncable* registry) {
+   registry->RegisterBooleanPref(
+       prefs::kLocalDiscoveryNotificationsEnabled,
+-#if defined(OS_WIN)
+       false,
+-#else
+-      true,
+-#endif
+       user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);
+ }
