@@ -1,6 +1,6 @@
 ## What is this about?
 Inox patchset is applied on the chromium source code and tries to prevent data transmission to Google Servers. So to say to remove Chromium from the cloud. The patches are split up based on features, so it's easy to patch only a subset of features.
-The current patchset is applied on top of Chromium 45.0.2454.85.
+The current patchset is applied on top of Chromium 45.0.2454.93.
 
 
 ## Warning
@@ -68,6 +68,7 @@ ShowBookmarkBar | true
 PromptForDownload | true
 SafeBrowsingEnabled | false
 EnableTranslate | false
+LocalDiscoveryNotificationsEnabled | false
 
 #### restore-classic-ntp.patch
 Restores old NTP (New Tab Page) and disables Google's new Avatar Menu.
@@ -89,6 +90,18 @@ This key is usually set on compile time and unique per distribution.
 See [ArchLinux chromium PKGBUILD](https://projects.archlinux.org/svntogit/packages.git/tree/trunk/PKGBUILD?h=packages/chromium#n37) on how it's applied or this [HOWTO](https://www.chromium.org/developers/how-tos/api-keys) for an in-depth API key explanation.
 
 Since we don't want to use these APIs at all, the keys are not set (at least for inox package on AUR).
+
+
+####disable-translation-lang-fetch.patch
+Disables language fetching when settings are opened for the first time
+
+
+####disable-update-pings.patch
+Disables update pings to https://clients2.google.com/service/update2 which is used for component updates.
+
+
+####branding.patch
+Replaces 'Chromium' strings with 'Inox' and removes 'Sign in to Chromium...' item from wrench menu
 
 
 ## Build flags
