@@ -134,6 +134,8 @@ To download a extension just replace [EXTENSION_ID] with the extension-id from t
 
 To install it, just drag and drop the downloaded file into a chrome://extensions/ tab.
 
+Keep in mind extensions are not updated automatically, so make sure you update them on a regular base.
+
 
 ## References
 
