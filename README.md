@@ -12,12 +12,12 @@ If you are looking for a complete package there is a source(inox) and binary(ino
 These patches are tested and functional on Arch Linux x86_64.
 Some Chromium features are also disabled via build flags during build (See below).
 
-#### disable-instant-extended-api.patch
-Disabled Google's Instant Extended API.
-This has the effect that the old "New Tab" is in place without Google Search bar.
+
+#### restore-classic-ntp.patch
+Restores old NTP (New Tab Page) and disables Google's new Avatar Menu.
+The default NTP loads data from a web server to modify the appearance and inject a Google Search bar with a unique identifier.
 
 ![alt text](http://i62.tinypic.com/29yi5t.jpg "inox-ntp-screen") 
-
 
 
 #### add-duckduckgo-search-engine.patch
@@ -69,10 +69,6 @@ PromptForDownload | true
 SafeBrowsingEnabled | false
 EnableTranslate | false
 LocalDiscoveryNotificationsEnabled | false
-
-#### restore-classic-ntp.patch
-Restores old NTP (New Tab Page) and disables Google's new Avatar Menu.
-The default NTP loads data from a web server to modify the appearance and inject a Google Search bar with a unique identifier.
 
 
 #### disable-google-ipv6-probes.patch
