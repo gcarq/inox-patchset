@@ -1,17 +1,3 @@
---- ./components/content_settings/core/browser/content_settings_default_provider.cc
-+++ ./components/content_settings/core/browser/content_settings_default_provider.cc.new
-@@ -40,7 +40,7 @@
- // default content setting. This array must be kept in sync with the enum
- // |ContentSettingsType|.
- const DefaultContentSettingInfo kDefaultSettings[] = {
--  {prefs::kDefaultCookiesSetting, CONTENT_SETTING_ALLOW},
-+  {prefs::kDefaultCookiesSetting, CONTENT_SETTING_SESSION_ONLY},
-   {prefs::kDefaultImagesSetting, CONTENT_SETTING_ALLOW},
-   {prefs::kDefaultJavaScriptSetting, CONTENT_SETTING_ALLOW},
-   {prefs::kDefaultPluginsSetting, CONTENT_SETTING_DEFAULT},
-
-
-
 --- ./chrome/browser/chrome_content_browser_client.cc
 +++ ./chrome/browser/chrome_content_browser_client.cc.new
 @@ -639,7 +639,7 @@

@@ -1,8 +1,8 @@
---- ./chrome/browser/component_updater/chrome_component_updater_configurator.cc
-+++ ./chrome/browser/component_updater/chrome_component_updater_configurator.cc.new
-@@ -202,14 +202,6 @@
+--- ./components/component_updater/configurator_impl.cc
++++ ./components/component_updater/configurator_impl.cc.new
+@@ -153,14 +153,6 @@
  
- std::vector<GURL> ChromeConfigurator::UpdateUrl() const {
+ std::vector<GURL> ConfiguratorImpl::UpdateUrl() const {
    std::vector<GURL> urls;
 -  if (url_source_override_.is_valid()) {
 -    urls.push_back(GURL(url_source_override_));
