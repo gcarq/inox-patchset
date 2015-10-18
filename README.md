@@ -1,6 +1,6 @@
 ## What is this about?
 Inox patchset is applied on the chromium source code and tries to prevent data transmission to Google Servers. So to say to remove Chromium from the cloud. The patches are split up based on features, so it's easy to patch only a subset of features.
-The current patchset is applied on top of Chromium 45.0.2454.93.
+The current patchset is applied on top of Chromium 46.0.2490.71.
 
 
 ## Warning
@@ -46,11 +46,14 @@ I know this class has a bad naming, but nevertheless it connects to Google.
 
 
 #### modify-default-prefs.patch
+
+DefaultCookiesSettings are temporary CONTENT_SETTING_DEFAULT.
+
 Modifies following default settings (can be changed anytime):
 
 User setting | new value
 --- | ---
-DefaultCookiesSetting      | CONTENT_SETTING_SESSION_ONLY
+DefaultCookiesSetting      | ~~CONTENT_SETTING_SESSION_ONLY~~
 EnableHyperLinkAuditing    | false
 CloudPrintSubmitEnabled    | false
 NetworkPredictionEnabled   | false
