@@ -1,20 +1,20 @@
 ## What is this about?
-Inox patchset is applied on the chromium source code and tries to prevent data transmission to Google Servers. So to say to remove Chromium from the cloud. The patches are split up based on features, so it's easy to patch only a subset of features.
-The current patchset is applied on top of Chromium 46.0.2490.71.
+Inox patchset is applied on the chromium source code and tries to prevent data transmission to Google to get a minimal chromium based browser. The patches are split up based on features, so it's easy to patch only a subset of them.
+The current patchset is applied on top of Chromium 47.0.2526.73.
 
 
 ## Warning
 It is possible that some data is still transmitted(but down to a minimum) this is because Chromium is a quite large and complex codebase which changes each day.
 
 
-# inox-patchset
+# inox-patchset 47.0.2526.73
 If you are looking for a complete package there is a source(inox) and binary(inox-bin) version hosted for Arch linux in AUR[1,2].
 These patches are tested and functional on Arch Linux x86_64.
 Some Chromium features are also disabled via build flags during build (See below).
 
 
 #### restore-classic-ntp.patch
-Restores old NTP (New Tab Page) and disables Google's new Avatar Menu.
+Restores old NTP (New Tab Page).
 The default NTP loads data from a web server to modify the appearance and inject a Google Search bar with a unique identifier.
 
 ![alt text](http://i62.tinypic.com/29yi5t.jpg "inox-ntp-screen") 
@@ -34,6 +34,7 @@ Disabled extensions:
 * Google Webstore
 * Network Speech synthesis
 * Google Hangout
+* Bookmark Manager
 
 
 #### disable-autofill-download-manager.patch
@@ -99,8 +100,22 @@ Disables language fetching when settings are opened for the first time
 Disables update pings to https://clients2.google.com/service/update2 which is used for component updates.
 
 
+####chromium-sandbox-pie.patch
+Hardening the sandbox with Position Independent Code(PIE) against ROP exploits.
+This patch originally from openSUSE.
+
+
+
+####disable-new-avatar-menu.patch
+Disables Google's new Avatar Menu.
+
+
+####disable-first-run-behaviour.patch
+Modifies the first-run behaviour to prevent data leakage.
+
+
 ####branding.patch
-Replaces 'Chromium' strings with 'Inox' and removes 'Sign in to Chromium...' item from wrench menu
+s/Chromium/Inox/g
 
 
 ## Build flags
@@ -138,9 +153,9 @@ Keep in mind extensions are not updated automatically, so make sure you update t
 
 ## References
 
-* [1] inox (Arch AUR): https://aur4.archlinux.org/packages/inox/
-* [2] inox-bin (Arch AUR): https://aur4.archlinux.org/packages/inox-bin/
-* [3] Chromium LinuxBuildInstructions: https://code.google.com/p/chromium/wiki/LinuxBuildInstructions#gyp_(configuring)
+* [1] inox (Arch AUR): https://aur.archlinux.org/packages/inox/
+* [2] inox-bin (Arch AUR): https://aur.archlinux.org/packages/inox-bin/
+* [3] Chromium LinuxBuildInstructions: https://chromium.googlesource.com/chromium/src/+/master/docs/linux_build_instructions.md
 
 ## Credits
 
@@ -148,4 +163,4 @@ Some patches are inspired from the Iridium Browser team. Thanks!
 
 
 
-Bitcoin donations are welcome: 1PLEDfDsEiay6BMbcMjuGHA4B6z8KTNu1o
+Bitcoin donations are welcome: 1EsahKzwNgZF56gmZZz8NVQJ4SWdGnshv4
