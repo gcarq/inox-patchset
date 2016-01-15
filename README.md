@@ -1,5 +1,5 @@
 # inox-patchset
-Most of the default Chromium behaviour is modified with patches, but some features are also disabled via build flags (See below). The current patchset is applied on top of Chromium 47.0.2526.80.
+Most of the default Chromium behaviour is modified with patches, but some features are also disabled via build flags (See below). The current patchset is applied on top of Chromium 47.0.2526.111.
 
 
 ## Whats the difference between Chromium?
