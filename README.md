@@ -19,6 +19,8 @@ If you are running Arch Linux you can download the source or binary package from
 * [inox](https://aur.archlinux.org/packages/inox/)
 * [inox-bin](https://aur.archlinux.org/packages/inox-bin/)
 
+For debian based distributions see [ungoogled-chromium](https://github.com/Eloston/ungoogled-chromium), it offers a debian build script to compile Chromium with various patches and also a pre-built version.
+
 For any other distribution check out the Chromium [Build Instructions](https://chromium.googlesource.com/chromium/src/+/master/docs/linux_build_instructions.md) or view the inox [PKGBUILD](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=inox) to get an idea how chromium is built.
 
 *The build process takes about 3 hours on a i5-3550 CPU @ 3.90GHz and 16GB ram. (without ccache)*
