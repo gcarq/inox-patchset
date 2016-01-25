@@ -2,6 +2,12 @@
 Inox patchset is applied on the chromium source code and tries to prevent data transmission to Google to get a minimal Chromium based browser. The patches are split up based on features, so it's easy to patch only a subset of them.
 See below for a full list of patched features. Some of them are also disabled via build flags.
 
+Here you can find some screenshots: http://imgur.com/a/IUfqm
+
+
+
+
+
 
 ## Warning
 It is possible that some data is still transmitted(but down to a minimum) this is because Chromium is a quite large and complex codebase which changes each day.
@@ -23,8 +29,6 @@ For any other distribution check out the Chromium [Build Instructions](https://c
 #### restore-classic-ntp.patch
 Restores old NTP (New Tab Page).
 The default NTP loads data from a web server to modify the appearance and inject a Google Search bar with a unique identifier.
-
-![alt text](http://i62.tinypic.com/29yi5t.jpg "inox-ntp-screen") 
 
 
 #### add-duckduckgo-search-engine.patch
