@@ -9,11 +9,13 @@ It is possible that some data is still transmitted(but down to a minimum) this i
 
 ## Building
 These patches are tested and functional on Arch Linux x86_64, but should run on any Linux/BSD distribution.
-If you are running Arch Linux you can download the packages from AUR:
+If you are running Arch Linux you can download the source or binary package from AUR:
 * [inox](https://aur.archlinux.org/packages/inox/)
 * [inox-bin](https://aur.archlinux.org/packages/inox-bin/)
 
-If not, check out the Chromium [LinuxBuildInstructions](https://chromium.googlesource.com/chromium/src/+/master/docs/linux_build_instructions.md) or view the [PKGBUILD](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=inox) from inox package to get an idea how chromium is built.
+For any other distribution check out the Chromium [Build Instructions](https://chromium.googlesource.com/chromium/src/+/master/docs/linux_build_instructions.md) or view the inox [PKGBUILD](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=inox) to get an idea how chromium is built.
+
+*The build process takes about 3 hours on a i5-3550 CPU @ 3.90GHz and 16GB ram. (without ccache)*
 
 
 ## Patches
@@ -42,7 +44,7 @@ Disabled extensions:
 
 
 #### disable-autofill-download-manager.patch
-Disables HTML-Form AutoFill data transmission. 
+Disables HTML-Form AutoFill data transmission. I don't know exactly when this is triggered, but it synchronizes the saved Form data with Google.
 
 
 #### disable-google-url-tracker.patch
@@ -123,7 +125,7 @@ s/Chromium/Inox/g
 
 ## Build flags
 The packages hosted on AUR are configured to use following build config.
-If you want to see how to apply a config flag view  [LinuxBuildInstructions](https://chromium.googlesource.com/chromium/src/+/master/docs/linux_build_instructions.md).
+If you want to see how to apply a config flag view Chromium [Build Instructions](https://chromium.googlesource.com/chromium/src/+/master/docs/linux_build_instructions.md).
 
 Feature | Build config
 --- | ---
@@ -144,12 +146,36 @@ Disable Chrome build |               google_chrome_build=0
 ## How to install extensions from Google WebStore?
 Since there is no WebStore plugin, you cannot install extensions directly from the store, but you can download and install any extension manually.
 
-    https://clients2.google.com/service/update2/crx?response=redirect&prodversion=47.0&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc
+    https://clients2.google.com/service/update2/crx?response=redirect&prodversion=48.0&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc
 
 To download a extension just replace [EXTENSION_ID] with the extension-id from the WebStore
-(For example gighmmpiobklfepjocnamgkkbiglidom is the extension id from AdBlock). To install it, just drag and drop the downloaded file into a chrome://extensions/ tab.
+(For example cjpalhdlnbpafiamejdnhcphjbkeiagm is the extension id of uBlock Origin). 
+You have 3 options to install an extension:
 
-You can also use [extension-downloader](https://github.com/gcarq/inox-patchset/issues/7), it's a small python script to automate the download + import.
+
+* **Drag and drop**
+
+    Download the crx file with the browser, open `chrome://extensions` and drop the file from the download bar into the extensions tab.
+    **Note:** Under some circumstances this method does not work on KDE Plasma.
+
+
+* **Preference file**
+
+    For example to install the extension aaaaaaaaaabbbbbbbbbbcccccccccc, create:
+    `/usr/share/chromium/extensions/aaaaaaaaaabbbbbbbbbbcccccccccc.json`
+    with following content:
+    ```json
+    {
+        "external_crx": "/home/share/extension_1_0_0.crx",
+        "external_version": "1.0.0"
+    }
+    ```
+    If you restart Inox the extension should be loaded automatically.
+    In near future /usr/share/chromium/ will be changed to /usr/share/inox/ to load independent extensions.
+
+* **Extension loader**
+
+    You can also use [extension-downloader](https://github.com/gcarq/inox-patchset/issues/7), it's a small python script to automate the download.
 
 Keep in mind extensions are not updated automatically, so make sure you update them on a regular base.
 
