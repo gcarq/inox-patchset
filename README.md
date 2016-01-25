@@ -149,7 +149,7 @@ Since there is no WebStore plugin, you cannot install extensions directly from t
 To download a extension just replace [EXTENSION_ID] with the extension-id from the WebStore
 (For example gighmmpiobklfepjocnamgkkbiglidom is the extension id from AdBlock). To install it, just drag and drop the downloaded file into a chrome://extensions/ tab.
 
-You can also use [extension-downloader](/gcarq/inox-patchset/issues/7), it's a small python script to automate the download + import.
+You can also use [extension-downloader](https://github.com/gcarq/inox-patchset/issues/7), it's a small python script to automate the download + import.
 
 Keep in mind extensions are not updated automatically, so make sure you update them on a regular base.
 
