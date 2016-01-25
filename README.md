@@ -1,10 +1,6 @@
 # inox-patchset
-Most of the default Chromium behaviour is modified with patches, but some features are also disabled via build flags (See below). The current patchset is applied on top of Chromium 47.0.2526.80.
-
-
-## Whats the difference between Chromium?
 Inox patchset is applied on the chromium source code and tries to prevent data transmission to Google to get a minimal Chromium based browser. The patches are split up based on features, so it's easy to patch only a subset of them.
-See below for a full list of patched features.
+See below for a full list of patched features. Some of them are also disabled via build flags.
 
 
 ## Warning
@@ -150,10 +146,10 @@ Since there is no WebStore plugin, you cannot install extensions directly from t
 
     https://clients2.google.com/service/update2/crx?response=redirect&prodversion=47.0&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc
 
-To download a extension just replace [EXTENSION_ID] with the extension-id from the WebStore.
-(For example gighmmpiobklfepjocnamgkkbiglidom is the extension id from AdBlock)
+To download a extension just replace [EXTENSION_ID] with the extension-id from the WebStore
+(For example gighmmpiobklfepjocnamgkkbiglidom is the extension id from AdBlock). To install it, just drag and drop the downloaded file into a chrome://extensions/ tab.
 
-To install it, just drag and drop the downloaded file into a chrome://extensions/ tab.
+You can also use [extension-downloader](/gcarq/inox-patchset/issues/7), it's a small python script to automate the download + import.
 
 Keep in mind extensions are not updated automatically, so make sure you update them on a regular base.
 
