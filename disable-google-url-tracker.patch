@@ -1,6 +1,6 @@
 --- ./components/google/core/browser/google_url_tracker.cc
 +++ ./components/google/core/browser/google_url_tracker.cc.new
-@@ -22,9 +22,9 @@
+@@ -25,9 +25,9 @@
  
  
  const char GoogleURLTracker::kDefaultGoogleHomepage[] =
@@ -12,7 +12,7 @@
  
  GoogleURLTracker::GoogleURLTracker(scoped_ptr<GoogleURLTrackerClient> client,
                                     Mode mode)
-@@ -143,48 +143,4 @@
+@@ -146,48 +146,4 @@
  }
  
  void GoogleURLTracker::StartFetchIfDesirable() {
