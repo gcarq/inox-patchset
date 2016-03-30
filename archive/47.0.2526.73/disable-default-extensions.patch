@@ -1,6 +1,6 @@
 --- ./chrome/browser/extensions/external_component_loader.cc
 +++ ./chrome/browser/extensions/external_component_loader.cc.new
-@@ -39,10 +39,6 @@
+@@ -35,30 +35,6 @@
  
  void ExternalComponentLoader::StartLoading() {
    prefs_.reset(new base::DictionaryValue());
@@ -8,15 +8,18 @@
 -
 -  if (HotwordServiceFactory::IsHotwordAllowed(profile_))
 -    AddExternalExtension(extension_misc::kHotwordSharedModuleId);
- 
- #if defined(OS_CHROMEOS)
-   {
-@@ -53,17 +49,6 @@
-   }
- #endif
- 
+-
+-#if defined(OS_CHROMEOS)
+-  {
+-    base::CommandLine* const command_line =
+-        base::CommandLine::ForCurrentProcess();
+-    if (!command_line->HasSwitch(chromeos::switches::kDisableNewZIPUnpacker))
+-      AddExternalExtension(extension_misc::kZIPUnpackerExtensionId);
+-  }
+-#endif
+-
 -#if defined(ENABLE_MEDIA_ROUTER) && defined(GOOGLE_CHROME_BUILD)
--  if (media_router::MediaRouterEnabled(profile_))
+-  if (switches::MediaRouterEnabled())
 -    AddExternalExtension(extension_misc::kMediaRouterStableExtensionId);
 -#endif  // defined(ENABLE_MEDIA_ROUTER) && defined(GOOGLE_CHROME_BUILD)
 -
@@ -25,14 +28,15 @@
 -  if (GetGoogleNowExtensionId(&google_now_extension_id))
 -    AddExternalExtension(google_now_extension_id);
 -#endif
--
+ 
    LoadFinished();
  }
+
  
 
 --- ./chrome/browser/extensions/component_loader.cc
 +++ ./chrome/browser/extensions/component_loader.cc.new
-@@ -351,24 +351,12 @@
+@@ -350,24 +350,12 @@
  }
  
  void ComponentLoader::AddHangoutServicesExtension() {
@@ -57,11 +61,11 @@
  }
  
  void ComponentLoader::AddImageLoaderExtension() {
-@@ -384,43 +372,6 @@
+@@ -384,43 +384,6 @@
  }
  
  void ComponentLoader::AddGoogleNowExtension() {
--#if BUILDFLAG(ENABLE_GOOGLE_NOW)
+-#if defined(ENABLE_GOOGLE_NOW)
 -  const char kEnablePrefix[] = "Enable";
 -  const char kFieldTrialName[] = "GoogleNow";
 -  std::string enable_prefix(kEnablePrefix);
@@ -97,11 +101,11 @@
 -  } else {
 -    DeleteData(google_now_manifest_id, root_directory);
 -  }
--#endif  // BUILDFLAG(ENABLE_GOOGLE_NOW)
+-#endif  // defined(ENABLE_GOOGLE_NOW)
  }
  
  #if defined(OS_CHROMEOS)
-@@ -496,15 +447,6 @@
+@@ -495,15 +446,6 @@
  }
  
  void ComponentLoader::AddWebStoreApp() {
@@ -117,7 +121,7 @@
  }
  
  scoped_refptr<const Extension> ComponentLoader::CreateExtension(
-@@ -555,9 +497,6 @@
+@@ -555,9 +555,6 @@
    DCHECK(!skip_session_components);
    Add(IDR_BOOKMARKS_MANIFEST,
        base::FilePath(FILE_PATH_LITERAL("bookmark_manager")));
@@ -132,7 +136,7 @@
 @@ -629,13 +571,6 @@
      AddImageLoaderExtension();
      AddGoogleNowExtension();
-
+ 
 -    bool install_feedback = enable_background_extensions_during_testing;
 -#if defined(GOOGLE_CHROME_BUILD)
 -    install_feedback = true;
@@ -143,3 +147,4 @@
  #if defined(ENABLE_SETTINGS_APP)
      Add(IDR_SETTINGS_APP_MANIFEST,
          base::FilePath(FILE_PATH_LITERAL("settings_app")));
+
