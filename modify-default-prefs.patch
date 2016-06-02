@@ -1,6 +1,6 @@
 --- ./chrome/browser/chrome_content_browser_client.cc
 +++ ./chrome/browser/chrome_content_browser_client.cc.new
-@@ -733,7 +733,7 @@
+@@ -749,7 +749,7 @@
  void ChromeContentBrowserClient::RegisterProfilePrefs(
      user_prefs::PrefRegistrySyncable* registry) {
    registry->RegisterBooleanPref(prefs::kDisable3DAPIs, false);
@@ -9,7 +9,6 @@
    registry->RegisterListPref(prefs::kEnableDeprecatedWebPlatformFeatures);
  }
  
-
 
 --- ./chrome/browser/ui/browser_ui_prefs.cc
 +++ ./chrome/browser/ui/browser_ui_prefs.cc.new
@@ -29,24 +28,22 @@
    registry->RegisterDictionaryPref(prefs::kBrowserWindowPlacementPopup);
 
 
-
 --- ./chrome/browser/net/prediction_options.cc
 +++ ./chrome/browser/net/prediction_options.cc.new
-@@ -26,7 +26,7 @@
-     case NETWORK_PREDICTION_NEVER:
-       return NetworkPredictionStatus::DISABLED_ALWAYS;
+@@ -30,7 +30,7 @@
+         return NetworkPredictionStatus::ENABLED;
+       }
      default:
--      DCHECK_EQ(NETWORK_PREDICTION_WIFI_ONLY, network_prediction_options);
-+      //DCHECK_EQ(NETWORK_PREDICTION_WIFI_ONLY, network_prediction_options);
-       if (net::NetworkChangeNotifier::IsConnectionCellular(
-                  net::NetworkChangeNotifier::GetConnectionType())) {
-         return NetworkPredictionStatus::DISABLED_DUE_TO_NETWORK;
-
+-      DCHECK_EQ(NETWORK_PREDICTION_NEVER, network_prediction_options);
++      //DCHECK_EQ(NETWORK_PREDICTION_NEVER, network_prediction_options);
+       return NetworkPredictionStatus::DISABLED_ALWAYS;
+   }
+ }
 
 
 --- ./chrome/browser/net/prediction_options.h
 +++ ./chrome/browser/net/prediction_options.h.new
-@@ -21,7 +21,7 @@ enum NetworkPredictionOptions {
+@@ -23,7 +23,7 @@
    NETWORK_PREDICTION_ALWAYS,
    NETWORK_PREDICTION_WIFI_ONLY,
    NETWORK_PREDICTION_NEVER,
@@ -59,7 +56,7 @@
 
 --- ./chrome/browser/background/background_mode_manager.cc
 +++ ./chrome/browser/background/background_mode_manager.cc.new
-@@ -356,7 +356,7 @@ void BackgroundModeManager::RegisterPref
+@@ -354,7 +354,7 @@
    registry->RegisterBooleanPref(prefs::kChromeCreatedLoginItem, false);
    registry->RegisterBooleanPref(prefs::kMigratedLoginItemPref, false);
  #endif
@@ -82,10 +79,9 @@
  }
  
 
-
 --- ./chrome/browser/ui/navigation_correction_tab_observer.cc
 +++ ./chrome/browser/ui/navigation_correction_tab_observer.cc.new
-@@ -56,7 +56,7 @@ NavigationCorrectionTabObserver::~Naviga
+@@ -56,7 +56,7 @@
  void NavigationCorrectionTabObserver::RegisterProfilePrefs(
      user_prefs::PrefRegistrySyncable* prefs) {
    prefs->RegisterBooleanPref(prefs::kAlternateErrorPagesEnabled,
@@ -93,11 +89,11 @@
 +                             false,
                               user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);
  }
-
+ 
 
 --- ./components/autofill/core/browser/autofill_manager.cc
 +++ ./components/autofill/core/browser/autofill_manager.cc.new
-@@ -140,7 +140,7 @@ void AutofillManager::RegisterProfilePre
+@@ -177,7 +177,7 @@
      user_prefs::PrefRegistrySyncable* registry) {
    registry->RegisterBooleanPref(
        prefs::kAutofillEnabled,
@@ -123,7 +119,7 @@
 
 --- ./chrome/browser/io_thread.cc
 +++ ./chrome/browser/io_thread.cc.new
-@@ -1043,7 +1043,7 @@ void IOThread::RegisterPrefs(PrefRegistr
+@@ -1014,7 +1014,7 @@
                                 std::string());
    registry->RegisterBooleanPref(prefs::kEnableReferrers, true);
    data_reduction_proxy::RegisterPrefs(registry);
@@ -135,7 +131,7 @@
 
 --- ./extensions/common/extension.cc
 +++ ./extensions/common/extension.cc.new
-@@ -357,7 +357,7 @@ bool Extension::ShouldNotBeVisible() con
+@@ -358,7 +358,7 @@
    if (extensions::Manifest::IsComponentLocation(location()) &&
        !base::CommandLine::ForCurrentProcess()->HasSwitch(
            switches::kShowComponentExtensionOptions)) {
@@ -144,7 +140,7 @@
    }
  
    // Always show unpacked extensions and apps.
-@@ -366,7 +366,7 @@ bool Extension::ShouldNotBeVisible() con
+@@ -367,7 +367,7 @@
  
    // Don't show apps that aren't visible in either launcher or ntp.
    if (is_app() && !ShouldDisplayInAppLauncher() && !ShouldDisplayInNewTabPage())
@@ -153,11 +149,11 @@
  
    return false;
  }
- 
+
 
 --- ./chrome/browser/signin/signin_promo.cc
 +++ ./chrome/browser/signin/signin_promo.cc.new
-@@ -353,8 +354,8 @@ void ForceWebBasedSigninFlowForTesting(b
+@@ -352,8 +352,8 @@
  void RegisterProfilePrefs(
      user_prefs::PrefRegistrySyncable* registry) {
    registry->RegisterIntegerPref(prefs::kSignInPromoStartupCount, 0);
@@ -169,10 +165,9 @@
  }
  
 
-
 --- ./components/bookmarks/browser/bookmark_utils.cc
 +++ ./components/bookmarks/browser/bookmark_utils.cc.new
-@@ -430,12 +430,12 @@ void GetBookmarksMatchingProperties(Book
+@@ -430,12 +430,12 @@
  void RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry) {
    registry->RegisterBooleanPref(
        prefs::kShowBookmarkBar,
@@ -191,7 +186,7 @@
 
 --- ./chrome/browser/profiles/profile.cc
 +++ ./chrome/browser/profiles/profile.cc.new
-@@ -77,7 +77,7 @@ const char Profile::kNoHostedDomainFound
+@@ -77,7 +77,7 @@
  void Profile::RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry) {
    registry->RegisterBooleanPref(
        prefs::kSearchSuggestEnabled,
@@ -200,7 +195,7 @@
        user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);
  #if BUILDFLAG(ANDROID_JAVA_UI)
    registry->RegisterStringPref(
-@@ -89,7 +89,7 @@ void Profile::RegisterProfilePrefs(user_
+@@ -89,7 +89,7 @@
    registry->RegisterStringPref(prefs::kSessionExitType, std::string());
    registry->RegisterBooleanPref(
        prefs::kSafeBrowsingEnabled,
@@ -209,7 +204,7 @@
        user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);
    registry->RegisterBooleanPref(prefs::kSafeBrowsingExtendedReportingEnabled,
                                  false);
-@@ -105,7 +105,7 @@ void Profile::RegisterProfilePrefs(user_
+@@ -105,7 +105,7 @@
    // This pref is intentionally outside the above #if. That flag corresponds
    // to the Notifier extension and does not gate the launcher page.
    // TODO(skare): Remove or rename ENABLE_GOOGLE_NOW: http://crbug.com/459827.
@@ -220,10 +215,9 @@
    registry->RegisterBooleanPref(extensions::pref_names::kAlertsInitialized,
 
 
-
 --- ./chrome/service/cloud_print/connector_settings.cc
 +++ ./chrome/service/cloud_print/connector_settings.cc.new
-@@ -60,7 +60,7 @@ void ConnectorSettings::InitFrom(Service
+@@ -60,7 +60,7 @@
    DCHECK(server_url_.is_valid());
  
    connect_new_printers_ = prefs->GetBoolean(
@@ -234,10 +228,9 @@
        prefs::kCloudPrintXmppPingEnabled, false);
 
 
-
 --- ./chrome/browser/ui/webui/local_discovery/local_discovery_ui.cc
 +++ ./chrome/browser/ui/webui/local_discovery/local_discovery_ui.cc.new
-@@ -142,10 +142,6 @@ void LocalDiscoveryUI::RegisterProfilePr
+@@ -142,10 +142,6 @@
      user_prefs::PrefRegistrySyncable* registry) {
    registry->RegisterBooleanPref(
        prefs::kLocalDiscoveryNotificationsEnabled,

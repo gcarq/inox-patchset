@@ -1,6 +1,6 @@
 --- ./chrome/common/chrome_paths_linux.cc
 +++ ./chrome/common/chrome_paths_linux.cc.new
-@@ -64,11 +64,7 @@
+@@ -65,11 +65,7 @@
    base::FilePath config_dir(GetXDGDirectory(env.get(),
                                              kXdgConfigHomeEnvVar,
                                              kDotConfigDir));
@@ -12,11 +12,10 @@
 +  *result = config_dir.Append("inox");
    return true;
  }
-
-
+ 
 --- ./chrome/app/chromium_strings.grd
 +++ ./chrome/app/chromium_strings.grd.new
-@@ -215,17 +215,17 @@ be available for now. -->
+@@ -137,17 +137,17 @@
          Disconnecting <ph name="USERNAME">$1<ex>someone@example.com</ex></ph> will clear your history, bookmarks, settings, and other Chromium data stored on this device. Data stored in your Google Account will not be cleared and can be managed on <ph name="GOOGLE_DASHBOARD_LINK">&lt;a target="_blank" href="$2"&gt;</ph>Google Dashboard<ph name="END_GOOGLE_DASHBOARD_LINK">&lt;/a&gt;</ph>.
        </message>
        <message name="IDS_PRODUCT_NAME" desc="The Chrome application name">
@@ -38,7 +37,7 @@
          </message>
        </if>
        <if expr="chromeos">
-@@ -241,7 +241,7 @@ be available for now. -->
+@@ -163,7 +163,7 @@
            Chromium App Launcher
          </message>
          <message name="IDS_PRODUCT_BINARIES_NAME" desc="The Chrome Binaries application name">
@@ -47,16 +46,12 @@
          </message>
          <message name="IDS_CHROME_FRAME_TURNDOWN_LEARN_MORE_URL" desc="Link to knowledge-base article about Chromium Frame's turndown">
            https://support.google.com/chrome/?p=ib_chromeframe
-@@ -272,17 +272,17 @@ be available for now. -->
-         </message>
-       </if>
+@@ -182,14 +182,14 @@
+         sign in to Chromium
+       </message>
        <message name="IDS_TASK_MANAGER_TITLE" desc="The title of the Task Manager window">
 -        Task Manager - Chromium
 +        Task Manager - Inox
-       </message>
-       <message name="IDS_SESSION_CRASHED_VIEW_MESSAGE" desc="Message shown when the last session didn't exit cleanly.">
--        Chromium didn't shut down correctly.
-+        Inox did not shut down correctly.
        </message>
        <message name="IDS_SESSION_CRASHED_VIEW_UMA_OPTIN" desc="Text besides the checkbox to let users optin to UMA in the restore from previous crash bubble.">
          Help make Chromium better by sending crash reports and <ph name="UMA_LINK">$1<ex>usage statistics</ex></ph> to Google
@@ -68,7 +63,7 @@
        </message>
        <if expr="not chromeos">
          <message name="IDS_GET_HELP_USING_CHROME" desc="Text of the button which takes the user to the Chrome help page.">
-@@ -787,7 +787,7 @@ For Chromium, processes used to display diagnostics information (such as this "a
+@@ -687,7 +687,7 @@
  
        <if expr="use_titlecase and not chromeos">
          <message name="IDS_ABOUT" desc="In Title Case: The text label of the About Chrome menu item">
@@ -77,7 +72,7 @@
          </message>
          <message name="IDS_UPDATE_NOW" desc="In Title Case: The text label of the Update Chrome Now menu item">
            Update &amp;Chromium
-@@ -795,7 +795,7 @@ For Chromium, processes used to display diagnostics information (such as this "a
+@@ -695,7 +695,7 @@
        </if>
        <if expr="not use_titlecase and not chromeos">
          <message name="IDS_ABOUT" desc="The text label of the About Chrome menu item">
@@ -86,7 +81,7 @@
          </message>
          <message name="IDS_UPDATE_NOW" desc="The text label of the Update Chrome Now menu item">
            Update &amp;Chromium
-@@ -812,7 +812,7 @@ For Chromium, processes used to display diagnostics information (such as this "a
+@@ -712,7 +712,7 @@
  
        <if expr="is_macosx">
          <message name="IDS_APP_MENU_PRODUCT_NAME" desc="The application's short name, used for the Mac's application menu, activity monitor, etc. This should be less than 16 characters. Example: Chrome, not Google Chrome.">
@@ -95,6 +90,3 @@
          </message>
          <message name="IDS_HELPER_NAME" desc="The helper application's name.  Should contain the Chrome application name (IDS_PRODUCT_NAME). Example: Google Chrome Helper.">
            Chromium Helper
-           
-
-
