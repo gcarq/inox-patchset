@@ -1,6 +1,6 @@
---- ./components/autofill/core/browser/autofill_download_manager.cc	2016-03-08 04:12:53.191538227 +0300
-+++ ./components/autofill/core/browser/autofill_download_manager.cc.new	2016-03-08 04:14:33.351542560 +0300
-@@ -87,8 +87,7 @@
+--- ./components/autofill/core/browser/autofill_download_manager.cc
++++ ./components/autofill/core/browser/autofill_download_manager.cc.new
+@@ -86,8 +86,7 @@
  }
  
  GURL GetRequestUrl(AutofillDownloadManager::RequestType request_type) {
@@ -9,8 +9,8 @@
 +  return GURL("about:blank");
  }
  
- }  // namespace
-@@ -174,48 +173,6 @@
+ std::ostream& operator<<(std::ostream& out,
+@@ -234,31 +233,6 @@
  
  bool AutofillDownloadManager::StartRequest(
      const FormRequestData& request_data) {
@@ -18,17 +18,6 @@
 -      driver_->GetURLRequestContext();
 -  DCHECK(request_context);
 -  GURL request_url = GetRequestUrl(request_data.request_type);
--
--  std::string compressed_data;
--  if (!compression::GzipCompress(request_data.payload, &compressed_data)) {
--    NOTREACHED();
--    return false;
--  }
--
--  const int compression_ratio = base::checked_cast<int>(
--      100 * compressed_data.size() / request_data.payload.size());
--  AutofillMetrics::LogPayloadCompressionRatio(compression_ratio,
--                                              request_data.request_type);
 -
 -  // Id is ignored for regular chrome, in unit test id's for fake fetcher
 -  // factory will be 0, 1, 2, ...
@@ -40,21 +29,15 @@
 -  url_fetchers_[fetcher] = request_data;
 -  fetcher->SetAutomaticallyRetryOn5xx(false);
 -  fetcher->SetRequestContext(request_context);
--  fetcher->SetUploadData("text/xml", compressed_data);
+-  fetcher->SetUploadData("text/proto", request_data.payload);
 -  fetcher->SetLoadFlags(net::LOAD_DO_NOT_SAVE_COOKIES |
 -                        net::LOAD_DO_NOT_SEND_COOKIES);
--  // Add Chrome experiment state and GZIP encoding to the request headers.
+-  // Add Chrome experiment state to the request headers.
 -  net::HttpRequestHeaders headers;
--  headers.SetHeaderIfMissing("content-encoding", "gzip");
 -  variations::AppendVariationHeaders(
 -      fetcher->GetOriginalURL(), driver_->IsOffTheRecord(), false, &headers);
 -  fetcher->SetExtraRequestHeaders(headers.ToString());
 -  fetcher->Start();
--
--  VLOG(1) << "Sending AutofillDownloadManager "
--          << RequestTypeToString(request_data.request_type)
--          << " request (compression " << compression_ratio
--          << "): " << request_data.payload;
 -
    return true;
  }
