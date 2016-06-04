@@ -1,6 +1,6 @@
 --- ./chrome/browser/search/search.cc
 +++ ./chrome/browser/search/search.cc.new
-@@ -260,17 +260,7 @@
+@@ -287,17 +287,7 @@
          template_url->new_tab_url_ref(), UIThreadSearchTermsData(profile),
          false, false);
      NewTabURLState state = IsValidNewTabURL(profile, search_provider_url);
@@ -19,3 +19,26 @@
    }
  
    GURL url;
+
+
+--- ./chrome/browser/ui/webui/ntp/new_tab_page_sync_handler.cc
++++ ./chrome/browser/ui/webui/ntp/new_tab_page_sync_handler.cc.new
+@@ -90,14 +90,9 @@
+   SigninManagerBase* signin = SigninManagerFactory::GetForProfile(
+       Profile::FromWebUI(web_ui()));
+ 
+-  // Hide the sync status section if sync is managed or disabled entirely.
+-  if (!sync_service_ ||
+-      sync_service_->IsManaged() ||
+-      !signin ||
+-      !signin->IsSigninAllowed()) {
+-    HideSyncStatusSection();
+-    return;
+-  }
++  // Hide the sync status section
++  HideSyncStatusSection();
++  return;
+ 
+   // Don't show sync status if setup is not complete.
+   if (!sync_service_->HasSyncSetupCompleted()) {
+
