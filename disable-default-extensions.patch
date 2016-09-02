@@ -29,10 +29,9 @@
    LoadFinished();
  }
  
-
 --- ./chrome/browser/extensions/component_loader.cc
 +++ ./chrome/browser/extensions/component_loader.cc.new
-@@ -351,24 +351,12 @@
+@@ -340,24 +340,12 @@
  }
  
  void ComponentLoader::AddHangoutServicesExtension() {
@@ -57,51 +56,7 @@
  }
  
  void ComponentLoader::AddImageLoaderExtension() {
-@@ -384,43 +372,6 @@
- }
- 
- void ComponentLoader::AddGoogleNowExtension() {
--#if BUILDFLAG(ENABLE_GOOGLE_NOW)
--  const char kEnablePrefix[] = "Enable";
--  const char kFieldTrialName[] = "GoogleNow";
--  std::string enable_prefix(kEnablePrefix);
--  std::string field_trial_result =
--      base::FieldTrialList::FindFullName(kFieldTrialName);
--
--  bool enabled_via_field_trial =
--      field_trial_result.compare(0, enable_prefix.length(), enable_prefix) == 0;
--
--  // Enable the feature on trybots and trunk builds.
--  bool enabled_via_trunk_build =
--      chrome::GetChannel() == version_info::Channel::UNKNOWN;
--
--  bool is_authenticated =
--      SigninManagerFactory::GetForProfile(profile_)->IsAuthenticated();
--
--  bool enabled =
--      (enabled_via_field_trial && is_authenticated) || enabled_via_trunk_build;
--
--#if defined(ENABLE_APP_LIST) && defined(OS_CHROMEOS)
--  // Don't load if newer trial is running (== new extension id is available).
--  std::string ignored_extension_id;
--  if (GetGoogleNowExtensionId(&ignored_extension_id)) {
--    enabled = false;
--  }
--#endif  // defined(ENABLE_APP_LIST) && defined(OS_CHROMEOS)
--
--  const int google_now_manifest_id = IDR_GOOGLE_NOW_MANIFEST;
--  const base::FilePath root_directory =
--      base::FilePath(FILE_PATH_LITERAL("google_now"));
--  if (enabled) {
--    Add(google_now_manifest_id, root_directory);
--  } else {
--    DeleteData(google_now_manifest_id, root_directory);
--  }
--#endif  // BUILDFLAG(ENABLE_GOOGLE_NOW)
- }
- 
- #if defined(OS_CHROMEOS)
-@@ -496,15 +447,6 @@
+@@ -445,15 +433,6 @@
  }
  
  void ComponentLoader::AddWebStoreApp() {
@@ -117,7 +72,7 @@
  }
  
  scoped_refptr<const Extension> ComponentLoader::CreateExtension(
-@@ -555,9 +497,6 @@
+@@ -504,9 +483,6 @@
    DCHECK(!skip_session_components);
    Add(IDR_BOOKMARKS_MANIFEST,
        base::FilePath(FILE_PATH_LITERAL("bookmark_manager")));
@@ -127,12 +82,10 @@
  #endif
  
    if (!skip_session_components) {
-
-
-@@ -629,13 +571,6 @@
+@@ -583,13 +559,6 @@
+     AddHotwordHelperExtension();
      AddImageLoaderExtension();
-     AddGoogleNowExtension();
-
+ 
 -    bool install_feedback = enable_background_extensions_during_testing;
 -#if defined(GOOGLE_CHROME_BUILD)
 -    install_feedback = true;

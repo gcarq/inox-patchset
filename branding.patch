@@ -1,6 +1,6 @@
 --- ./chrome/common/chrome_paths_linux.cc
 +++ ./chrome/common/chrome_paths_linux.cc.new
-@@ -65,11 +65,7 @@
+@@ -66,11 +66,7 @@
    base::FilePath config_dir(GetXDGDirectory(env.get(),
                                              kXdgConfigHomeEnvVar,
                                              kDotConfigDir));
@@ -46,7 +46,7 @@
          </message>
          <message name="IDS_CHROME_FRAME_TURNDOWN_LEARN_MORE_URL" desc="Link to knowledge-base article about Chromium Frame's turndown">
            https://support.google.com/chrome/?p=ib_chromeframe
-@@ -182,14 +182,14 @@
+@@ -182,7 +182,7 @@
          sign in to Chromium
        </message>
        <message name="IDS_TASK_MANAGER_TITLE" desc="The title of the Task Manager window">
@@ -55,15 +55,16 @@
        </message>
        <message name="IDS_SESSION_CRASHED_VIEW_UMA_OPTIN" desc="Text besides the checkbox to let users optin to UMA in the restore from previous crash bubble.">
          Help make Chromium better by sending crash reports and <ph name="UMA_LINK">$1<ex>usage statistics</ex></ph> to Google
-       </message>
-       <!-- Browser Window Title Format -->
-       <message name="IDS_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for titles displayed in tabs and popup windows">
--        <ph name="PAGE_TITLE">$1<ex>Google</ex></ph> - Chromium
-+        <ph name="PAGE_TITLE">$1<ex>Google</ex></ph> – Inox
-       </message>
+@@ -190,7 +190,7 @@
        <if expr="not chromeos">
-         <message name="IDS_GET_HELP_USING_CHROME" desc="Text of the button which takes the user to the Chrome help page.">
-@@ -687,7 +687,7 @@
+         <!-- Browser Window Title Format -->
+         <message name="IDS_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for titles displayed in tabs and popup windows">
+-          <ph name="PAGE_TITLE">$1<ex>Google</ex></ph> - Chromium
++          <ph name="PAGE_TITLE">$1<ex>Google</ex></ph> - Inox
+         </message>
+       </if>
+       <if expr="chromeos">
+@@ -682,7 +682,7 @@
  
        <if expr="use_titlecase and not chromeos">
          <message name="IDS_ABOUT" desc="In Title Case: The text label of the About Chrome menu item">
@@ -72,7 +73,7 @@
          </message>
          <message name="IDS_UPDATE_NOW" desc="In Title Case: The text label of the Update Chrome Now menu item">
            Update &amp;Chromium
-@@ -695,7 +695,7 @@
+@@ -690,7 +690,7 @@
        </if>
        <if expr="not use_titlecase and not chromeos">
          <message name="IDS_ABOUT" desc="The text label of the About Chrome menu item">
@@ -81,7 +82,7 @@
          </message>
          <message name="IDS_UPDATE_NOW" desc="The text label of the Update Chrome Now menu item">
            Update &amp;Chromium
-@@ -712,7 +712,7 @@
+@@ -707,7 +707,7 @@
  
        <if expr="is_macosx">
          <message name="IDS_APP_MENU_PRODUCT_NAME" desc="The application's short name, used for the Mac's application menu, activity monitor, etc. This should be less than 16 characters. Example: Chrome, not Google Chrome.">
