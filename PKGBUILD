@@ -25,9 +25,9 @@ options=('!strip')
 install=inox.install
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
-        inox.desktop
-        chromium-52.0.2743.116-unset-madv_free.patch
-        chromium-widevine.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/inox.desktop
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-52.0.2743.116-unset-madv_free.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-widevine.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/disable-autofill-download-manager.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/disable-google-url-tracker.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/disable-default-extensions.patch
@@ -269,7 +269,7 @@ package() {
     "$pkgdir/usr/share/applications/$pkgname.desktop"
 
   for size in 16 22 24 32 48 64 128 256; do
-    echo install -Dm644 "icons/product_logo_$size.png" \
+    echo install -Dm644 "product_logo_$size.png" \
       "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/$pkgname.png"
   done
 
