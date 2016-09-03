@@ -269,7 +269,7 @@ package() {
     "$pkgdir/usr/share/applications/$pkgname.desktop"
 
   for size in 16 22 24 32 48 64 128 256; do
-    echo install -Dm644 "product_logo_$size.png" \
+    install -Dm644 "$srcdir/product_logo_$size.png" \
       "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/$pkgname.png"
   done
 
