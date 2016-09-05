@@ -54,8 +54,64 @@ Disables HTML-Form AutoFill data transmission. I don't know exactly when this is
 
 
 #### disable-google-url-tracker.patch
-Disables URLTracker, which checks in which country you are to provide the closest google server for search lookups. 
+Disables URLTracker, which checks in which country you are to provide the closest google server for search lookups.
 I know this class has a bad naming, but nevertheless it connects to Google.
+
+
+#### disable-google-ipv6-probes.patch
+Disables ipv6 probes to Google servers.
+Google pings its own DNS server to check if ipv6 is available. Changed this to RIPE NCC k.root-servers.net. 2001:7fd::1 (anycasted).
+
+
+#### disable-gcm-status-check.patch
+Disables Google Cloud-Messaging status probes. GCM provides an interface to send messages directly to single devices, groups of devices, or devices subscribed to topics.
+
+
+#### disable-missing-key-warning.patch
+Disables warning dialog about missing Google API key.
+This key is usually set on compile time and unique per distribution.
+See [ArchLinux chromium PKGBUILD](https://projects.archlinux.org/svntogit/packages.git/tree/trunk/PKGBUILD?h=packages/chromium#n37) on how it's applied or this [HOWTO](https://www.chromium.org/developers/how-tos/api-keys) for an in-depth API key explanation.
+
+Since we don't want to use these APIs at all, the keys are not set (at least for inox package on AUR).
+
+
+#### disable-translation-lang-fetch.patch
+Disables language fetching when settings are opened for the first time
+
+
+#### disable-update-pings.patch
+Disables update pings to https://clients2.google.com/service/update2 which is used for component updates.
+
+
+#### chromium-sandbox-pie.patch
+Hardening the sandbox with Position Independent Code(PIE) against ROP exploits.
+This patch originally from openSUSE.
+
+
+#### disable-new-avatar-menu.patch
+Disables Google's new Avatar and signin menu.
+
+
+#### disable-first-run-behaviour.patch
+Modifies the first-run behaviour to prevent data leakage.
+
+
+#### disable-battery-status-service.patch
+The W3C Battery Status API[1] has quite a laughable statement:
+
+"The information disclosed has minimal impact on privacy or
+fingerprinting, and therefore is exposed without permission grants".
+
+Along comes a paper "The leaking battery, A privacy analysis of the
+HTML5 Battery Status API."
+
+Clean up after the W3C and disable the battery status updater which
+could be used to identity users[2].
+
+[1] http://www.w3.org/TR/battery-status/
+[2] https://eprint.iacr.org/2015/616.pdf
+
+References: https://github.com/iridium-browser/iridium-browser/issues/40
 
 
 #### modify-default-prefs.patch
@@ -87,45 +143,9 @@ EnableTranslate | false
 LocalDiscoveryNotificationsEnabled | false
 
 
-#### disable-google-ipv6-probes.patch
-Disables ipv6 probes to Google servers.
-Google pings its own DNS server to check if ipv6 is available. Changed this to RIPE NCC k.root-servers.net. 2001:7fd::1 (anycasted).
 
 
-####disable-gcm-status-check.patch
-Disables Google Cloud-Messaging status probes. GCM provides an interface to send messages directly to single devices, groups of devices, or devices subscribed to topics.
-
-
-####disable-missing-key-warning.patch
-Disables warning dialog about missing Google API key.
-This key is usually set on compile time and unique per distribution. 
-See [ArchLinux chromium PKGBUILD](https://projects.archlinux.org/svntogit/packages.git/tree/trunk/PKGBUILD?h=packages/chromium#n37) on how it's applied or this [HOWTO](https://www.chromium.org/developers/how-tos/api-keys) for an in-depth API key explanation.
-
-Since we don't want to use these APIs at all, the keys are not set (at least for inox package on AUR).
-
-
-####disable-translation-lang-fetch.patch
-Disables language fetching when settings are opened for the first time
-
-
-####disable-update-pings.patch
-Disables update pings to https://clients2.google.com/service/update2 which is used for component updates.
-
-
-####chromium-sandbox-pie.patch
-Hardening the sandbox with Position Independent Code(PIE) against ROP exploits.
-This patch originally from openSUSE.
-
-
-####disable-new-avatar-menu.patch
-Disables Google's new Avatar and signin menu.
-
-
-####disable-first-run-behaviour.patch
-Modifies the first-run behaviour to prevent data leakage.
-
-
-####branding.patch
+#### branding.patch
 s/Chromium/Inox/g
 
 
@@ -155,7 +175,7 @@ Since there is no WebStore plugin, you cannot install extensions directly from t
     https://clients2.google.com/service/update2/crx?response=redirect&prodversion=48.0&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc
 
 To download a extension just replace [EXTENSION_ID] with the extension-id from the WebStore
-(For example cjpalhdlnbpafiamejdnhcphjbkeiagm is the extension id of uBlock Origin). 
+(For example cjpalhdlnbpafiamejdnhcphjbkeiagm is the extension id of uBlock Origin).
 You have 3 options to install an extension:
 
 
