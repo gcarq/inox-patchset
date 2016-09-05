@@ -28,6 +28,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/inox.desktop
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-52.0.2743.116-unset-madv_free.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-widevine.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/disable-battery-status-service.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/disable-autofill-download-manager.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/disable-google-url-tracker.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/disable-default-extensions.patch
@@ -52,6 +53,7 @@ sha256sums=('2e3c5f7b12b5b4f150b93004a718fb85778aeddc4df05bbf92b99a19a1c63dee'
             'ff3f939a8757f482c1c5ba35c2c0f01ee80e2a2273c16238370081564350b148'
             '3b3aa9e28f29e6f539ed1c7832e79463b13128863a02e9c6fecd16c30d61c227'
             'd6fdcb922e5a7fbe15759d39ccc8ea4225821c44d98054ce0f23f9d1f00c9808'
+            'c46e918f9e469aefdf4861967dcba98a30b3af0fedb5cb0f674efbdf253bc87a'
             '2d4b600d8085f1d5b3b4f30f8cfc6741558b1c8721dc19dd6b4de2b8dbedd80d'
             'a7329d7f3099f6b8dfe4b7addeb7abbca1cf079139a86c6483a51fed0190478e'
             '6d56f80d8d5977e59551163d06b3ce1fee4efe1e2b2aea07863d6ac853071a63'
@@ -116,6 +118,7 @@ prepare() {
   patch -Np1 -i ../chromium-sandbox-pie.patch
   patch -Np1 -i ../disable-new-avatar-menu.patch
   patch -Np1 -i ../disable-first-run-behaviour.patch
+  patch -Np1 -i ../disable-battery-status-service.patch
 
   # Commentception – use bundled ICU due to build failures (50.0.2661.75)
   # See https://crbug.com/584920 and https://crbug.com/592268
