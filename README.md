@@ -157,8 +157,8 @@ Feature | Build config
 --- | ---
 Disable google now |                enable_google_now=0
 Disable WebRTC |                    enable_webrtc=0
-Disable Remote service |          emable_remoting=0
-Disable safe browsing |             safe_browsing_mode=0
+Disable Remote service |          remoting=0
+Disable safe browsing |             safe_browsing=0
 Disable RLZ Identifier |              enable_rlz=0
 Disable google hangouts |         enable_hangout_services_extension=0
 Disable wifi bootstrapping |        enable_wifi_bootstrapping=0
