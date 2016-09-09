@@ -2,7 +2,7 @@
 
 --- a/chrome/browser/chrome_content_browser_client.cc
 +++ b/chrome/browser/chrome_content_browser_client.cc
-@@ -592,10 +592,10 @@ class SafeBrowsingSSLCertReporter : public SSLCertReporter {
+@@ -621,10 +621,6 @@
    // SSLCertReporter implementation
    void ReportInvalidCertificateChain(
        const std::string& serialized_report) override {
@@ -10,38 +10,40 @@
 -      safe_browsing_ui_manager_->ReportInvalidCertificateChain(
 -          serialized_report, base::Bind(&base::DoNothing));
 -    }
-+    //if (safe_browsing_ui_manager_) {
-+    //  safe_browsing_ui_manager_->ReportInvalidCertificateChain(
-+    //      serialized_report, base::Bind(&base::DoNothing));
-+    //}
    }
 
   private:
-@@ -1504,7 +1504,7 @@ void ChromeContentBrowserClient::AppendExtraCommandLineSwitches(
-       // Disable client-side phishing detection in the renderer if it is
-       // disabled in the Profile preferences or the browser process.
-       if (!prefs->GetBoolean(prefs::kSafeBrowsingEnabled) ||
--          !g_browser_process->safe_browsing_detection_service()) {
-+          !false) {
-         command_line->AppendSwitch(
-             switches::kDisableClientSidePhishingDetection);
+@@ -1532,13 +1528,9 @@
+         }
        }
-@@ -2037,11 +2037,11 @@ void ChromeContentBrowserClient::AllowCertificateError(
+
+-      // Disable client-side phishing detection in the renderer if it is
+-      // disabled in the Profile preferences or the browser process.
+-      if (!prefs->GetBoolean(prefs::kSafeBrowsingEnabled) ||
+-          !g_browser_process->safe_browsing_detection_service()) {
+-        command_line->AppendSwitch(
+-            switches::kDisableClientSidePhishingDetection);
+-      }
++      // Disable client-side phishing detection.
++      command_line->AppendSwitch(
++          switches::kDisableClientSidePhishingDetection);
+
+       if (prefs->GetBoolean(prefs::kPrintPreviewDisabled))
+         command_line->AppendSwitch(switches::kDisablePrintPreview);
+@@ -2077,12 +2069,8 @@
    if (expired_previous_decision)
      options_mask |= SSLErrorUI::EXPIRED_BUT_PREVIOUSLY_ALLOWED;
 
 -  safe_browsing::SafeBrowsingService* safe_browsing_service =
 -      g_browser_process->safe_browsing_service();
-+  //safe_browsing::SafeBrowsingService* safe_browsing_service =
-+  //    g_browser_process->safe_browsing_service();
-   scoped_ptr<SafeBrowsingSSLCertReporter> cert_reporter(
+   std::unique_ptr<SafeBrowsingSSLCertReporter> cert_reporter(
 -      new SafeBrowsingSSLCertReporter(safe_browsing_service
 -                                          ? safe_browsing_service->ui_manager()
-+      new SafeBrowsingSSLCertReporter(false
-+                                          ? nullptr
-                                           : nullptr));
+-                                          : nullptr));
++      new SafeBrowsingSSLCertReporter(nullptr));
    SSLErrorHandler::HandleSSLError(web_contents, cert_error, ssl_info,
                                    request_url, options_mask,
+                                   std::move(cert_reporter), callback)
 --- a/chrome/browser/profiles/profile_impl.cc
 +++ b/chrome/browser/profiles/profile_impl.cc
 @@ -452,12 +452,12 @@ ProfileImpl::ProfileImpl(
@@ -224,36 +226,6 @@
    scoped_refptr<net::URLRequestContextGetter> url_request_context_getter_;
    scoped_refptr<net::URLRequestContextGetter> parent_request_context_for_test_;
 
---- a/chrome/browser/browsing_data/browsing_data_remover.cc
-+++ b/chrome/browser/browsing_data/browsing_data_remover.cc
-@@ -612,27 +612,6 @@ void BrowsingDataRemover::RemoveImpl(const TimeRange& time_range,
-     storage_partition_remove_mask |=
-         content::StoragePartition::REMOVE_DATA_MASK_COOKIES;
-
--    // Clear the safebrowsing cookies only if time period is for "all time".  It
--    // doesn't make sense to apply the time period of deleting in the last X
--    // hours/days to the safebrowsing cookies since they aren't the result of
--    // any user action.
--    if (delete_begin_ == base::Time()) {
--      safe_browsing::SafeBrowsingService* sb_service =
--          g_browser_process->safe_browsing_service();
--      if (sb_service) {
--        scoped_refptr<net::URLRequestContextGetter> sb_context =
--            sb_service->url_request_context();
--        ++waiting_for_clear_cookies_count_;
--        BrowserThread::PostTask(
--            BrowserThread::IO, FROM_HERE,
--            base::Bind(&ClearCookiesOnIOThread, delete_begin_, delete_end_,
--                       base::RetainedRef(std::move(sb_context)),
--                       UIThreadTrampoline(
--                           base::Bind(&BrowsingDataRemover::OnClearedCookies,
--                                      weak_ptr_factory_.GetWeakPtr()))));
--      }
--    }
--
-     MediaDeviceIDSalt::Reset(profile_->GetPrefs());
-   }
-
 --- a/chrome/browser/download/chrome_download_manager_delegate.cc
 +++ b/chrome/browser/download/chrome_download_manager_delegate.cc
 @@ -194,12 +194,12 @@ ChromeDownloadManagerDelegate::~ChromeDownloadManagerDelegate() {
@@ -277,7 +249,7 @@
  void ChromeDownloadManagerDelegate::Shutdown() {
 --- a/chrome/browser/browser_process_impl.cc
 +++ b/chrome/browser/browser_process_impl.cc
-@@ -62,7 +62,6 @@
+@@ -67,7 +67,6 @@
  #include "chrome/browser/printing/print_preview_dialog_controller.h"
  #include "chrome/browser/profiles/profile_manager.h"
  #include "chrome/browser/renderer_host/chrome_resource_dispatcher_host_delegate.h"
@@ -285,24 +257,24 @@
  #include "chrome/browser/shell_integration.h"
  #include "chrome/browser/status_icons/status_tray.h"
  #include "chrome/browser/ui/browser_dialogs.h"
-@@ -191,7 +190,6 @@ BrowserProcessImpl::BrowserProcessImpl(
-       created_local_state_(false),
+@@ -196,7 +195,6 @@
        created_icon_manager_(false),
        created_notification_ui_manager_(false),
+       created_notification_bridge_(false),
 -      created_safe_browsing_service_(false),
+       created_subresource_filter_ruleset_service_(false),
        shutting_down_(false),
        tearing_down_(false),
-       download_status_updater_(new DownloadStatusUpdater),
-@@ -268,8 +266,6 @@ void BrowserProcessImpl::StartTearDown() {
-   // URLFetcher operation before going away.)
+@@ -280,8 +278,6 @@
+   // that URLFetcher operation before going away.)
    metrics_services_manager_.reset();
    intranet_redirect_detector_.reset();
 -  if (safe_browsing_service_.get())
 -    safe_browsing_service()->ShutDown();
+   network_time_tracker_.reset();
  #if defined(ENABLE_PLUGIN_INSTALLATION)
    plugins_resource_service_.reset();
- #endif
-@@ -882,22 +878,6 @@ StatusTray* BrowserProcessImpl::status_tray() {
+@@ -843,22 +839,6 @@
    return status_tray_.get();
  }
 
@@ -322,15 +294,15 @@
 -  return NULL;
 -}
 -
- #if (defined(OS_WIN) || defined(OS_LINUX)) && !defined(OS_CHROMEOS)
- void BrowserProcessImpl::StartAutoupdateTimer() {
-   autoupdate_timer_.Start(FROM_HERE,
-@@ -1151,16 +1131,6 @@ void BrowserProcessImpl::CreateBackgroundPrintingManager() {
+ subresource_filter::RulesetService*
+ BrowserProcessImpl::subresource_filter_ruleset_service() {
+   DCHECK(CalledOnValidThread());
+@@ -1128,16 +1108,6 @@
  #endif
  }
 
 -void BrowserProcessImpl::CreateSafeBrowsingService() {
--  DCHECK(safe_browsing_service_.get() == NULL);
+-  DCHECK(!safe_browsing_service_);
 -  // Set this flag to true so that we don't retry indefinitely to
 -  // create the service class if there was an error.
 -  created_safe_browsing_service_ = true;
@@ -339,31 +311,32 @@
 -  safe_browsing_service_->Initialize();
 -}
 -
- void BrowserProcessImpl::CreateGCMDriver() {
-   DCHECK(!gcm_driver_);
+ void BrowserProcessImpl::CreateSubresourceFilterRulesetService() {
+   DCHECK(!subresource_filter_ruleset_service_);
+   created_subresource_filter_ruleset_service_ = true;
 
 --- a/chrome/browser/browser_process_impl.h
 +++ b/chrome/browser/browser_process_impl.h
-@@ -129,9 +129,6 @@ class BrowserProcessImpl : public BrowserProcess,
+@@ -126,9 +126,6 @@
    void set_background_mode_manager_for_test(
-       scoped_ptr<BackgroundModeManager> manager) override;
+       std::unique_ptr<BackgroundModeManager> manager) override;
    StatusTray* status_tray() override;
 -  safe_browsing::SafeBrowsingService* safe_browsing_service() override;
 -  safe_browsing::ClientSideDetectionService* safe_browsing_detection_service()
 -      override;
+   subresource_filter::RulesetService* subresource_filter_ruleset_service()
+       override;
 
- #if (defined(OS_WIN) || defined(OS_LINUX)) && !defined(OS_CHROMEOS)
-   void StartAutoupdateTimer() override;
-@@ -244,9 +241,6 @@ class BrowserProcessImpl : public BrowserProcess,
-   scoped_ptr<BackgroundModeManager> background_mode_manager_;
+@@ -253,9 +250,6 @@
+   std::unique_ptr<BackgroundModeManager> background_mode_manager_;
  #endif
 
 -  bool created_safe_browsing_service_;
 -  scoped_refptr<safe_browsing::SafeBrowsingService> safe_browsing_service_;
 -
-   bool shutting_down_;
-
-   bool tearing_down_;
+   bool created_subresource_filter_ruleset_service_;
+   std::unique_ptr<subresource_filter::RulesetService>
+       subresource_filter_ruleset_service_;
 --- a/chrome/browser/metrics/chrome_metrics_services_manager_client.cc
 +++ b/chrome/browser/metrics/chrome_metrics_services_manager_client.cc
 @@ -72,21 +72,7 @@ ChromeMetricsServicesManagerClient::GetURLRequestContext() {
@@ -389,83 +362,73 @@
  }
 
  bool ChromeMetricsServicesManagerClient::IsMetricsReportingEnabled() {
---- a/chrome/browser/browser_process.h
-+++ b/chrome/browser/browser_process.h
-@@ -42,10 +42,6 @@ class WatchDogThread;
- class WebRtcLogUploader;
- #endif
-
--namespace safe_browsing {
--class SafeBrowsingService;
--}
--
- namespace variations {
- class VariationsService;
- }
-@@ -107,10 +103,6 @@ namespace rappor {
- class RapporService;
- }
-
--namespace safe_browsing {
--class ClientSideDetectionService;
--}
--
- namespace web_resource {
- class PromoResourceService;
- }
-@@ -217,14 +209,6 @@ class BrowserProcess {
-   // on this platform (or this is a unit test).
-   virtual StatusTray* status_tray() = 0;
-
--  // Returns the SafeBrowsing service.
--  virtual safe_browsing::SafeBrowsingService* safe_browsing_service() = 0;
--
--  // Returns an object which handles communication with the SafeBrowsing
--  // client-side detection servers.
--  virtual safe_browsing::ClientSideDetectionService*
--      safe_browsing_detection_service() = 0;
--
- #if (defined(OS_WIN) || defined(OS_LINUX)) && !defined(OS_CHROMEOS)
-   // This will start a timer that, if Chrome is in persistent mode, will check
-   // whether an update is available, and if that's the case, restart the
 --- a/chrome/browser/download/download_danger_prompt.cc
 +++ b/chrome/browser/download/download_danger_prompt.cc
-@@ -28,10 +28,6 @@
- #include "ui/base/l10n/l10n_util.h"
+@@ -14,9 +14,6 @@
+ #include "content/public/browser/download_danger_type.h"
+ #include "content/public/browser/download_item.h"
 
- using extensions::ExperienceSamplingEvent;
 -using safe_browsing::ClientDownloadResponse;
 -using safe_browsing::ClientSafeBrowsingReportRequest;
--using safe_browsing::download_protection_util::
--    GetSBClientDownloadExtensionValueForUMA;
-
+-
  namespace {
 
-@@ -316,6 +312,7 @@ DownloadDangerPrompt* DownloadDangerPrompt::Create(
- void DownloadDangerPrompt::SendSafeBrowsingDownloadRecoveryReport(
+ const char kDownloadDangerPromptPrefix[] = "Download.DownloadDangerPrompt";
+@@ -53,57 +50,9 @@
+     ClientSafeBrowsingReportRequest::ReportType report_type,
      bool did_proceed,
      const content::DownloadItem& download) {
-+#if 0
-   safe_browsing::SafeBrowsingService* sb_service =
-       g_browser_process->safe_browsing_service();
-   ClientSafeBrowsingReportRequest report;
-@@ -345,11 +342,13 @@ void DownloadDangerPrompt::SendSafeBrowsingDownloadRecoveryReport(
-     sb_service->SendDownloadRecoveryReport(serialized_report);
-   else
-     DLOG(ERROR) << "Unable to serialize the threat report.";
-+#endif
+-  safe_browsing::SafeBrowsingService* sb_service =
+-      g_browser_process->safe_browsing_service();
+-  ClientSafeBrowsingReportRequest report;
+-  report.set_type(report_type);
+-  switch (download.GetDangerType()) {
+-    case content::DOWNLOAD_DANGER_TYPE_DANGEROUS_URL:
+-    case content::DOWNLOAD_DANGER_TYPE_DANGEROUS_CONTENT:
+-      report.set_download_verdict(ClientDownloadResponse::DANGEROUS);
+-      break;
+-    case content::DOWNLOAD_DANGER_TYPE_UNCOMMON_CONTENT:
+-      report.set_download_verdict(ClientDownloadResponse::UNCOMMON);
+-      break;
+-    case content::DOWNLOAD_DANGER_TYPE_POTENTIALLY_UNWANTED:
+-      report.set_download_verdict(ClientDownloadResponse::POTENTIALLY_UNWANTED);
+-      break;
+-    case content::DOWNLOAD_DANGER_TYPE_DANGEROUS_HOST:
+-      report.set_download_verdict(ClientDownloadResponse::DANGEROUS_HOST);
+-      break;
+-    default:  // Don't send report for any other danger types.
+-      return;
+-  }
+-  report.set_url(download.GetURL().spec());
+-  report.set_did_proceed(did_proceed);
+-  std::string token =
+-    safe_browsing::DownloadProtectionService::GetDownloadPingToken(
+-        &download);
+-  if (!token.empty())
+-    report.set_token(token);
+-  std::string serialized_report;
+-  if (report.SerializeToString(&serialized_report))
+-    sb_service->SendSerializedDownloadReport(serialized_report);
+-  else
+-    DLOG(ERROR) << "Unable to serialize the threat report.";
  }
 
  void DownloadDangerPrompt::RecordDownloadDangerPrompt(
      bool did_proceed,
      const content::DownloadItem& download) {
-+#if 0
-   int dangerous_file_type =
-       GetSBClientDownloadExtensionValueForUMA(download.GetTargetFilePath());
-   content::DownloadDangerType danger_type = download.GetDangerType();
-@@ -364,4 +363,5 @@ void DownloadDangerPrompt::RecordDownloadDangerPrompt(
-                            GetDangerTypeString(danger_type)),
-         dangerous_file_type);
-   }
-+#endif
+-  int64_t file_type_uma_value =
+-      safe_browsing::FileTypePolicies::GetInstance()->UmaValueForFile(
+-          download.GetTargetFilePath());
+-  content::DownloadDangerType danger_type = download.GetDangerType();
+-
+-  UMA_HISTOGRAM_SPARSE_SLOWLY(
+-      base::StringPrintf("%s.%s.Shown", kDownloadDangerPromptPrefix,
+-                         GetDangerTypeString(danger_type)),
+-      file_type_uma_value);
+-  if (did_proceed) {
+-    UMA_HISTOGRAM_SPARSE_SLOWLY(
+-        base::StringPrintf("%s.%s.Proceed", kDownloadDangerPromptPrefix,
+-                           GetDangerTypeString(danger_type)),
+-        file_type_uma_value);
+-  }
  }
