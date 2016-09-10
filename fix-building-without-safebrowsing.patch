@@ -364,17 +364,15 @@
  bool ChromeMetricsServicesManagerClient::IsMetricsReportingEnabled() {
 --- a/chrome/browser/download/download_danger_prompt.cc
 +++ b/chrome/browser/download/download_danger_prompt.cc
-@@ -14,9 +14,6 @@
+@@ -14,7 +14,6 @@
  #include "content/public/browser/download_danger_type.h"
  #include "content/public/browser/download_item.h"
 
 -using safe_browsing::ClientDownloadResponse;
--using safe_browsing::ClientSafeBrowsingReportRequest;
--
- namespace {
+ using safe_browsing::ClientSafeBrowsingReportRequest;
 
- const char kDownloadDangerPromptPrefix[] = "Download.DownloadDangerPrompt";
-@@ -53,57 +50,9 @@
+ namespace {
+@@ -53,57 +52,9 @@
      ClientSafeBrowsingReportRequest::ReportType report_type,
      bool did_proceed,
      const content::DownloadItem& download) {
