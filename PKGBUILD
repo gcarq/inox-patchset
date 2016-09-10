@@ -123,6 +123,9 @@ prepare() {
   patch -Np1 -i ../disable-first-run-behaviour.patch
   patch -Np1 -i ../disable-battery-status-service.patch
 
+  ## Fix linker errors if building with -Dsafe_browsing=0
+  #patch -Np1 -i ../fix-building-without-safebrowsing.patch
+
   # Commentception – use bundled ICU due to build failures (50.0.2661.75)
   # See https://crbug.com/584920 and https://crbug.com/592268
   # ---
@@ -212,7 +215,7 @@ build() {
     -Denable_webrtc=0
     -Denable_google_now=0
     -Dremoting=0
-    -Dsafe_browsing=0
+    -Dsafe_browsing_mode=0
     -Denable_rlz=0
     -Denable_hangout_services_extension=0
     -Dbranding=Chromium
