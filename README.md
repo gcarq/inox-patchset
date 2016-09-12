@@ -122,7 +122,6 @@ Modifies following default settings (can be changed anytime):
 
 User setting | new value
 --- | ---
-DefaultCookiesSetting      | ~~CONTENT_SETTING_SESSION_ONLY~~
 EnableHyperLinkAuditing    | false
 CloudPrintSubmitEnabled    | false
 NetworkPredictionEnabled   | false
@@ -158,7 +157,7 @@ Feature | Build config
 Disable google now |                enable_google_now=0
 Disable WebRTC |                    enable_webrtc=0
 Disable Remote service |          remoting=0
-Disable safe browsing |             safe_browsing=0
+Disable safe browsing |             safe_browsing=0*
 Disable RLZ Identifier |              enable_rlz=0
 Disable google hangouts |         enable_hangout_services_extension=0
 Disable wifi bootstrapping |        enable_wifi_bootstrapping=0
@@ -167,6 +166,7 @@ Disable pre backups on sync |   enable_pre_sync_backup=0
 Disable print preview |                enable_print_preview=0
 Disable Chrome build |               google_chrome_build=0
 
+\* safe_browsing flag is currently broken and needs more work
 
 
 ## How to install extensions from Google WebStore?
