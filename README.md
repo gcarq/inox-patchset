@@ -1,9 +1,9 @@
 # Inox Browser (inox-patchset)
 Inox patchset is applied on the chromium source code and tries to prevent data transmission to Google to get a minimal Chromium based browser. The patches are split up based on features, so it's easy to patch only a subset of them.
-See below for a full list of patched features. Some of them are also disabled via build flags.
 
 Table of Contents
 * [Foreword](#foreword)
+* [Download](#download)
 * [Building](#building)
     * [Patches](#patches)
     * [Build flags](#build-flags)
@@ -21,17 +21,23 @@ Table of Contents
 ## Foreword
 It is possible that some data is still transmitted (but down to a minimum) this is because Chromium is a quite large and complex codebase which changes each day.
 
+## Download
+* **Arch Linux**:
+Pre-built binaries are hosted in the AUR: [inox-bin](https://aur.archlinux.org/packages/inox-bin/)
+
+* **Ubuntu, Debian, OSX, Windows**: See [ungoogled-chromium](https://github.com/Eloston/ungoogled-chromium), it offers pre-built binaries with inox-patchset and various other patches.
+
 ## Building
 These patches are tested and functional on Arch Linux x86_64, but should run on any Linux/BSD distribution.
-If you are running Arch Linux you can download the source or binary package from AUR:
-* [inox](https://aur.archlinux.org/packages/inox/)
-* [inox-bin](https://aur.archlinux.org/packages/inox-bin/)
-
-For debian based distributions see [ungoogled-chromium](https://github.com/Eloston/ungoogled-chromium), it offers a debian build script to compile Chromium with various patches and also a pre-built version.
-
-For any other distribution check out the Chromium [Build Instructions](https://chromium.googlesource.com/chromium/src/+/master/docs/linux_build_instructions.md) or view the inox [PKGBUILD](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=inox) to get an idea how chromium is built.
 
 *The build process takes about 3 hours on a i5-3550 CPU @ 3.90GHz and 16GB ram. (without ccache)*
+
+* **Arch Linux**:
+If you are running Arch Linux you can download and build the source from AUR: [inox](https://aur.archlinux.org/packages/inox/)
+
+* **Ubuntu, Debian, OSX, Windows**: See [ungoogled-chromium](https://github.com/Eloston/ungoogled-chromium), it offers build scripts to compile Chromium with inox-patchset and various other patches.
+
+* **Build manually:** If you want to build it yourself check out the Chromium [Build Instructions](https://chromium.googlesource.com/chromium/src/+/master/docs/linux_build_instructions.md) or view the [PKGBUILD](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=inox) to get an idea how chromium is built.
 
 
 ### Patches
@@ -253,4 +259,3 @@ GPLv3. See [LICENSE](LICENSE)
 ## Donations
 Donations are welcome and keep me motivated :-)
 * BTC: `1EsahKzwNgZF56gmZZz8NVQJ4SWdGnshv4`
-* ETH: ``
