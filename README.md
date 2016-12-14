@@ -1,17 +1,25 @@
-# inox-patchset
+# Inox Browser (inox-patchset)
 Inox patchset is applied on the chromium source code and tries to prevent data transmission to Google to get a minimal Chromium based browser. The patches are split up based on features, so it's easy to patch only a subset of them.
 See below for a full list of patched features. Some of them are also disabled via build flags.
 
-Here you can find some screenshots: http://imgur.com/a/IUfqm
+Table of Contents
+* [Foreword](#foreword)
+* [Building](#building)
+    * [Patches](#patches)
+    * [Build flags](#build-flags)
+* [Frequently-asked questions](#frequently-asked-questions)
+    * [Install extensions from Google WebStore](#install-extensions-from-google-webstore)
+    * [Use widevine](#use-widevine)
+    * [Use a proxy](#use-a-proxy)
+* [Screenshots](#screenshots)
+* [Contributing](#contributing)
+* [Credits](#credits)
+* [License](#license)
+* [Donations](#donations)
 
 
-
-
-
-
-## Warning
-It is possible that some data is still transmitted(but down to a minimum) this is because Chromium is a quite large and complex codebase which changes each day.
-
+## Foreword
+It is possible that some data is still transmitted (but down to a minimum) this is because Chromium is a quite large and complex codebase which changes each day.
 
 ## Building
 These patches are tested and functional on Arch Linux x86_64, but should run on any Linux/BSD distribution.
@@ -26,18 +34,18 @@ For any other distribution check out the Chromium [Build Instructions](https://c
 *The build process takes about 3 hours on a i5-3550 CPU @ 3.90GHz and 16GB ram. (without ccache)*
 
 
-## Patches
+### Patches
 
-#### restore-classic-ntp.patch
+##### restore-classic-ntp.patch
 Restores old NTP (New Tab Page).
 The default NTP loads data from a web server to modify the appearance and inject a Google Search bar with a unique identifier.
 
 
-#### add-duckduckgo-search-engine.patch
+##### add-duckduckgo-search-engine.patch
 Adds DuckDuckGo as default search engine, it's still changeable in settings.
 
 
-#### disable-default-extensions.patch
+##### disable-default-extensions.patch
 Enabled user-modification for all extensions.
 Disabled extensions:
 * Hotword (incl. Shared Module)
@@ -49,25 +57,25 @@ Disabled extensions:
 * Google Hangout
 
 
-#### disable-autofill-download-manager.patch
+##### disable-autofill-download-manager.patch
 Disables HTML-Form AutoFill data transmission. I don't know exactly when this is triggered, but it synchronizes the saved Form data with Google.
 
 
-#### disable-google-url-tracker.patch
+##### disable-google-url-tracker.patch
 Disables URLTracker, which checks in which country you are to provide the closest google server for search lookups.
 I know this class has a bad naming, but nevertheless it connects to Google.
 
 
-#### disable-google-ipv6-probes.patch
+##### disable-google-ipv6-probes.patch
 Disables ipv6 probes to Google servers.
 Google pings its own DNS server to check if ipv6 is available. Changed this to RIPE NCC k.root-servers.net. 2001:7fd::1 (anycasted).
 
 
-#### disable-gcm-status-check.patch
+##### disable-gcm-status-check.patch
 Disables Google Cloud-Messaging status probes. GCM provides an interface to send messages directly to single devices, groups of devices, or devices subscribed to topics.
 
 
-#### disable-missing-key-warning.patch
+##### disable-missing-key-warning.patch
 Disables warning dialog about missing Google API key.
 This key is usually set on compile time and unique per distribution.
 See [ArchLinux chromium PKGBUILD](https://projects.archlinux.org/svntogit/packages.git/tree/trunk/PKGBUILD?h=packages/chromium#n37) on how it's applied or this [HOWTO](https://www.chromium.org/developers/how-tos/api-keys) for an in-depth API key explanation.
@@ -75,28 +83,28 @@ See [ArchLinux chromium PKGBUILD](https://projects.archlinux.org/svntogit/packag
 Since we don't want to use these APIs at all, the keys are not set (at least for inox package on AUR).
 
 
-#### disable-translation-lang-fetch.patch
-Disables language fetching when settings are opened for the first time
+##### disable-translation-lang-fetch.patch
+* Disables language fetching when settings are opened for the first time
+* Disables TranslateRankerQuery and TranslateRankerEnforcement (connects to `chromium-i18n.appspot.com`)
+
+##### disable-update-pings.patch
+Disables update pings to `https://clients2.google.com/service/update2` which is used for component updates.
 
 
-#### disable-update-pings.patch
-Disables update pings to https://clients2.google.com/service/update2 which is used for component updates.
-
-
-#### chromium-sandbox-pie.patch
+##### chromium-sandbox-pie.patch
 Hardening the sandbox with Position Independent Code(PIE) against ROP exploits.
-This patch originally from openSUSE.
+This patch is originally from openSUSE.
 
 
-#### disable-new-avatar-menu.patch
-Disables Google's new Avatar and signin menu.
+##### disable-new-avatar-menu.patch
+Disables Google's new Avatar and signin menu. **(currently broken!)**
 
 
-#### disable-first-run-behaviour.patch
+##### disable-first-run-behaviour.patch
 Modifies the first-run behaviour to prevent data leakage.
 
 
-#### disable-battery-status-service.patch
+##### disable-battery-status-service.patch
 The W3C Battery Status API[1] has quite a laughable statement:
 
 "The information disclosed has minimal impact on privacy or
@@ -108,68 +116,63 @@ HTML5 Battery Status API."
 Clean up after the W3C and disable the battery status updater which
 could be used to identity users[2].
 
-[1] http://www.w3.org/TR/battery-status/
-[2] https://eprint.iacr.org/2015/616.pdf
+* [1] http://www.w3.org/TR/battery-status/
+* [2] https://eprint.iacr.org/2015/616.pdf
 
 References: https://github.com/iridium-browser/iridium-browser/issues/40
 
 
-#### modify-default-prefs.patch
-
-DefaultCookiesSettings are temporary CONTENT_SETTING_DEFAULT.
+##### modify-default-prefs.patch
 
 Modifies following default settings (can be changed anytime):
 
 User setting | new value
 --- | ---
-EnableHyperLinkAuditing    | false
-CloudPrintSubmitEnabled    | false
-NetworkPredictionEnabled   | false
-BackgroundModeEnabled      | false
-BlockThirdPartyCookies     | true
-AlternateErrorPagesEnabled | false
-SearchSuggestEnabled       | false
-AutofillEnabled            | false
-"Send feedback" checkbox if user triggers settings-reset | false
-BuiltInDnsClientEnabled    | false
-SignInPromoUserSkipped     | true
-SignInPromoShowOnFirstRunAllowed | false
-ShowAppsShortcutInBookmarkBar | false
-ShowBookmarkBar | true
-PromptForDownload | true
-SafeBrowsingEnabled | false
-EnableTranslate | false
-LocalDiscoveryNotificationsEnabled | false
+DefaultCookiesSettings     | `CONTENT_SETTING_DEFAULT`
+EnableHyperLinkAuditing    | `false`
+CloudPrintSubmitEnabled    | `false`
+NetworkPredictionEnabled   | `false`
+BackgroundModeEnabled      | `false`
+BlockThirdPartyCookies     | `true`
+AlternateErrorPagesEnabled | `false`
+SearchSuggestEnabled       | `false`
+AutofillEnabled            | `false`
+Send feedback to Google if preferences are reset | `false`
+BuiltInDnsClientEnabled    | `false`
+SignInPromoUserSkipped     | `true`
+SignInPromoShowOnFirstRunAllowed | `false`
+ShowAppsShortcutInBookmarkBar | `false`
+ShowBookmarkBar | `true`
+PromptForDownload | `true`
+SafeBrowsingEnabled | `false`
+EnableTranslate | `false`
+LocalDiscoveryNotificationsEnabled | `false`
 
 
+##### branding.patch
+`s/Chromium/Inox/g`
 
 
-#### branding.patch
-s/Chromium/Inox/g
-
-
-## Build flags
-The packages hosted on AUR are configured to use following build config.
-If you want to see how to apply a config flag view Chromium [Build Instructions](https://chromium.googlesource.com/chromium/src/+/master/docs/linux_build_instructions.md).
+### Build flags
+The PKGBUILD uses chromium [GN build system](https://chromium.googlesource.com/chromium/src/tools/gn/).
+The following config flags are applied:
 
 Feature | Build config
 --- | ---
-Disable google now |                enable_google_now=0
-Disable WebRTC |                    enable_webrtc=0
-Disable Remote service |          remoting=0
-Disable safe browsing |             safe_browsing=0*
-Disable RLZ Identifier |              enable_rlz=0
-Disable google hangouts |         enable_hangout_services_extension=0
-Disable wifi bootstrapping |        enable_wifi_bootstrapping=0
-Disable speech input |               enable_speech_input=0
-Disable pre backups on sync |   enable_pre_sync_backup=0
-Disable print preview |                enable_print_preview=0
-Disable Chrome build |               google_chrome_build=0
+Disable google now |                `enable_google_now=false`
+Disable WebRTC |                    `enable_webrtc=false`
+Disable Remote service |          `enable_remoting=false`
+Disable safe browsing |             `safe_browsing_mode=0*`
+Disable RLZ Identifier |              `enable_rlz=false`, `enable_rlz_support=false`
+Disable google hangouts |         `enable_hangout_services_extension=false`
+Disable print preview |                `enable_print_preview=false`
 
-\* safe_browsing flag is currently broken and needs more work
+\* Builds only with `fix-building-without-safebrowsing.patch`.
 
 
-## How to install extensions from Google WebStore?
+## Frequently-asked questions
+
+### Install extensions from Google WebStore
 Since there is no WebStore plugin, you cannot install extensions directly from the store, but you can download and install any extension manually.
 
     https://clients2.google.com/service/update2/crx?response=redirect&prodversion=48.0&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc
@@ -205,6 +208,32 @@ You have 3 options to install an extension:
 
 Keep in mind extensions are not updated automatically, so make sure you update them on a regular base.
 
+### Use widevine
+Though it might not be ideal to use DRM technologies, Inox supports widevine if you provide `libwidevinecdm.so`.
+To activate it, create a symlink from a chromium setup.
+
+`# ln -s /usr/lib/chromium/libwidevinecdm.so /usr/lib/inox/libwidevinecdm.so`
+
+### Use a proxy
+As mentioned in [Foreword](#foreword) it is still possible that some data is leaked to Google, so use if want to you use a proxy to achieve a high level of anonymity it would be better to use TorBrowser.
+
+The `--proxy-server` flag supports `HTTP`, `HTTPS` and `SOCKS` proxies.
+The `--host-resolver-rules` flag forces DNS requests through the proxy (prevents DNS leakage), the `EXCLUDE` option lets Inox resolve the domain name.
+
+#### Examples
+
+###### Tor
+`inox --proxy-server="socks5://localhost:9050" --host-resolver-rules="MAP * 0.0.0.0, EXCLUDE localhost, EXCLUDE *.local"`
+
+###### I2P
+`inox --proxy-server="http://127.0.0.1:4444" --host-resolver-rules="MAP * 0.0.0.0, EXCLUDE localhost, EXCLUDE *.local"`
+
+
+## Screenshots
+![Inox Browser](http://i.imgur.com/eNiCycy.png "Inox Browser")
+
+[Here](http://imgur.com/a/IUfqm) you can find more screenshots.
+
 
 ## Contributing
 Use the Issue Tracker for problems, suggestions, and questions, or visit the [Inox Browser thread](https://bbs.archlinux.org/viewtopic.php?id=198763) in the Arch forums.
@@ -213,8 +242,15 @@ You may also contribute by submitting pull requests.
 
 
 ## Credits
-[Iridium Browser](https://iridiumbrowser.de/)
+* [Chromium](https://www.chromium.org/)
+* [Iridium Browser](https://iridiumbrowser.de/)
+* [ungoogled-chromium](https://github.com/Eloston/ungoogled-chromium)
 
 
+## License
+GPLv3. See [LICENSE](LICENSE)
 
-Bitcoin donations are welcome: 1EsahKzwNgZF56gmZZz8NVQJ4SWdGnshv4
+## Donations
+Donations are welcome and keep me motivated :-)
+* BTC: `1EsahKzwNgZF56gmZZz8NVQJ4SWdGnshv4`
+* ETH: ``
