@@ -12,7 +12,7 @@
 +  *result = config_dir.Append("inox");
    return true;
  }
- 
+
 --- ./chrome/app/chromium_strings.grd
 +++ ./chrome/app/chromium_strings.grd.new
 @@ -137,17 +137,17 @@
@@ -65,7 +65,7 @@
        </if>
        <if expr="chromeos">
 @@ -682,7 +682,7 @@
- 
+
        <if expr="use_titlecase and not chromeos">
          <message name="IDS_ABOUT" desc="In Title Case: The text label of the About Chrome menu item">
 -          About &amp;Chromium
@@ -83,7 +83,7 @@
          <message name="IDS_UPDATE_NOW" desc="The text label of the Update Chrome Now menu item">
            Update &amp;Chromium
 @@ -707,7 +707,7 @@
- 
+
        <if expr="is_macosx">
          <message name="IDS_APP_MENU_PRODUCT_NAME" desc="The application's short name, used for the Mac's application menu, activity monitor, etc. This should be less than 16 characters. Example: Chrome, not Google Chrome.">
 -          Chromium
@@ -91,3 +91,25 @@
          </message>
          <message name="IDS_HELPER_NAME" desc="The helper application's name.  Should contain the Chrome application name (IDS_PRODUCT_NAME). Example: Google Chrome Helper.">
            Chromium Helper
+--- a/chrome/test/chromedriver/chrome/chrome_finder.cc
++++ b/chrome/test/chromedriver/chrome/chrome_finder.cc
+@@ -91,15 +91,12 @@ void GetApplicationDirs(std::vector<base::FilePath>* locations);
+ bool FindChrome(base::FilePath* browser_exe) {
+   base::FilePath browser_exes_array[] = {
+ #if defined(OS_WIN)
+-      base::FilePath(L"chrome.exe")
++      base::FilePath(L"inox.exe")
+ #elif defined(OS_MACOSX)
+-      base::FilePath("Google Chrome.app/Contents/MacOS/Google Chrome"),
+-      base::FilePath("Chromium.app/Contents/MacOS/Chromium")
++      base::FilePath("Google Chrome.app/Contents/MacOS/Inox"),
++      base::FilePath("Inox.app/Contents/MacOS/Inox")
+ #elif defined(OS_LINUX)
+-      base::FilePath("google-chrome"),
+-      base::FilePath("chrome"),
+-      base::FilePath("chromium"),
+-      base::FilePath("chromium-browser")
++      base::FilePath("inox"),
+ #else
+       // it will compile but won't work on other OSes
+       base::FilePath()
