@@ -1,6 +1,10 @@
 sudo: required
 language: cpp
 arch:
+  packages:
+    - mesa-libgl
+    - noto-fonts
+    - libx264
   script:
     - "makepkg -s"
 script:
