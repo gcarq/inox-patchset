@@ -221,7 +221,7 @@ To activate it, create a symlink from a chromium setup.
 `# ln -s /usr/lib/chromium/libwidevinecdm.so /usr/lib/inox/libwidevinecdm.so`
 
 ### Use a proxy
-As mentioned in [Foreword](#foreword) it is still possible that some data is leaked to Google, so use if want to you use a proxy to achieve a high level of anonymity it would be better to use TorBrowser.
+As mentioned in [Foreword](#foreword) it is still possible that some data is leaked to Google, so use if want to use a proxy to achieve a high level of anonymity it would be better to use TorBrowser.
 
 The `--proxy-server` flag supports `HTTP`, `HTTPS` and `SOCKS` proxies.
 The `--host-resolver-rules` flag forces DNS requests through the proxy (prevents DNS leakage), the `EXCLUDE` option lets Inox resolve the domain name.
