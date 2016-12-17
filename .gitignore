@@ -27,3 +27,13 @@
 *.out
 *.app
 /.project
+
+src/
+pkg/
+build.sh
+chromium-*.tar.*z
+
+makepkg.conf
+inox-*.tar.*z
+
+test*
