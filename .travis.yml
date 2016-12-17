@@ -1,10 +1,7 @@
 sudo: required
 language: cpp
 arch:
-  packages:
-    - base-devel
   script:
-    - "./build_script.sh"
     - "makepkg -s"
 script:
   - "curl -s https://raw.githubusercontent.com/mikkeloscar/arch-travis/master/arch-travis.sh | bash"
