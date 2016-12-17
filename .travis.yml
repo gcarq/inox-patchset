@@ -1,5 +1,5 @@
 sudo: required
-
+language: cpp
 arch:
   packages:
     # aur packages
@@ -9,4 +9,3 @@ arch:
 
 script:
   - "curl -s https://raw.githubusercontent.com/mikkeloscar/arch-travis/master/arch-travis.sh | bash"
-```
