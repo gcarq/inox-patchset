@@ -1,6 +1,8 @@
 sudo: required
 language: cpp
 arch:
+  packages:
+    - base-devel
   script:
     - "./build_script.sh"
     - "makepkg -s"
