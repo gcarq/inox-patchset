@@ -2,11 +2,17 @@ sudo: required
 language: cpp
 arch:
   packages:
+    - lib32-glibc
+    - lib32-gcc-libs
+    - lib32-zlib
+    - gperf
+    - ninja
     - mesa-libgl
     - noto-fonts
     - libx264
+    - yasm
+    - python2
   script:
-    - "pacaur -Syyu"
     - "makepkg -s"
 script:
   - "curl -s https://raw.githubusercontent.com/mikkeloscar/arch-travis/master/arch-travis.sh | bash"
