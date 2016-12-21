@@ -9,6 +9,7 @@ build:
           pacman -S base-devel --needed --noconfirm
           useradd -m -G wheel -s /bin/bash builder
           chown -R builder ${WERCKER_PIPELINE_DIR}
+          sed -i 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
     - script:
         name: makepkg
         code: |
