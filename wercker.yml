@@ -1,7 +1,9 @@
 box: pritunl/archlinux
+no-response-timeout: 360
 build:
   steps:
     - script:
         name: makepkg
         code: |
-          makepkg --syncdeps --needed --noconfirm
+          useradd -m -G wheel -s /bin/bash builder
+          su -c "makepkg --syncdeps --needed --noconfirm" builder
