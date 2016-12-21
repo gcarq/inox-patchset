@@ -1,5 +1,6 @@
 box: pritunl/archlinux
 no-response-timeout: 360
+command-timeout: 360
 build:
   steps:
     - script:
