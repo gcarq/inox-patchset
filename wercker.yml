@@ -10,8 +10,7 @@ build:
           useradd -m -G wheel -s /bin/bash builder
           chown -R builder ${WERCKER_PIPELINE_DIR}
           sed -i 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /etc/sudoers
-          sed -i 's:#[multilib]:[multilib]:' /etc/pacman.conf
-          sed -i 's:#Include = /etc/pacman.d/mirrorlist:Include = /etc/pacman.d/mirrorlist:' /etc/pacman.conf
+          sed -i 's|#\[multilib\]|\[multilib\]\nInclude = /etc/pacman.d/mirrorlist|' /etc/pacman.conf
           pacman -Syyu --noconfirm
     - script:
         name: makepkg
