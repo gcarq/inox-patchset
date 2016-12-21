@@ -3,8 +3,9 @@ no-response-timeout: 360
 build:
   steps:
     - script:
-        name: setup user
+        name: setup archlinux
         code: |
+          pacman -S base-devel
           useradd -m -G wheel -s /bin/bash builder
           chown -R builder ${WERCKER_PIPELINE_DIR}
     - script:
