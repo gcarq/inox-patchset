@@ -3,7 +3,11 @@ no-response-timeout: 360
 build:
   steps:
     - script:
-        name: makepkg
+        name: setup user
         code: |
           useradd -m -G wheel -s /bin/bash builder
+          chmod -R o+r ${WERCKER_PIPELINE_DIR}
+    - script:
+        name: makepkg
+        code: |
           su -c "makepkg --syncdeps --needed --noconfirm" builder
