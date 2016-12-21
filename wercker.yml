@@ -5,7 +5,8 @@ build:
     - script:
         name: setup archlinux
         code: |
-          pacman -S base-devel
+          pacman -Syyu --noconfirm
+          pacman -S base-devel --needed --noconfirm
           useradd -m -G wheel -s /bin/bash builder
           chown -R builder ${WERCKER_PIPELINE_DIR}
     - script:
