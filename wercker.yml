@@ -1,0 +1,7 @@
+box: pritunl/archlinux
+build:
+  steps:
+    - script:
+        name: makepkg
+        code: |
+          makepkg --syncdeps --needed --noconfirm
