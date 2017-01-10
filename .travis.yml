@@ -1,0 +1,20 @@
+box: pritunl/archlinux
+no-response-timeout: 999999999
+command-timeout: 999999999
+build:
+  steps:
+    - script:
+        name: setup archlinux
+        code: |
+          free
+          pacman -Syyu --noconfirm
+          pacman -S base-devel --needed --noconfirm
+          useradd -m -G wheel -s /bin/bash builder
+          chown -R builder ${WERCKER_PIPELINE_DIR}
+          sed -i 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /etc/sudoers
+          sed -i 's|#\[multilib\]|\[multilib\]\nInclude = /etc/pacman.d/mirrorlist|' /etc/pacman.conf
+          pacman -Syyu --noconfirm
+    - script:
+        name: makepkg
+        code: |
+          su -c "makepkg --syncdeps --needed --noconfirm" builder
