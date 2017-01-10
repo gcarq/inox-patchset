@@ -1,6 +1,6 @@
 box: pritunl/archlinux
-no-response-timeout: 660
-command-timeout: 660
+no-response-timeout: 6600
+command-timeout: 6600
 build:
   steps:
     - script:

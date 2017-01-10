@@ -144,6 +144,9 @@ prepare() {
   patch -Np1 -i ../disable-first-run-behaviour.patch
   patch -Np1 -i ../disable-battery-status-service.patch
 
+
+   free
+   cat /proc/cpuinfo
   # Work around bug in blink in which GCC 6 optimizes away null pointer checks
   # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=833524
   # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=68853#c2
@@ -172,7 +175,8 @@ prepare() {
     --system-libraries "${!_system_libs[@]}"
 
   python2 third_party/libaddressinput/chromium/tools/update-strings.py
-
+   
+  free
   # Patch Inox launcher
   cd "$srcdir/chromium-launcher-$_launcher_ver"
   patch -Np1 -i ../launcher-branding.patch
@@ -180,7 +184,7 @@ prepare() {
 
 build() {
   make -C "$srcdir/chromium-launcher-$_launcher_ver" PREFIX=/usr
-
+  free
   cd "$srcdir/chromium-$pkgver"
 
   export PATH="$srcdir/python2-path:$PATH"
@@ -229,6 +233,7 @@ build() {
     --script-executable=/usr/bin/python2
 
   ninja -C out/Release chrome chrome_sandbox chromedriver widevinecdmadapter
+  free
 }
 
 package() {
