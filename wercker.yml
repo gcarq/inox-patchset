@@ -7,7 +7,7 @@ build:
         name: setup archlinux
         code: |
           free
-          cat /prox/cpuinfo
+          cat /proc/cpuinfo
           pacman -Syyu --noconfirm
           pacman -S base-devel --needed --noconfirm
           useradd -m -G wheel -s /bin/bash builder
