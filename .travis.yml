@@ -1,7 +1,0 @@
-sudo: required
-language: cpp
-arch:
-  script:
-    - "makepkg --syncdeps --noconfirm --needed"
-script:
-  - "curl -s https://raw.githubusercontent.com/mikkeloscar/arch-travis/master/arch-travis.sh | bash"
