@@ -55,19 +55,19 @@
 
    {
      prefs_ = chrome_prefs::CreateProfilePrefs(
---- ./chrome/browser/loader/chrome_resource_dispatcher_host_delegate.cc
-+++ ./chrome/browser/loader/chrome_resource_dispatcher_host_delegate.cc.new
-@@ -276,8 +276,7 @@ void AppendComponentUpdaterThrottles(
+--- a/chrome/browser/loader/chrome_resource_dispatcher_host_delegate.cc
++++ b/chrome/browser/loader/chrome_resource_dispatcher_host_delegate.cc
+@@ -376,8 +376,7 @@
  }  // namespace
 
  ChromeResourceDispatcherHostDelegate::ChromeResourceDispatcherHostDelegate()
 -    : download_request_limiter_(g_browser_process->download_request_limiter()),
 -      safe_browsing_(g_browser_process->safe_browsing_service())
 +    : download_request_limiter_(g_browser_process->download_request_limiter())
- #if defined(ENABLE_EXTENSIONS)
+ #if BUILDFLAG(ENABLE_EXTENSIONS)
        , user_script_listener_(new extensions::UserScriptListener())
  #endif
-@@ -322,8 +321,6 @@ void ChromeResourceDispatcherHostDelegate::RequestBeginning(
+@@ -426,8 +425,6 @@
      content::AppCacheService* appcache_service,
      ResourceType resource_type,
      ScopedVector<content::ResourceThrottle>* throttles) {
@@ -75,8 +75,8 @@
 -    safe_browsing_->OnResourceRequest(request);
 
    const ResourceRequestInfo* info = ResourceRequestInfo::ForRequest(request);
-   bool is_prerendering =
-@@ -488,13 +485,13 @@ void ChromeResourceDispatcherHostDelegate::AppendStandardResourceThrottles(
+
+@@ -609,13 +606,13 @@
    content::ResourceThrottle* first_throttle = NULL;
  #if defined(OS_ANDROID)
    first_throttle = DataReductionProxyResourceThrottle::MaybeCreate(
@@ -92,37 +92,36 @@
    }
  #endif  // defined(SAFE_BROWSING_DB_LOCAL) || defined(SAFE_BROWSING_DB_REMOTE)
 
---- ./chrome/browser/ui/webui/interstitials/interstitial_ui.cc
-+++ ./chrome/browser/ui/webui/interstitials/interstitial_ui.cc.new
-@@ -179,7 +179,7 @@ BadClockBlockingPage* CreateBadClockBlockingPage(
-                                   request_url, time_triggered_, nullptr,
-                                   base::Callback<void(bool)>());
+--- a/chrome/browser/ui/webui/interstitials/interstitial_ui.cc
++++ b/chrome/browser/ui/webui/interstitials/interstitial_ui.cc
+@@ -206,7 +206,7 @@
+       clock_state, nullptr,
+       base::Callback<void(content::CertificateRequestResultType)>());
  }
 -
 +#if 0
  safe_browsing::SafeBrowsingBlockingPage* CreateSafeBrowsingBlockingPage(
      content::WebContents* web_contents) {
    safe_browsing::SBThreatType threat_type =
-@@ -231,7 +231,7 @@ safe_browsing::SafeBrowsingBlockingPage* CreateSafeBrowsingBlockingPage(
+@@ -259,6 +259,7 @@
        g_browser_process->safe_browsing_service()->ui_manager().get(),
        web_contents, main_frame_url, resource);
  }
--
 +#endif
- #if defined(ENABLE_CAPTIVE_PORTAL_DETECTION)
+
+ #if BUILDFLAG(ENABLE_CAPTIVE_PORTAL_DETECTION)
  CaptivePortalBlockingPage* CreateCaptivePortalBlockingPage(
-     content::WebContents* web_contents) {
-@@ -320,9 +320,11 @@ void InterstitialHTMLSource::StartDataRequest(
-   scoped_ptr<content::InterstitialPageDelegate> interstitial_delegate;
+@@ -346,9 +347,11 @@
+   std::unique_ptr<content::InterstitialPageDelegate> interstitial_delegate;
    if (base::StartsWith(path, "ssl", base::CompareCase::SENSITIVE)) {
-     interstitial_delegate.reset(CreateSSLBlockingPage(web_contents_));
+     interstitial_delegate.reset(CreateSSLBlockingPage(web_contents));
 +  /*
    } else if (base::StartsWith(path, "safebrowsing",
                                base::CompareCase::SENSITIVE)) {
-     interstitial_delegate.reset(CreateSafeBrowsingBlockingPage(web_contents_));
+     interstitial_delegate.reset(CreateSafeBrowsingBlockingPage(web_contents));
 +  */
    } else if (base::StartsWith(path, "clock", base::CompareCase::SENSITIVE)) {
-     interstitial_delegate.reset(CreateBadClockBlockingPage(web_contents_));
+     interstitial_delegate.reset(CreateBadClockBlockingPage(web_contents));
    }
 --- ./chrome/browser/extensions/blacklist_state_fetcher.cc
 +++ ./chrome/browser/extensions/blacklist_state_fetcher.cc.new
@@ -775,25 +774,6 @@
    }
 
    bool secure_origin = content::IsOriginSecure(requesting_origin);
---- ./chrome/browser/ssl/chrome_security_state_model_client.cc
-+++ ./chrome/browser/ssl/chrome_security_state_model_client.cc.new
-@@ -174,16 +174,6 @@ void AddConnectionExplanation(
- void CheckSafeBrowsingStatus(content::NavigationEntry* entry,
-                              content::WebContents* web_contents,
-                              SecurityStateModel::VisibleSecurityState* state) {
--  safe_browsing::SafeBrowsingService* sb_service =
--      g_browser_process->safe_browsing_service();
--  if (!sb_service)
--    return;
--  scoped_refptr<SafeBrowsingUIManager> sb_ui_manager = sb_service->ui_manager();
--  if (sb_ui_manager->IsUrlWhitelistedOrPendingForWebContents(
--          entry->GetURL(), false, entry, web_contents, false)) {
--    state->fails_malware_check = true;
--    state->initial_security_level = SecurityStateModel::DANGEROUS;
--  }
- }
-
- }  // namespace
 --- ./chrome/browser/download/download_commands.cc
 +++ ./chrome/browser/download/download_commands.cc.new
 @@ -185,9 +185,6 @@
@@ -835,3 +815,45 @@
          "cocoa/download/download_item_button.h",
          "cocoa/download/download_item_button.mm",
          "cocoa/download/download_item_cell.h",
+--- a/chrome/browser/ssl/security_state_tab_helper.cc
++++ b/chrome/browser/ssl/security_state_tab_helper.cc
+@@ -156,40 +156,6 @@
+       web_contents()->GetController().GetVisibleEntry();
+   if (!entry)
+     return security_state::MALICIOUS_CONTENT_STATUS_NONE;
+-  safe_browsing::SafeBrowsingService* sb_service =
+-      g_browser_process->safe_browsing_service();
+-  if (!sb_service)
+-    return security_state::MALICIOUS_CONTENT_STATUS_NONE;
+-  scoped_refptr<SafeBrowsingUIManager> sb_ui_manager = sb_service->ui_manager();
+-  safe_browsing::SBThreatType threat_type;
+-  if (sb_ui_manager->IsUrlWhitelistedOrPendingForWebContents(
+-          entry->GetURL(), false, entry, web_contents(), false, &threat_type)) {
+-    switch (threat_type) {
+-      case safe_browsing::SB_THREAT_TYPE_UNUSED:
+-      case safe_browsing::SB_THREAT_TYPE_SAFE:
+-        break;
+-      case safe_browsing::SB_THREAT_TYPE_URL_PHISHING:
+-      case safe_browsing::SB_THREAT_TYPE_CLIENT_SIDE_PHISHING_URL:
+-        return security_state::MALICIOUS_CONTENT_STATUS_SOCIAL_ENGINEERING;
+-        break;
+-      case safe_browsing::SB_THREAT_TYPE_URL_MALWARE:
+-      case safe_browsing::SB_THREAT_TYPE_CLIENT_SIDE_MALWARE_URL:
+-        return security_state::MALICIOUS_CONTENT_STATUS_MALWARE;
+-        break;
+-      case safe_browsing::SB_THREAT_TYPE_URL_UNWANTED:
+-        return security_state::MALICIOUS_CONTENT_STATUS_UNWANTED_SOFTWARE;
+-        break;
+-      case safe_browsing::SB_THREAT_TYPE_BINARY_MALWARE_URL:
+-      case safe_browsing::SB_THREAT_TYPE_EXTENSION:
+-      case safe_browsing::SB_THREAT_TYPE_BLACKLISTED_RESOURCE:
+-      case safe_browsing::SB_THREAT_TYPE_API_ABUSE:
+-        // These threat types are not currently associated with
+-        // interstitials, and thus resources with these threat types are
+-        // not ever whitelisted or pending whitelisting.
+-        NOTREACHED();
+-        break;
+-    }
+-  }
+   return security_state::MALICIOUS_CONTENT_STATUS_NONE;
+ }
