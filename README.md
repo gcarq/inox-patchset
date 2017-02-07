@@ -104,7 +104,7 @@ This patch is originally from openSUSE.
 
 
 ##### disable-new-avatar-menu.patch
-Disables Google's new Avatar and signin menu. **(currently broken!)**
+Disables Google's new Avatar and signin menu.
 
 
 ##### disable-first-run-behaviour.patch
