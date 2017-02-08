@@ -12,6 +12,8 @@ Table of Contents
     * [Install extensions from Google WebStore](#install-extensions-from-google-webstore)
     * [Use widevine](#use-widevine)
     * [Use a proxy](#use-a-proxy)
+    * [Use firejail](#use-firejail)
+    * [Reduce memory footprint](#reduce-memory-footprint)
 * [Screenshots](#screenshots)
 * [Contributing](#contributing)
 * [Credits](#credits)
@@ -180,23 +182,20 @@ Disable print preview |                `enable_print_preview=false`
 ## Frequently-asked questions
 
 ### Install extensions from Google WebStore
-Since there is no WebStore plugin, you cannot install extensions directly from the store, but you can download and install any extension manually.
+Since there is no WebStore plugin, you cannot install extensions directly from the store, but there are three options to install an extension:
 
-    https://clients2.google.com/service/update2/crx?response=redirect&prodversion=48.0&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc
-
-To download a extension just replace [EXTENSION_ID] with the extension-id from the WebStore
-(For example cjpalhdlnbpafiamejdnhcphjbkeiagm is the extension id of uBlock Origin).
-You have 3 options to install an extension:
-
+* **Extension downloader**
+   The most convenient way is via the [extension-downloader](https://github.com/SethDusek/extension-downloader), it's a small python script to automate the steps explained below.
 
 * **Drag and drop**
 
-    Download the crx file with the browser, open `chrome://extensions` and drop the file from the download bar into the extensions tab.
+   `https://clients2.google.com/service/update2/crx?response=redirect&prodversion=48.0&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc
+
+   To download a extension just replace `[EXTENSION_ID]` with the extension-id from the WebStore (For example `cjpalhdlnbpafiamejdnhcphjbkeiagm` is the extension id of uBlock Origin). Download the crx file with the browser, open `chrome://extensions` and drop the file from the download bar into the extensions tab.
+
     **Note:** Under some circumstances this method does not work on KDE Plasma.
 
-
 * **Preference file**
-
     For example to install the extension aaaaaaaaaabbbbbbbbbbcccccccccc, create:
     `/usr/share/chromium/extensions/aaaaaaaaaabbbbbbbbbbcccccccccc.json`
     with following content:
@@ -209,11 +208,8 @@ You have 3 options to install an extension:
     If you restart Inox the extension should be loaded automatically.
     In near future /usr/share/chromium/ will be changed to /usr/share/inox/ to load independent extensions.
 
-* **Extension loader**
 
-    You can also use [extension-downloader](https://github.com/gcarq/inox-patchset/issues/7), it's a small python script to automate the download.
-
-Keep in mind extensions are not updated automatically, so make sure you update them on a regular base.
+**Keep in mind extensions are not updated automatically, so make sure you update them on a regular base.**
 
 ### Use widevine
 Though it might not be ideal to use DRM technologies, Inox supports widevine if you provide `libwidevinecdm.so`.
@@ -235,6 +231,16 @@ The `--host-resolver-rules` flag forces DNS requests through the proxy (prevents
 ###### I2P
 `inox --proxy-server="http://127.0.0.1:4444" --host-resolver-rules="MAP * 0.0.0.0, EXCLUDE localhost, EXCLUDE *.local"`
 
+### Use firejail
+[Firejail](https://github.com/netblue30/firejail) is a SUID program that reduces the risk of security breaches by restricting the running environment of untrusted applications using Linux namespaces and seccomp-bpf.
+It supports Inox out of the box, you just need to run inox with firejail: `firejail inox`.
+
+### Reduce memory footprint
+#### Enabling process per site
+By default Chrom* heavily isolates each tab regardless of it's domain. While doing this arguably improves security by some extent, downside is that as number of tabs increase, the RAM bloat due to duplication reaches absurd levels. This can end up with Chrom* using >4.5GB of RAM on a machine with 8GB thus preventing other heavy programs from running at the same time. This can be fixed by making Chrom* use one process per site/domain and not per tab. This greatly reduces RAM bloat while (probably) not sacrificing much from security. Use the following command-line argument:
+`inox --process-per-site`
+
+For more details go [here](https://www.chromium.org/developers/design-documents/process-models).
 
 ## Screenshots
 ![Inox Browser](http://i.imgur.com/eNiCycy.png "Inox Browser")
