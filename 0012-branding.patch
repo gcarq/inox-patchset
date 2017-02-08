@@ -1,5 +1,5 @@
---- ./chrome/common/chrome_paths_linux.cc
-+++ ./chrome/common/chrome_paths_linux.cc.new
+--- a/chrome/common/chrome_paths_linux.cc
++++ b/chrome/common/chrome_paths_linux.cc
 @@ -66,11 +66,7 @@
    base::FilePath config_dir(GetXDGDirectory(env.get(),
                                              kXdgConfigHomeEnvVar,
@@ -13,8 +13,8 @@
    return true;
  }
 
---- ./chrome/app/chromium_strings.grd
-+++ ./chrome/app/chromium_strings.grd.new
+--- a/chrome/app/chromium_strings.grd
++++ b/chrome/app/chromium_strings.grd
 @@ -137,17 +137,17 @@
          Disconnecting <ph name="USERNAME">$1<ex>someone@example.com</ex></ph> will clear your history, bookmarks, settings, and other Chromium data stored on this device. Data stored in your Google Account will not be cleared and can be managed on <ph name="GOOGLE_DASHBOARD_LINK">&lt;a target="_blank" href="$2"&gt;</ph>Google Dashboard<ph name="END_GOOGLE_DASHBOARD_LINK">&lt;/a&gt;</ph>.
        </message>
@@ -113,3 +113,14 @@
  #else
        // it will compile but won't work on other OSes
        base::FilePath()
+--- a/chrome/common/chrome_paths.cc
++++ b/chrome/common/chrome_paths.cc
+@@ -58,7 +58,7 @@
+ #if defined(GOOGLE_CHROME_BUILD)
+     FILE_PATH_LITERAL("/usr/share/google-chrome/extensions");
+ #else
+-    FILE_PATH_LITERAL("/usr/share/chromium/extensions");
++    FILE_PATH_LITERAL("/usr/share/inox/extensions");
+ #endif  // defined(GOOGLE_CHROME_BUILD)
+
+ // The path to the hint file that tells the pepper plugin loader

@@ -197,16 +197,15 @@ Since there is no WebStore plugin, you cannot install extensions directly from t
 
 * **Preference file**
     For example to install the extension aaaaaaaaaabbbbbbbbbbcccccccccc, create:
-    `/usr/share/chromium/extensions/aaaaaaaaaabbbbbbbbbbcccccccccc.json`
+    `/usr/share/inox/extensions/aaaaaaaaaabbbbbbbbbbcccccccccc.json`
     with following content:
     ```json
     {
-        "external_crx": "/home/share/extension_1_0_0.crx",
+        "external_crx": "/path/to/extension/extension_1_0_0.crx",
         "external_version": "1.0.0"
     }
     ```
-    If you restart Inox the extension should be loaded automatically.
-    In near future /usr/share/chromium/ will be changed to /usr/share/inox/ to load independent extensions.
+    If you restart Inox the extension should be loaded automatically. For more details go [here](https://developer.chrome.com/extensions/external_extensions#preferences).
 
 
 **Keep in mind extensions are not updated automatically, so make sure you update them on a regular base.**
