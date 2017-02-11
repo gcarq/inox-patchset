@@ -205,12 +205,12 @@ Since there is no WebStore plugin, you cannot install extensions directly from t
 
    To download a extension just replace `[EXTENSION_ID]` with the extension-id from the WebStore (For example `cjpalhdlnbpafiamejdnhcphjbkeiagm` is the extension id of uBlock Origin).
 
-   ###### Drag and Drop:
-   Open `chrome://extensions` and drop the file from the download bar into the extensions tab.
+   **Drag and Drop**
 
-   **Note:** Under some circumstances this method does not work on KDE Plasma.
+   Open `chrome://extensions` and drop the file from the download bar into the extensions tab. **Note:** Under some circumstances this method does not work on KDE Plasma.
 
-   ###### Preferences File:
+   **Preferences File**
+
    Alternatively you can also install the extension via a preferences file.
 
    For example to install the extension cjpalhdlnbpafiamejdnhcphjbkeiagm create a file called: `/usr/share/inox/extensions/cjpalhdlnbpafiamejdnhcphjbkeagm.json` with following content:
