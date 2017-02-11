@@ -182,33 +182,45 @@ Disable print preview |                `enable_print_preview=false`
 ## Frequently-asked questions
 
 ### Install extensions from Google WebStore
-Since there is no WebStore plugin, you cannot install extensions directly from the store, but there are three options to install an extension:
 
-* **Extension downloader**
-   The most convenient way is via the [extension-downloader](https://github.com/SethDusek/extension-downloader), it's a small python script to automate the steps explained below.
 
-* **Drag and drop**
-
-   `https://clients2.google.com/service/update2/crx?response=redirect&prodversion=48.0&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc
-
-   To download a extension just replace `[EXTENSION_ID]` with the extension-id from the WebStore (For example `cjpalhdlnbpafiamejdnhcphjbkeiagm` is the extension id of uBlock Origin). Download the crx file with the browser, open `chrome://extensions` and drop the file from the download bar into the extensions tab.
-
-    **Note:** Under some circumstances this method does not work on KDE Plasma.
-
-* **Preference file**
-    For example to install the extension aaaaaaaaaabbbbbbbbbbcccccccccc, create:
-    `/usr/share/inox/extensions/aaaaaaaaaabbbbbbbbbbcccccccccc.json`
-    with following content:
-    ```json
-    {
-        "external_crx": "/path/to/extension/extension_1_0_0.crx",
-        "external_version": "1.0.0"
-    }
-    ```
-    If you restart Inox the extension should be loaded automatically. For more details go [here](https://developer.chrome.com/extensions/external_extensions#preferences).
-
+Since there is no WebStore plugin, you cannot install extensions directly from the store, but there are two options to install an extension.
 
 **Keep in mind extensions are not updated automatically, so make sure you update them on a regular base.**
+
+* **Extension downloader**
+
+   The most convenient way is via the extension downloader [inoxunpack](https://github.com/gcarq/inoxunpack), it's a small python script to download and unpack extensions from Google WebStore.
+
+   Example usages:
+   ```
+   $ inoxunpack ublock-origin
+   $ inoxunpack cjpalhdlnbpafiamejdnhcphjbkeiagm
+   ```
+   Both of the commands will download but not install ublock origin. After executing you will se an instruction how to install the extension in developer mode. See inoxunpack for more details.
+
+* **Download manually**
+
+  `https://clients2.google.com/service/update2/crx?response=redirect&os=linux&prodversion=55.0.2883.87&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc`
+
+   To download a extension just replace `[EXTENSION_ID]` with the extension-id from the WebStore (For example `cjpalhdlnbpafiamejdnhcphjbkeiagm` is the extension id of uBlock Origin).
+
+   ###### Drag and Drop:
+   Open `chrome://extensions` and drop the file from the download bar into the extensions tab.
+
+   **Note:** Under some circumstances this method does not work on KDE Plasma.
+
+   ###### Preferences File:
+   Alternatively you can also install the extension via a preferences file.
+
+   For example to install the extension cjpalhdlnbpafiamejdnhcphjbkeiagm create a file called: `/usr/share/inox/extensions/cjpalhdlnbpafiamejdnhcphjbkeagm.json` with following content:
+   ```json
+   {
+       "external_crx": "/path/to/extension/extension_1_0_0.crx",
+       "external_version": "1.0.0"
+   }
+   ```
+   If you restart Inox the extension should be loaded automatically. For more details go [here](https://developer.chrome.com/extensions/external_extensions#preferences).
 
 ### Use widevine
 Though it might not be ideal to use DRM technologies, Inox supports widevine if you provide `libwidevinecdm.so`.
