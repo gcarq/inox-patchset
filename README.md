@@ -1,43 +1,60 @@
-# inox-patchset
+# Inox Browser (inox-patchset)
+
 Inox patchset is applied on the chromium source code and tries to prevent data transmission to Google to get a minimal Chromium based browser. The patches are split up based on features, so it's easy to patch only a subset of them.
-See below for a full list of patched features. Some of them are also disabled via build flags.
 
-Here you can find some screenshots: http://imgur.com/a/IUfqm
+Table of Contents
+* [Foreword](#foreword)
+* [Download](#download)
+* [Building](#building)
+    * [Patches](#patches)
+    * [Build flags](#build-flags)
+* [Frequently-asked questions](#frequently-asked-questions)
+    * [Install extensions from Google WebStore](#install-extensions-from-google-webstore)
+    * [Use widevine](#use-widevine)
+    * [Use a proxy](#use-a-proxy)
+    * [Use firejail](#use-firejail)
+    * [Reduce memory footprint](#reduce-memory-footprint)
+* [Screenshots](#screenshots)
+* [Contributing](#contributing)
+* [Credits](#credits)
+* [License](#license)
+* [Donations](#donations)
 
 
+## Foreword
+It is possible that some data is still transmitted (but down to a minimum) this is because Chromium is a quite large and complex codebase which changes each day.
 
+## Download
+* **Arch Linux**:
+Pre-built binaries are hosted in the AUR: [inox-bin](https://aur.archlinux.org/packages/inox-bin/)
 
-
-
-## Warning
-It is possible that some data is still transmitted(but down to a minimum) this is because Chromium is a quite large and complex codebase which changes each day.
-
+* **Ubuntu, Debian, OSX, Windows**: See [ungoogled-chromium](https://github.com/Eloston/ungoogled-chromium), it offers pre-built binaries with inox-patchset and various other patches.
 
 ## Building
 These patches are tested and functional on Arch Linux x86_64, but should run on any Linux/BSD distribution.
-If you are running Arch Linux you can download the source or binary package from AUR:
-* [inox](https://aur.archlinux.org/packages/inox/)
-* [inox-bin](https://aur.archlinux.org/packages/inox-bin/)
-
-For debian based distributions see [ungoogled-chromium](https://github.com/Eloston/ungoogled-chromium), it offers a debian build script to compile Chromium with various patches and also a pre-built version.
-
-For any other distribution check out the Chromium [Build Instructions](https://chromium.googlesource.com/chromium/src/+/master/docs/linux_build_instructions.md) or view the inox [PKGBUILD](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=inox) to get an idea how chromium is built.
 
 *The build process takes about 3 hours on a i5-3550 CPU @ 3.90GHz and 16GB ram. (without ccache)*
 
+* **Arch Linux**:
+If you are running Arch Linux you can download and build the source from AUR: [inox](https://aur.archlinux.org/packages/inox/)
 
-## Patches
+* **Ubuntu, Debian, OSX, Windows**: See [ungoogled-chromium](https://github.com/Eloston/ungoogled-chromium), it offers build scripts to compile Chromium with inox-patchset and various other patches.
 
-#### restore-classic-ntp.patch
+* **Build manually:** If you want to build it yourself check out the Chromium [Build Instructions](https://chromium.googlesource.com/chromium/src/+/master/docs/linux_build_instructions.md) or view the [PKGBUILD](https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=inox) to get an idea how chromium is built.
+
+
+### Patches
+
+##### restore-classic-ntp.patch
 Restores old NTP (New Tab Page).
 The default NTP loads data from a web server to modify the appearance and inject a Google Search bar with a unique identifier.
 
 
-#### add-duckduckgo-search-engine.patch
+##### add-duckduckgo-search-engine.patch
 Adds DuckDuckGo as default search engine, it's still changeable in settings.
 
 
-#### disable-default-extensions.patch
+##### disable-default-extensions.patch
 Enabled user-modification for all extensions.
 Disabled extensions:
 * Hotword (incl. Shared Module)
@@ -49,25 +66,25 @@ Disabled extensions:
 * Google Hangout
 
 
-#### disable-autofill-download-manager.patch
+##### disable-autofill-download-manager.patch
 Disables HTML-Form AutoFill data transmission. I don't know exactly when this is triggered, but it synchronizes the saved Form data with Google.
 
 
-#### disable-google-url-tracker.patch
+##### disable-google-url-tracker.patch
 Disables URLTracker, which checks in which country you are to provide the closest google server for search lookups.
 I know this class has a bad naming, but nevertheless it connects to Google.
 
 
-#### disable-google-ipv6-probes.patch
+##### disable-google-ipv6-probes.patch
 Disables ipv6 probes to Google servers.
 Google pings its own DNS server to check if ipv6 is available. Changed this to RIPE NCC k.root-servers.net. 2001:7fd::1 (anycasted).
 
 
-#### disable-gcm-status-check.patch
+##### disable-gcm-status-check.patch
 Disables Google Cloud-Messaging status probes. GCM provides an interface to send messages directly to single devices, groups of devices, or devices subscribed to topics.
 
 
-#### disable-missing-key-warning.patch
+##### disable-missing-key-warning.patch
 Disables warning dialog about missing Google API key.
 This key is usually set on compile time and unique per distribution.
 See [ArchLinux chromium PKGBUILD](https://projects.archlinux.org/svntogit/packages.git/tree/trunk/PKGBUILD?h=packages/chromium#n37) on how it's applied or this [HOWTO](https://www.chromium.org/developers/how-tos/api-keys) for an in-depth API key explanation.
@@ -75,28 +92,28 @@ See [ArchLinux chromium PKGBUILD](https://projects.archlinux.org/svntogit/packag
 Since we don't want to use these APIs at all, the keys are not set (at least for inox package on AUR).
 
 
-#### disable-translation-lang-fetch.patch
-Disables language fetching when settings are opened for the first time
+##### disable-translation-lang-fetch.patch
+* Disables language fetching when settings are opened for the first time
+* Disables TranslateRankerQuery and TranslateRankerEnforcement (connects to `chromium-i18n.appspot.com`)
+
+##### disable-update-pings.patch
+Disables update pings to `https://clients2.google.com/service/update2` which is used for component updates.
 
 
-#### disable-update-pings.patch
-Disables update pings to https://clients2.google.com/service/update2 which is used for component updates.
-
-
-#### chromium-sandbox-pie.patch
+##### chromium-sandbox-pie.patch
 Hardening the sandbox with Position Independent Code(PIE) against ROP exploits.
-This patch originally from openSUSE.
+This patch is originally from openSUSE.
 
 
-#### disable-new-avatar-menu.patch
+##### disable-new-avatar-menu.patch
 Disables Google's new Avatar and signin menu.
 
 
-#### disable-first-run-behaviour.patch
+##### disable-first-run-behaviour.patch
 Modifies the first-run behaviour to prevent data leakage.
 
 
-#### disable-battery-status-service.patch
+##### disable-battery-status-service.patch
 The W3C Battery Status API[1] has quite a laughable statement:
 
 "The information disclosed has minimal impact on privacy or
@@ -108,102 +125,138 @@ HTML5 Battery Status API."
 Clean up after the W3C and disable the battery status updater which
 could be used to identity users[2].
 
-[1] http://www.w3.org/TR/battery-status/
-[2] https://eprint.iacr.org/2015/616.pdf
+* [1] http://www.w3.org/TR/battery-status/
+* [2] https://eprint.iacr.org/2015/616.pdf
 
 References: https://github.com/iridium-browser/iridium-browser/issues/40
 
 
-#### modify-default-prefs.patch
-
-DefaultCookiesSettings are temporary CONTENT_SETTING_DEFAULT.
+##### modify-default-prefs.patch
 
 Modifies following default settings (can be changed anytime):
 
 User setting | new value
 --- | ---
-EnableHyperLinkAuditing    | false
-CloudPrintSubmitEnabled    | false
-NetworkPredictionEnabled   | false
-BackgroundModeEnabled      | false
-BlockThirdPartyCookies     | true
-AlternateErrorPagesEnabled | false
-SearchSuggestEnabled       | false
-AutofillEnabled            | false
-"Send feedback" checkbox if user triggers settings-reset | false
-BuiltInDnsClientEnabled    | false
-SignInPromoUserSkipped     | true
-SignInPromoShowOnFirstRunAllowed | false
-ShowAppsShortcutInBookmarkBar | false
-ShowBookmarkBar | true
-PromptForDownload | true
-SafeBrowsingEnabled | false
-EnableTranslate | false
-LocalDiscoveryNotificationsEnabled | false
+DefaultCookiesSettings     | `CONTENT_SETTING_DEFAULT`
+EnableHyperLinkAuditing    | `false`
+CloudPrintSubmitEnabled    | `false`
+NetworkPredictionEnabled   | `false`
+BackgroundModeEnabled      | `false`
+BlockThirdPartyCookies     | `true`
+AlternateErrorPagesEnabled | `false`
+SearchSuggestEnabled       | `false`
+AutofillEnabled            | `false`
+Send feedback to Google if preferences are reset | `false`
+BuiltInDnsClientEnabled    | `false`
+SignInPromoUserSkipped     | `true`
+SignInPromoShowOnFirstRunAllowed | `false`
+ShowAppsShortcutInBookmarkBar | `false`
+ShowBookmarkBar | `true`
+PromptForDownload | `true`
+SafeBrowsingEnabled | `false`
+EnableTranslate | `false`
+LocalDiscoveryNotificationsEnabled | `false`
 
 
+##### branding.patch
+`s/Chromium/Inox/g`
 
 
-#### branding.patch
-s/Chromium/Inox/g
-
-
-## Build flags
-The packages hosted on AUR are configured to use following build config.
-If you want to see how to apply a config flag view Chromium [Build Instructions](https://chromium.googlesource.com/chromium/src/+/master/docs/linux_build_instructions.md).
+### Build flags
+The PKGBUILD uses chromium [GN build system](https://chromium.googlesource.com/chromium/src/tools/gn/).
+The following config flags are applied:
 
 Feature | Build config
 --- | ---
-Disable google now |                enable_google_now=0
-Disable WebRTC |                    enable_webrtc=0
-Disable Remote service |          remoting=0
-Disable safe browsing |             safe_browsing=0*
-Disable RLZ Identifier |              enable_rlz=0
-Disable google hangouts |         enable_hangout_services_extension=0
-Disable wifi bootstrapping |        enable_wifi_bootstrapping=0
-Disable speech input |               enable_speech_input=0
-Disable pre backups on sync |   enable_pre_sync_backup=0
-Disable print preview |                enable_print_preview=0
-Disable Chrome build |               google_chrome_build=0
+Disable google now |                `enable_google_now=false`
+Disable WebRTC |                    `enable_webrtc=false`
+Disable Remote service |          `enable_remoting=false`
+Disable safe browsing |             `safe_browsing_mode=0*`
+Disable RLZ Identifier |              `enable_rlz=false`, `enable_rlz_support=false`
+Disable google hangouts |         `enable_hangout_services_extension=false`
+Disable print preview |                `enable_print_preview=false`
 
-\* safe_browsing flag is currently broken and needs more work
+\* Builds only with `fix-building-without-safebrowsing.patch`.
 
 
-## How to install extensions from Google WebStore?
-Since there is no WebStore plugin, you cannot install extensions directly from the store, but you can download and install any extension manually.
+## Frequently-asked questions
 
-    https://clients2.google.com/service/update2/crx?response=redirect&prodversion=48.0&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc
-
-To download a extension just replace [EXTENSION_ID] with the extension-id from the WebStore
-(For example cjpalhdlnbpafiamejdnhcphjbkeiagm is the extension id of uBlock Origin).
-You have 3 options to install an extension:
+### Install extensions from Google WebStore
 
 
-* **Drag and drop**
+Since there is no WebStore plugin, you cannot install extensions directly from the store, but there are two options to install an extension.
 
-    Download the crx file with the browser, open `chrome://extensions` and drop the file from the download bar into the extensions tab.
-    **Note:** Under some circumstances this method does not work on KDE Plasma.
+**Keep in mind extensions are not updated automatically, so make sure you update them on a regular base.**
 
+* **Extension downloader**
 
-* **Preference file**
+   The most convenient way is via the extension downloader [inoxunpack](https://github.com/gcarq/inoxunpack), it's a small python script to download and unpack extensions from Google WebStore.
 
-    For example to install the extension aaaaaaaaaabbbbbbbbbbcccccccccc, create:
-    `/usr/share/chromium/extensions/aaaaaaaaaabbbbbbbbbbcccccccccc.json`
-    with following content:
-    ```json
-    {
-        "external_crx": "/home/share/extension_1_0_0.crx",
-        "external_version": "1.0.0"
-    }
-    ```
-    If you restart Inox the extension should be loaded automatically.
-    In near future /usr/share/chromium/ will be changed to /usr/share/inox/ to load independent extensions.
+   Example usages:
+   ```
+   $ inoxunpack ublock-origin
+   $ inoxunpack cjpalhdlnbpafiamejdnhcphjbkeiagm
+   ```
+   Both of the commands will download but not install ublock origin. After executing you will se an instruction how to install the extension in developer mode. See inoxunpack for more details.
 
-* **Extension loader**
+* **Download manually**
 
-    You can also use [extension-downloader](https://github.com/gcarq/inox-patchset/issues/7), it's a small python script to automate the download.
+  `https://clients2.google.com/service/update2/crx?response=redirect&os=linux&prodversion=55.0.2883.87&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc`
 
-Keep in mind extensions are not updated automatically, so make sure you update them on a regular base.
+   To download a extension just replace `[EXTENSION_ID]` with the extension-id from the WebStore (For example `cjpalhdlnbpafiamejdnhcphjbkeiagm` is the extension id of uBlock Origin).
+
+   **Drag and Drop**
+
+   Open `chrome://extensions` and drop the file from the download bar into the extensions tab. **Note:** Under some circumstances this method does not work on KDE Plasma.
+
+   **Preferences File**
+
+   Alternatively you can also install the extension via a preferences file.
+
+   For example to install the extension cjpalhdlnbpafiamejdnhcphjbkeiagm create a file called: `/usr/share/inox/extensions/cjpalhdlnbpafiamejdnhcphjbkeagm.json` with following content:
+   ```json
+   {
+       "external_crx": "/path/to/extension/extension_1_0_0.crx",
+       "external_version": "1.0.0"
+   }
+   ```
+   If you restart Inox the extension should be loaded automatically. For more details go [here](https://developer.chrome.com/extensions/external_extensions#preferences).
+
+### Use widevine
+Though it might not be ideal to use DRM technologies, Inox supports widevine if you provide `libwidevinecdm.so`.
+To activate it, create a symlink from a chromium setup.
+
+`# ln -s /usr/lib/chromium/libwidevinecdm.so /usr/lib/inox/libwidevinecdm.so`
+
+### Use a proxy
+As mentioned in [Foreword](#foreword) it is still possible that some data is leaked to Google, so use if want to use a proxy to achieve a high level of anonymity it would be better to use TorBrowser.
+
+The `--proxy-server` flag supports `HTTP`, `HTTPS` and `SOCKS` proxies.
+The `--host-resolver-rules` flag forces DNS requests through the proxy (prevents DNS leakage), the `EXCLUDE` option lets Inox resolve the domain name.
+
+#### Examples
+
+###### Tor
+`inox --proxy-server="socks5://localhost:9050" --host-resolver-rules="MAP * 0.0.0.0, EXCLUDE localhost, EXCLUDE *.local"`
+
+###### I2P
+`inox --proxy-server="http://127.0.0.1:4444" --host-resolver-rules="MAP * 0.0.0.0, EXCLUDE localhost, EXCLUDE *.local"`
+
+### Use firejail
+[Firejail](https://github.com/netblue30/firejail) is a SUID program that reduces the risk of security breaches by restricting the running environment of untrusted applications using Linux namespaces and seccomp-bpf.
+It supports Inox out of the box, you just need to run inox with firejail: `firejail inox`.
+
+### Reduce memory footprint
+#### Enabling process per site
+By default Chrom* heavily isolates each tab regardless of it's domain. While doing this arguably improves security by some extent, downside is that as number of tabs increase, the RAM bloat due to duplication reaches absurd levels. This can end up with Chrom* using >4.5GB of RAM on a machine with 8GB thus preventing other heavy programs from running at the same time. This can be fixed by making Chrom* use one process per site/domain and not per tab. This greatly reduces RAM bloat while (probably) not sacrificing much from security. Use the following command-line argument:
+`inox --process-per-site`
+
+For more details go [here](https://www.chromium.org/developers/design-documents/process-models).
+
+## Screenshots
+![Inox Browser](http://i.imgur.com/eNiCycy.png "Inox Browser")
+
+[Here](http://imgur.com/a/IUfqm) you can find more screenshots.
 
 
 ## Contributing
@@ -213,8 +266,14 @@ You may also contribute by submitting pull requests.
 
 
 ## Credits
-[Iridium Browser](https://iridiumbrowser.de/)
+* [Chromium](https://www.chromium.org/)
+* [Iridium Browser](https://iridiumbrowser.de/)
+* [ungoogled-chromium](https://github.com/Eloston/ungoogled-chromium)
 
 
+## License
+GPLv3. See [LICENSE](LICENSE)
 
-Bitcoin donations are welcome: 1EsahKzwNgZF56gmZZz8NVQJ4SWdGnshv4
+## Donations
+Donations are welcome and keep me motivated :-)
+* BTC: `1EsahKzwNgZF56gmZZz8NVQJ4SWdGnshv4`

@@ -1,12 +1,11 @@
 box: pritunl/archlinux
-no-response-timeout: 999999999
-command-timeout: 999999999
+no-response-timeout: 360
+command-timeout: 360
 build:
   steps:
     - script:
         name: setup archlinux
         code: |
-          free
           pacman -Syyu --noconfirm
           pacman -S base-devel --needed --noconfirm
           useradd -m -G wheel -s /bin/bash builder
