@@ -276,4 +276,5 @@ GPLv3. See [LICENSE](LICENSE)
 
 ## Donations
 Donations are welcome and keep me motivated :-)
+* ETH: `0x00bE42851D8F4dE8DEAAbF91a4D93dD4b44Dcf8E`
 * BTC: `1EsahKzwNgZF56gmZZz8NVQJ4SWdGnshv4`
