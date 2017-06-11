@@ -14,7 +14,7 @@
    }
 +#else
 +  // Always pass the default values.
-+  callback.Run(BatteryStatus());
++  callback.Run(mojom::BatteryStatus());
 +#endif
  
    return callback_list_.Add(callback);

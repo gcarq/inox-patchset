@@ -34,27 +34,60 @@
  }
  
  void ChromeContentBrowserClient::SelectClientCertificate(
+@@ -3468,13 +3468,5 @@ std::vector<std::unique_ptr<content::Nav
+   if (delay_navigation_throttle)
+     throttles.push_back(std::move(delay_navigation_throttle));
+ 
+-  content::NavigationThrottle* subresource_filter_activation_throttle =
+-      MaybeCreateSubresourceFilterNavigationThrottle(
+-          handle, g_browser_process->safe_browsing_service());
+-  if (subresource_filter_activation_throttle) {
+-    throttles.push_back(
+-        base::WrapUnique(subresource_filter_activation_throttle));
+-  }
+-
+   // These throttles must come after the
+   // SubresourceFilterSafeBrowsingActivationThrottle.
 --- a/chrome/browser/profiles/profile_impl.cc
 +++ b/chrome/browser/profiles/profile_impl.cc
-@@ -470,12 +470,12 @@ ProfileImpl::ProfileImpl(
+@@ -501,17 +501,17 @@ ProfileImpl::ProfileImpl(
        path_, sequenced_task_runner, create_mode == CREATE_MODE_SYNCHRONOUS);
  #endif
  
 -  scoped_refptr<safe_browsing::SafeBrowsingService> safe_browsing_service(
 -      g_browser_process->safe_browsing_service());
+-  prefs::mojom::TrackedPreferenceValidationDelegatePtr pref_validation_delegate;
 -  if (safe_browsing_service.get()) {
--    pref_validation_delegate_ =
+-    auto pref_validation_delegate_impl =
 -        safe_browsing_service->CreatePreferenceValidationDelegate(this);
+-    if (pref_validation_delegate_impl) {
+-      mojo::MakeStrongBinding(std::move(pref_validation_delegate_impl),
+-                              mojo::MakeRequest(&pref_validation_delegate));
+-    }
 -  }
 +  //scoped_refptr<safe_browsing::SafeBrowsingService> safe_browsing_service(
 +  //    g_browser_process->safe_browsing_service());
++  //prefs::mojom::TrackedPreferenceValidationDelegatePtr pref_validation_delegate;
 +  //if (safe_browsing_service.get()) {
-+  //  pref_validation_delegate_ =
++  //  auto pref_validation_delegate_impl =
 +  //      safe_browsing_service->CreatePreferenceValidationDelegate(this);
++  //  if (pref_validation_delegate_impl) {
++  //    mojo::MakeStrongBinding(std::move(pref_validation_delegate_impl),
++  //                            mojo::MakeRequest(&pref_validation_delegate));
++  //  }
 +  //}
  
    content::BrowserContext::Initialize(this, path_);
  
+@@ -521,7 +521,7 @@ ProfileImpl::ProfileImpl(
+       connector = content::BrowserContext::GetConnectorFor(this);
+     }
+     prefs_ = chrome_prefs::CreateProfilePrefs(
+-        path_, std::move(pref_validation_delegate),
++        path_, nullptr,
+         profile_policy_connector_->policy_service(), supervised_user_settings,
+         CreateExtensionPrefStore(this, false), pref_registry_, async_prefs,
+         connector);
 --- a/chrome/browser/loader/chrome_resource_dispatcher_host_delegate.cc
 +++ b/chrome/browser/loader/chrome_resource_dispatcher_host_delegate.cc
 @@ -387,8 +387,7 @@ void NotifyUIThreadOfRequestComplete(
@@ -276,7 +309,7 @@
    network_time_tracker_.reset();
  #if BUILDFLAG(ENABLE_PLUGIN_INSTALLATION)
    plugins_resource_service_.reset();
-@@ -881,22 +877,6 @@ StatusTray* BrowserProcessImpl::status_t
+@@ -911,22 +911,6 @@ StatusTray* BrowserProcessImpl::status_t
    return status_tray_.get();
  }
  
@@ -296,7 +329,7 @@
 -  return NULL;
 -}
 -
- subresource_filter::RulesetService*
+ subresource_filter::ContentRulesetService*
  BrowserProcessImpl::subresource_filter_ruleset_service() {
    DCHECK(CalledOnValidThread());
 @@ -1187,16 +1167,6 @@ void BrowserProcessImpl::CreateBackgroun
@@ -318,15 +351,15 @@
    created_subresource_filter_ruleset_service_ = true;
 --- a/chrome/browser/browser_process_impl.h
 +++ b/chrome/browser/browser_process_impl.h
-@@ -129,9 +129,6 @@ class BrowserProcessImpl : public Browse
+@@ -131,9 +131,6 @@ class BrowserProcessImpl : public Browse
    void set_background_mode_manager_for_test(
        std::unique_ptr<BackgroundModeManager> manager) override;
    StatusTray* status_tray() override;
 -  safe_browsing::SafeBrowsingService* safe_browsing_service() override;
 -  safe_browsing::ClientSideDetectionService* safe_browsing_detection_service()
 -      override;
-   subresource_filter::RulesetService* subresource_filter_ruleset_service()
-       override;
+   subresource_filter::ContentRulesetService*
+   subresource_filter_ruleset_service() override;
  
 @@ -258,9 +255,6 @@ class BrowserProcessImpl : public Browse
    std::unique_ptr<BackgroundModeManager> background_mode_manager_;
@@ -338,31 +371,6 @@
    bool created_subresource_filter_ruleset_service_;
    std::unique_ptr<subresource_filter::RulesetService>
        subresource_filter_ruleset_service_;
---- a/chrome/browser/metrics/chrome_metrics_services_manager_client.cc
-+++ b/chrome/browser/metrics/chrome_metrics_services_manager_client.cc
-@@ -232,21 +232,7 @@ ChromeMetricsServicesManagerClient::GetU
- 
- bool ChromeMetricsServicesManagerClient::IsSafeBrowsingEnabled(
-     const base::Closure& on_update_callback) {
--  // Start listening for updates to SB service state. This is done here instead
--  // of in the constructor to avoid errors from trying to instantiate SB
--  // service before the IO thread exists.
--  safe_browsing::SafeBrowsingService* sb_service =
--      g_browser_process->safe_browsing_service();
--  if (!sb_state_subscription_ && sb_service) {
--    // It is safe to pass the callback received from the
--    // MetricsServicesManager here since the MetricsServicesManager owns
--    // this object, which owns the sb_state_subscription_, which owns the
--    // pointer to the MetricsServicesManager.
--    sb_state_subscription_ =
--        sb_service->RegisterStateCallback(on_update_callback);
--  }
--
--  return sb_service && sb_service->enabled_by_prefs();
-+  return false;
- }
- 
- bool ChromeMetricsServicesManagerClient::IsMetricsReportingEnabled() {
 --- a/chrome/browser/browser_process.h
 +++ b/chrome/browser/browser_process.h
 @@ -41,10 +41,6 @@ class WatchDogThread;
