@@ -1,33 +1,22 @@
---- ./Makefile
-+++ ./Makefile.new
-@@ -1,9 +1,9 @@
--OUT               := chromium-launcher launcher-errmsg
-+OUT               := inox-launcher launcher-errmsg
+--- a/help.go
++++ b/help.go
+@@ -9,7 +9,7 @@
+ 	userFlags := fmt.Sprintf("%q", getUserFlags())
  
- CHROMIUM_SUFFIX   :=
- PREFIX            := /usr/local
+ 	fmt.Println(`
+-Chromium launcher ` + launcherVersion + ` -- for Chromium help, see ` + chromiumName + `(1)
++Inox launcher ` + launcherVersion + ` -- for Inox help, see ` + chromiumName + `(1)
  
--CHROMIUM_NAME     := chromium$(CHROMIUM_SUFFIX)
-+CHROMIUM_NAME     := inox$(CHROMIUM_SUFFIX)
- CHROMIUM_BIN      := /usr/lib/$(CHROMIUM_NAME)/$(CHROMIUM_NAME)
- PEPPER_FLASH_DIR  := /usr/lib/PepperFlash
+ Custom flags are read from the following file:
  
-@@ -15,7 +15,7 @@
+--- a/Makefile
++++ b/Makefile
+@@ -4,7 +4,7 @@
+ PREFIX = /usr/local
  
- all: $(OUT)
+ CHROMIUM_SUFFIX  =
+-CHROMIUM_NAME    = chromium$(CHROMIUM_SUFFIX)
++CHROMIUM_NAME    = inox$(CHROMIUM_SUFFIX)
+ CHROMIUM_BIN     = /usr/lib/$(CHROMIUM_NAME)/$(CHROMIUM_NAME)
+ PEPPER_FLASH_DIR = /usr/lib/PepperFlash
  
--chromium-launcher: chromium-launcher.in
-+inox-launcher: chromium-launcher.in
- 	sed \
- 		-e "s|@CHROMIUM_NAME@|$(CHROMIUM_NAME)|g" \
- 		-e "s|@CHROMIUM_BIN@|$(CHROMIUM_BIN)|g" \
-@@ -24,7 +24,7 @@
- 		$< >$@
- 
- install: all
--	install -Dm755 chromium-launcher "$(DESTDIR)$(PREFIX)/bin/$(CHROMIUM_NAME)"
-+	install -Dm755 inox-launcher "$(DESTDIR)$(PREFIX)/bin/$(CHROMIUM_NAME)"
- 	install -Dm755 launcher-errmsg "$(DESTDIR)$(LAUNCHER_ERRMSG)"
- 
- install-strip: install
-
