@@ -1,22 +1,22 @@
---- a/help.go
-+++ b/help.go
-@@ -9,7 +9,7 @@
- 	userFlags := fmt.Sprintf("%q", getUserFlags())
- 
- 	fmt.Println(`
--Chromium launcher ` + launcherVersion + ` -- for Chromium help, see ` + chromiumName + `(1)
-+Inox launcher ` + launcherVersion + ` -- for Inox help, see ` + chromiumName + `(1)
- 
- Custom flags are read from the following file:
- 
 --- a/Makefile
 +++ b/Makefile
-@@ -4,7 +4,7 @@
+@@ -1,7 +1,7 @@
  PREFIX = /usr/local
  
  CHROMIUM_SUFFIX  =
 -CHROMIUM_NAME    = chromium$(CHROMIUM_SUFFIX)
 +CHROMIUM_NAME    = inox$(CHROMIUM_SUFFIX)
- CHROMIUM_BIN     = /usr/lib/$(CHROMIUM_NAME)/$(CHROMIUM_NAME)
+ CHROMIUM_BINARY  = /usr/lib/$(CHROMIUM_NAME)/$(CHROMIUM_NAME)
  PEPPER_FLASH_DIR = /usr/lib/PepperFlash
  
+--- a/launcher.c
++++ b/launcher.c
+@@ -85,7 +85,7 @@
+     fprintf(
+       stderr,
+       "\n"
+-      "Chromium launcher %s -- for Chromium help, see %s(1)\n"
++      "Inox launcher %s -- for Inox help, see %s(1)\n"
+       "\n"
+       "Custom flags are read from the following file:\n\n"
+       "  %s\n\n"
