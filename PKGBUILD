@@ -31,9 +31,9 @@ declare -rgA _system_libs=(
 )
 
 pkgname=inox
-pkgver=59.0.3071.104
+pkgver=59.0.3071.109
 pkgrel=1
-_launcher_ver=4
+_launcher_ver=5
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
 arch=('i686' 'x86_64')
 url="https://www.chromium.org/Home"
@@ -42,13 +42,13 @@ depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
          'ttf-font' 'systemd' 'dbus' 'libpulse' 'pciutils' 'desktop-file-utils'
          'hicolor-icon-theme')
 depends+=(${_system_libs[@]})
-makedepends=('python2' 'gperf' 'yasm' 'mesa' 'ninja' 'nodejs' 'go' 'git')
+makedepends=('python2' 'gperf' 'yasm' 'mesa' 'ninja' 'nodejs' 'git')
 optdepends=('kdialog: needed for file dialogs in KDE'
             'gnome-keyring: for storing passwords in GNOME keyring'
             'kwallet: for storing passwords in KWallet')
 install=inox.install
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
-        git+https://github.com/foutrelis/chromium-launcher.git#tag=v$_launcher_ver
+        chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/inox.desktop
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-system-ffmpeg-r6.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0001-ClientNativePixmapFactoryDmabuf-uses-ioctl-instead-o.patch
@@ -78,8 +78,8 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0001-fix-building-without-safebrowsing.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/product_logo_{16,22,24,32,48,64,128,256}.png)
 
-sha256sums=('a949fa166cdcdbd8419fbdb4583804613d9845130f0c851e4c647d79a4c300d0'
-            'SKIP'
+sha256sums=('83faeb3537428d83728258b28e907caaee6e6572bcd7d9b9a5f6009e7ea758d9'
+            '4dc3428f2c927955d9ae117f2fb24d098cc6dd67adb760ac9c82b522ec8b0587'
             'ff3f939a8757f482c1c5ba35c2c0f01ee80e2a2273c16238370081564350b148'
             '2fc21f48b95f9f2c2bd8576742fcf8028a8877c6b6e96c04d88184915982234e'
             '9c081c84a4f85dbef82a9edf34cf0b1e8377c563874fd9c1b4efddf1476748f9'
@@ -99,7 +99,7 @@ sha256sums=('a949fa166cdcdbd8419fbdb4583804613d9845130f0c851e4c647d79a4c300d0'
             'f294fb136ab128d8b5dc866a858d061ff2a1aea593c4081ed7a5fdb0e85553bc'
             'e8a6893c82579f71095d8bb3808a24e39b17c97efc45d2fa783072c7a0a1f9d5'
             'c5a36918c490ba5dbe4c62ff04fd17075ec0aa998465cfe261f6d931fe0e8f75'
-            '40473a7027407822e70899e3c65ab95bc3a26e5a5f31bd19a3fdd5e7ead4dff7'
+            'bfa530d317a5de1d038fd63f16a23694abc7a953456b30ae57ac649676137a2a'
             '55b75daf5aad2a8929c80837f986d4474993f781c0ffa4169e38483b0af6e385'
             '0f29fb266fddc5b553a8eca37ad3171ef2369af77e1e3a4638d396479428c184'
             'd47347bcaeeb59e336fcaf4f2fd3a7c6950c01958cce29e969721069aa5276ad'
@@ -117,9 +117,6 @@ sha256sums=('a949fa166cdcdbd8419fbdb4583804613d9845130f0c851e4c647d79a4c300d0'
             '3df9b3bbdc07fde63d9e400954dcc6ab6e0e5454f0ef6447570eef0549337354')
 
 prepare() {
-  cd chromium-launcher
-  git submodule update --init
-
   cd "$srcdir/chromium-$pkgver"
 
   # Enable support for the Widevine CDM plugin
@@ -205,12 +202,12 @@ prepare() {
     --system-libraries "${!_system_libs[@]}"
 
   # Patch Inox launcher
-  cd "$srcdir/chromium-launcher"
+  cd "$srcdir/chromium-launcher-$_launcher_ver"
   patch -Np1 -i ../0020-launcher-branding.patch
 }
 
 build() {
-  make -C chromium-launcher
+  make -C "chromium-launcher-$_launcher_ver"
 
   cd "$srcdir/chromium-$pkgver"
 
@@ -257,7 +254,7 @@ build() {
 }
 
 package() {
-  cd chromium-launcher
+  cd "$srcdir/chromium-launcher-$_launcher_ver"
   make PREFIX=/usr DESTDIR="$pkgdir" install-strip
   install -Dm644 LICENSE \
     "$pkgdir/usr/share/licenses/$pkgname/LICENSE.launcher"
