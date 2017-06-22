@@ -56,20 +56,17 @@
        return;
      }
    }
---- a/components/translate/core/browser/translate_ranker.cc
-+++ b/components/translate/core/browser/translate_ranker.cc
-@@ -96,12 +96,12 @@ bool TranslateRanker::IsLoggingEnabled()
+--- a/components/translate/core/browser/translate_ranker_impl.cc
++++ b/components/translate/core/browser/translate_ranker_impl.cc
+@@ -192,9 +192,9 @@ bool TranslateRanker::IsLoggingEnabled()
  
- // static
- bool TranslateRanker::IsQueryEnabled() {
--  return base::FeatureList::IsEnabled(kTranslateRankerQuery);
+ bool TranslateRankerImpl::IsQueryEnabled() {
+-  return is_query_enabled_;
 +  return false;
  }
  
- // static
- bool TranslateRanker::IsEnforcementEnabled() {
--  return base::FeatureList::IsEnabled(kTranslateRankerEnforcement);
+ bool TranslateRankerImpl::IsEnforcementEnabled() {
+-  return is_enforcement_enabled_;
 +  return false;
  }
  
- // static
