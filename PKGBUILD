@@ -43,7 +43,8 @@ depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
          'hicolor-icon-theme')
 depends+=(${_system_libs[@]})
 makedepends=('python2' 'gperf' 'yasm' 'mesa' 'ninja' 'nodejs' 'git')
-optdepends=('kdialog: needed for file dialogs in KDE'
+optdepends=('pepper-flash: support for Flash content'
+            'kdialog: needed for file dialogs in KDE'
             'gnome-keyring: for storing passwords in GNOME keyring'
             'kwallet: for storing passwords in KWallet')
 install=inox.install
