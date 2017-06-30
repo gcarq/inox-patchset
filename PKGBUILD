@@ -31,9 +31,10 @@ declare -rgA _system_libs=(
 )
 
 pkgname=inox
-pkgver=59.0.3071.109
+pkgver=59.0.3071.115
 pkgrel=1
 _launcher_ver=5
+_freetype_rev=5a3490e054bda8a318ebde482
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
 arch=('i686' 'x86_64')
 url="https://www.chromium.org/Home"
@@ -50,10 +51,12 @@ optdepends=('pepper-flash: support for Flash content'
 install=inox.install
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
+        chromium-freetype2::git+https://chromium.googlesource.com/chromium/src/third_party/freetype2#commit=$_freetype_rev
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/inox.desktop
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-system-ffmpeg-r6.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0001-ClientNativePixmapFactoryDmabuf-uses-ioctl-instead-o.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0001-Fix-kernel-version-condition-for-including-dma-buf.h.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0001-Clip-FreeType-glyph-bitmap-to-mask.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-blink-gcc7.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-v8-gcc7.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-widevine.patch
@@ -79,12 +82,14 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0001-fix-building-without-safebrowsing.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/product_logo_{16,22,24,32,48,64,128,256}.png)
 
-sha256sums=('83faeb3537428d83728258b28e907caaee6e6572bcd7d9b9a5f6009e7ea758d9'
+sha256sums=('37cbc9955ae3b25cd4e9851a82ea97a0035021cc90658902938ad1c20f263170'
             '4dc3428f2c927955d9ae117f2fb24d098cc6dd67adb760ac9c82b522ec8b0587'
+            'SKIP'
             'ff3f939a8757f482c1c5ba35c2c0f01ee80e2a2273c16238370081564350b148'
             '2fc21f48b95f9f2c2bd8576742fcf8028a8877c6b6e96c04d88184915982234e'
             '9c081c84a4f85dbef82a9edf34cf0b1e8377c563874fd9c1b4efddf1476748f9'
             '42eb6ada30d5d507f2bda2d2caece37e397e7086bc0d430db776fad143562fb6'
+            'e60aa0ff01f8bee67e45fde7bbe932901194984673ec4b10ea82bba1bace0cd7'
             'f94310a7ba9b8b777adfb4442bcc0a8f0a3d549b2cf4a156066f8e2e28e2f323'
             '46dacc4fa52652b7d99b8996d6a97e5e3bac586f879aefb9fb95020d2c4e5aec'
             'd6fdcb922e5a7fbe15759d39ccc8ea4225821c44d98054ce0f23f9d1f00c9808'
@@ -120,6 +125,9 @@ sha256sums=('83faeb3537428d83728258b28e907caaee6e6572bcd7d9b9a5f6009e7ea758d9'
 prepare() {
   cd "$srcdir/chromium-$pkgver"
 
+  # https://groups.google.com/a/chromium.org/d/msg/chromium-packagers/wuInaKJkosg/kMfIV_7wDgAJ
+  mv "$srcdir/chromium-freetype2" third_party/freetype/src
+
   # Enable support for the Widevine CDM plugin
   # libwidevinecdm.so is not included, but can be copied over from Chrome
   # (Version string doesn't seem to matter so let's go with "Pinkie Pie")
@@ -129,6 +137,9 @@ prepare() {
   # https://bugs.chromium.org/p/chromium/issues/detail?id=707604
   patch -Np1 -i ../0001-ClientNativePixmapFactoryDmabuf-uses-ioctl-instead-o.patch
   patch -Np1 -i ../0001-Fix-kernel-version-condition-for-including-dma-buf.h.patch
+
+  # https://bugs.chromium.org/p/skia/issues/detail?id=6663
+  patch -Np1 -d third_party/skia <../0001-Clip-FreeType-glyph-bitmap-to-mask.patch
 
   # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=853347
   patch -Np1 -i ../chromium-blink-gcc7.patch
