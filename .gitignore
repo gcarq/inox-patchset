@@ -37,3 +37,4 @@ makepkg.conf
 inox-*.tar.*z
 
 test*
+chromium-freetype2/
