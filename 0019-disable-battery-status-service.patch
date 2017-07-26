@@ -1,5 +1,5 @@
---- a/device/battery/battery_status_service.cc
-+++ b/device/battery/battery_status_service.cc
+--- a/services/device/battery/battery_status_service.cc
++++ b/services/device/battery/battery_status_service.cc
 @@ -43,6 +43,7 @@ BatteryStatusService::AddCallback(const
    if (!battery_fetcher_)
      battery_fetcher_ = BatteryStatusManager::Create(update_callback_);

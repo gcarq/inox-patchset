@@ -66,9 +66,9 @@
    MaybeAppendAuthUserParameter(approval_->authuser, &download_url_);
  
 @@ -601,6 +602,7 @@
-       BrowserThread::FILE, FROM_HERE,
-       base::Bind(&GetDownloadFilePath, download_directory, extension_id,
-         base::Bind(&WebstoreInstaller::StartDownload, this, extension_id)));
+       base::BindOnce(
+           &GetDownloadFilePath, download_directory, extension_id,
+           base::Bind(&WebstoreInstaller::StartDownload, this, extension_id)));
 +#endif /* 0 */
  }
  
@@ -97,6 +97,6 @@
    const char* const kAllowed[] = {
 -    extension_misc::kHotwordSharedModuleId,
 -    extension_misc::kInAppPaymentsSupportAppId,
- #if defined(ENABLE_MEDIA_ROUTER)
      extension_misc::kMediaRouterStableExtensionId,
- #endif  // defined(ENABLE_MEDIA_ROUTER)
+     extension_misc::kPdfExtensionId,
+ #if defined(OS_CHROMEOS)
