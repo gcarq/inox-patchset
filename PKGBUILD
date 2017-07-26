@@ -78,6 +78,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0018-disable-first-run-behaviour.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0019-disable-battery-status-service.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0020-launcher-branding.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/9999-disable-metrics.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/product_logo_{16,22,24,32,48,64,128,256}.png)
 
 sha256sums=('a82db2aa1b9348b619c01894db565eba686780de0e6fa9e83a8f406d06ce03ea'
@@ -115,6 +116,7 @@ sha256sums=('a82db2aa1b9348b619c01894db565eba686780de0e6fa9e83a8f406d06ce03ea'
             '8c10e3b03b13555b461add586422472e0a96d3af49a078d6d952bc0719ba9d94'
             'cc08b771d83b7434c3173c27419bc7d1d4ee375256f3169ef2b9333ba1f2beeb'
             '53a1e8da18069eb4d6ab3af9c923c22a0f020241a4839c3140e3601052ddf6ff'
+            '896993987d4ef9f0ac7db454f288117316c2c80ed0b6764019afd760db222dad'
             '3df9b3bbdc07fde63d9e400954dcc6ab6e0e5454f0ef6447570eef0549337354')
 
 prepare() {
@@ -174,6 +176,9 @@ prepare() {
   patch -Np1 -i ../0017-disable-new-avatar-menu.patch
   patch -Np1 -i ../0018-disable-first-run-behaviour.patch
   patch -Np1 -i ../0019-disable-battery-status-service.patch
+
+  # Apply custom patches
+  patch -Np1 -i ../9999-disable-metrics.patch
 
   # Use Python 2
   find . -name '*.py' -exec sed -i -r 's|/usr/bin/python$|&2|g' {} +

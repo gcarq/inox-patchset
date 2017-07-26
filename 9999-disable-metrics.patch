@@ -52,7 +52,7 @@
 -    NOTREACHED();
 -    return;
 -  }
--  samples_->Accumulate(value, count);
+-  unlogged_samples_->Accumulate(value, count);
 -
 -  FindAndRunCallback(value);
  }
@@ -62,11 +62,11 @@
  }
  
  void Histogram::AddSamples(const HistogramSamples& samples) {
--  samples_->Add(samples);
+-  unlogged_samples_->Add(samples);
  }
  
  bool Histogram::AddSamplesFromPickle(PickleIterator* iter) {
--  return samples_->AddFromPickle(iter);
+-  return unlogged_samples_->AddFromPickle(iter);
 +  return true;
  }
  
@@ -111,7 +111,7 @@
 -  }
 -  {
 -    base::AutoLock auto_lock(lock_);
--    samples_->Accumulate(value, count);
+-    unlogged_samples_->Accumulate(value, count);
 -  }
 -
 -  FindAndRunCallback(value);
@@ -123,12 +123,12 @@
  
  void SparseHistogram::AddSamples(const HistogramSamples& samples) {
 -  base::AutoLock auto_lock(lock_);
--  samples_->Add(samples);
+-  unlogged_samples_->Add(samples);
  }
  
  bool SparseHistogram::AddSamplesFromPickle(PickleIterator* iter) {
 -  base::AutoLock auto_lock(lock_);
--  return samples_->AddFromPickle(iter);
+-  return unlogged_samples_->AddFromPickle(iter);
 +  return true;
  }
  
