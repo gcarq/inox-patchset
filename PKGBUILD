@@ -54,11 +54,11 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/inox.desktop
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-gn-bootstrap-r8.patch
-	      https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0001-Clip-FreeType-glyph-bitmap-to-mask.patch
-      	https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-blink-gcc7.patch
-      	https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-v8-gcc7.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0001-Clip-FreeType-glyph-bitmap-to-mask.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-blink-gcc7.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-v8-gcc7.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-widevine.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/vaapi_patch_r2.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0001-fix-building-without-safebrowsing.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0003-disable-autofill-download-manager.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0004-disable-google-url-tracker.patch
@@ -87,8 +87,8 @@ sha256sums=('a82db2aa1b9348b619c01894db565eba686780de0e6fa9e83a8f406d06ce03ea'
             'e60aa0ff01f8bee67e45fde7bbe932901194984673ec4b10ea82bba1bace0cd7'
             'f94310a7ba9b8b777adfb4442bcc0a8f0a3d549b2cf4a156066f8e2e28e2f323'
             '46dacc4fa52652b7d99b8996d6a97e5e3bac586f879aefb9fb95020d2c4e5aec'
+            'c454d6200e51f052dc301a98cf13e1c6989395975997d3d9671dd186a23bb709'
             'd6fdcb922e5a7fbe15759d39ccc8ea4225821c44d98054ce0f23f9d1f00c9808'
-            '4ec8b2df4859b9d26b8ea4afc205f563f59844c54a6659bb279776b93163a0ce'
             '9036511e2e15b3587110601b671e6cdb1bb03bd03042db43b7393ed242b350d4'
             '293c31dc7df13bdef6087f839071c00dc096bfc93ffbce8615c2d157f0675033'
             'a9134b55d5521907f127e8e4e81e91a35226d55e9f034e7d589b357cf2566760'
@@ -138,17 +138,10 @@ prepare() {
   # Fixes from Gentoo
   patch -Np1 -i ../chromium-gn-bootstrap-r8.patch
 
-  # Misc Patches:
+  # VA-API
   if [ "${_enable_vaapi}" = 1 ]; then
-    patch -Np1 -i ../vaapi_patch_r2.patch
+    patch -Np1 -i ../chromium-vaapi.patch
   fi
-
-  # Fix paths.
-  sed -e 's|i386-linux-gnu/||g' \
-      -e 's|x86_64-linux-gnu/||g' \
-      -e 's|/usr/lib/va/drivers|/usr/lib/dri|g' \
-      -e 's|/usr/lib64/va/drivers|/usr/lib/dri|g' \
-      -i content/common/sandbox_linux/bpf_gpu_policy_linux.cc
 
   # Make it possible to remove third_party/adobe
   echo > "flapper_version.h"
