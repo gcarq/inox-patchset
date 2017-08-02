@@ -33,7 +33,7 @@ declare -rgA _system_libs=(
 )
 
 pkgname=inox
-pkgver=60.0.3112.78
+pkgver=60.0.3112.90
 pkgrel=1
 _launcher_ver=5
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
@@ -54,7 +54,6 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/inox.desktop
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-gn-bootstrap-r8.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0001-Clip-FreeType-glyph-bitmap-to-mask.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-blink-gcc7.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-v8-gcc7.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi.patch
@@ -80,11 +79,10 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0020-launcher-branding.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/product_logo_{16,22,24,32,48,64,128,256}.png)
 
-sha256sums=('a82db2aa1b9348b619c01894db565eba686780de0e6fa9e83a8f406d06ce03ea'
+sha256sums=('b42f7965764b4528116622a71a60f52becd4186ff8854f3051bf45c6368739e6'
             '4dc3428f2c927955d9ae117f2fb24d098cc6dd67adb760ac9c82b522ec8b0587'
             'ff3f939a8757f482c1c5ba35c2c0f01ee80e2a2273c16238370081564350b148'
             '06345804c00d9618dad98a2dc04f31ef19912cdf6e9d6e577ef7ffb1fa57003f'
-            'e60aa0ff01f8bee67e45fde7bbe932901194984673ec4b10ea82bba1bace0cd7'
             'f94310a7ba9b8b777adfb4442bcc0a8f0a3d549b2cf4a156066f8e2e28e2f323'
             '46dacc4fa52652b7d99b8996d6a97e5e3bac586f879aefb9fb95020d2c4e5aec'
             'c454d6200e51f052dc301a98cf13e1c6989395975997d3d9671dd186a23bb709'
@@ -125,9 +123,6 @@ prepare() {
   # (Version string doesn't seem to matter so let's go with "Pinkie Pie")
   sed "s/@WIDEVINE_VERSION@/Pinkie Pie/" ../chromium-widevine.patch |
     patch -Np1
-
-  # https://bugs.chromium.org/p/skia/issues/detail?id=6663
-  patch -Np1 -d third_party/skia <../0001-Clip-FreeType-glyph-bitmap-to-mask.patch
 
   # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=853347
   patch -Np1 -i ../chromium-blink-gcc7.patch
