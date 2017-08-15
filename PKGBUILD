@@ -20,7 +20,7 @@ declare -rgA _system_libs=(
   #[icu]=icu                 # Enable again when upstream supports ICU 59
   [libdrm]=
   [libjpeg]=libjpeg
-  [libpng]=libpng
+  #[libpng]=libpng           # https://crbug.com/752403
   #[libvpx]=libvpx           # https://bugs.gentoo.org/611394
   [libwebp]=libwebp
   #[libxml]=libxml2          # https://bugs.gentoo.org/616818
@@ -33,7 +33,7 @@ declare -rgA _system_libs=(
 )
 
 pkgname=inox
-pkgver=60.0.3112.90
+pkgver=60.0.3112.101
 pkgrel=1
 _launcher_ver=5
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
@@ -79,7 +79,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0020-launcher-branding.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/product_logo_{16,22,24,32,48,64,128,256}.png)
 
-sha256sums=('b42f7965764b4528116622a71a60f52becd4186ff8854f3051bf45c6368739e6'
+sha256sums=('0bfb6318af1c3cf82e8ac872e3da34cd3c013aadaab446d5097228101cec065e'
             '4dc3428f2c927955d9ae117f2fb24d098cc6dd67adb760ac9c82b522ec8b0587'
             'ff3f939a8757f482c1c5ba35c2c0f01ee80e2a2273c16238370081564350b148'
             '06345804c00d9618dad98a2dc04f31ef19912cdf6e9d6e577ef7ffb1fa57003f'
