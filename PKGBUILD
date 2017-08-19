@@ -65,6 +65,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/BUILD.gn
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-gn-bootstrap-r8.patch
         # Misc
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-toolchain.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi.patch
         # Inox patchset
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0001-fix-building-without-safebrowsing.patch
@@ -149,6 +150,10 @@ prepare() {
   # VA-API
   msg2 'Applying VA-API patches'
   patch -Np1 -i ../chromium-vaapi.patch
+
+  # TODO: remove when the commit arrives in stable
+  # https://bugs.gentoo.org/show_bug.cgi?id=587408
+  patch -Np1 -i ../chromium-toolchain.patch
 
   # Make it possible to remove third_party/adobe
   echo > "flapper_version.h"
@@ -252,22 +257,31 @@ build() {
     'enable_mdns=false'
   )
 
+  # Use the unbundle template to get compiler flags from environment
+  # variables like CFLAGS, otherwise they are ignored
+  _flags+=('custom_toolchain="//build/toolchain/linux/unbundle:default"'
+           'host_toolchain="//build/toolchain/linux/unbundle:default"')
+
   if (( ! $_clang )); then
     _flags+=('is_clang=false')
-  else
-    # Set toolchain defined by $srcdir/BUILD.gn and
-    # disable Chromium style plugins
-    _flags+=("custom_toolchain=\"${srcdir}:default\""
-             "host_toolchain=\"${srcdir}:default\""
-             'clang_use_chrome_plugins=false')
-    # Set environment variables. CFLAGS and CXXFLAGS are appended to the
-    # the flags defined by GN and should override already present options
+    # Set environment variables
     export AR=ar
+    export CC=gcc
+    export CXX=c++
+    export NM=nm
+  else
+    # Disable Google's Clang plugins
+    _flags+=('clang_use_chrome_plugins=false')
+
+    # Set environment variables.
+    # '-fno-plt' is default in Arch but officially not supported by Clang
+    # and causes an error if used with an unpatched toolchain
+    export AR=llvm-ar
     export CC=clang
     export CXX=clang++
-    export NM=nm
-    export CFLAGS="$CFLAGS -Wno-unknown-warning-option"
-    export CXXFLAGS="$CXXFLAGS -Wno-unknown-warning-option"
+    export NM=llvm-nm
+    export CFLAGS="${CFLAGS//-fno-plt/} -Wno-unknown-warning-option"
+    export CXXFLAGS="${CXXFLAGS//-fno-plt/} -Wno-unknown-warning-option"
   fi
 
   msg2 'Building GN'
