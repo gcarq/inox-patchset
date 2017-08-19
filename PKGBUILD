@@ -227,11 +227,11 @@ build() {
     'treat_warnings_as_errors=false'
     'fieldtrial_testing_like_official_build=true'
     'remove_webcore_debug_symbols=true'
+    'exclude_unwind_tables=true'
     'ffmpeg_branding="Chrome"'
     'proprietary_codecs=true'
     'link_pulseaudio=true'
     'linux_use_bundled_binutils=false'
-    'use_gtk3=true'
     'use_gconf=false'
     'use_gnome_keyring=false'
     'use_gold=false'
@@ -242,13 +242,12 @@ build() {
     'enable_nacl=false'
     'enable_swiftshader=false'
     'enable_nacl_nonsfi=false'
-    'enable_rlz=false'
-    'enable_rlz_support=false'
     'enable_remoting=false'
     'enable_google_now=false'
     'safe_browsing_mode=0'
     'enable_hotwording=false'
     'enable_print_preview=false'
+    'enable_mdns=false'
   )
 
   if (( ! $_clang )); then
