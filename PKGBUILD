@@ -6,6 +6,8 @@
 
 # Build options
 _clang=0  # Use Clang instead of GCC for compilation
+_lto=0    # Use link-time optimization (LTO) if using Clang
+_cfi=0    # Use Control Flow Integrity (CFI) if using Clang and LTO
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
@@ -44,7 +46,7 @@ depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
          'desktop-file-utils' 'hicolor-icon-theme')
 depends+=(${_system_libs[@]})
 makedepends=('python2' 'gperf' 'yasm' 'mesa' 'ninja' 'nodejs' 'git' 'libva')
-(( $_clang )) && makedepends+=('clang')
+(( $_clang )) && makedepends+=('clang' 'lld')
 optdepends=('pepper-flash: support for Flash content'
             'kdialog: needed for file dialogs in KDE'
             'gnome-keyring: for storing passwords in GNOME keyring'
@@ -62,7 +64,6 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-v8-gcc7.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-widevine.patch
         # Patches from Gentoo
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/BUILD.gn
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-gn-bootstrap-r8.patch
         # Misc
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-toolchain.patch
@@ -103,8 +104,8 @@ sha256sums=('0bfb6318af1c3cf82e8ac872e3da34cd3c013aadaab446d5097228101cec065e'
             'f94310a7ba9b8b777adfb4442bcc0a8f0a3d549b2cf4a156066f8e2e28e2f323'
             '46dacc4fa52652b7d99b8996d6a97e5e3bac586f879aefb9fb95020d2c4e5aec'
             'd6fdcb922e5a7fbe15759d39ccc8ea4225821c44d98054ce0f23f9d1f00c9808'
-            '7b42f63ac928b7d1ff8e4d91cc620e944d581beb26c64fe7e1560f10a9c5ad94'
             '06345804c00d9618dad98a2dc04f31ef19912cdf6e9d6e577ef7ffb1fa57003f'
+            '8db6503fbf329fd56cc20d1d1c56ae11bc33247dbb48688a80a9691ca22c9255'
             'c454d6200e51f052dc301a98cf13e1c6989395975997d3d9671dd186a23bb709'
             '9036511e2e15b3587110601b671e6cdb1bb03bd03042db43b7393ed242b350d4'
             '293c31dc7df13bdef6087f839071c00dc096bfc93ffbce8615c2d157f0675033'
@@ -270,8 +271,10 @@ build() {
     export CXX=c++
     export NM=nm
   else
-    # Disable Google's Clang plugins
-    _flags+=('clang_use_chrome_plugins=false')
+    # Disable Google's Clang plugins and use LLVM's lld linker to ensure
+    # LTO support
+    _flags+=('clang_use_chrome_plugins=false'
+             'use_lld=true')
 
     # Set environment variables.
     # '-fno-plt' is default in Arch but officially not supported by Clang
@@ -282,6 +285,27 @@ build() {
     export NM=llvm-nm
     export CFLAGS="${CFLAGS//-fno-plt/} -Wno-unknown-warning-option"
     export CXXFLAGS="${CXXFLAGS//-fno-plt/} -Wno-unknown-warning-option"
+
+    if (( $_lto )); then
+      # Enable link-time optimizations (LTO).
+      # ThinLTO greatly reduces memory usage during linking in comparison
+      # to LTO but disables some optimizations and requires Clang 5
+      _flags+=('allow_posix_link_time_opt=true'
+               'use_thin_lto=true')
+
+      # Force lld linker.
+      # Optionally set cache directory and policy for ThinLTO if environment
+      # variables THINLTO_CACHE_DIR and THINLTO_CACE_SIZE are found.
+      # See https://clang.llvm.org/docs/ThinLTO.html for possible settings
+      local ldf="-fuse-ld=lld"
+      ldf+="${THINLTO_CACHE_DIR:+ -Wl,--thinlto-cache-dir=}${THINLTO_CACHE_DIR}"
+      ldf+="${THINLTO_CACHE_SIZE:+ -Wl,--thinlto-cache-policy,cache_size_bytes=}${THINLTO_CACHE_SIZE}"
+      export LDFLAGS="$LDFLAGS $ldf"
+
+      # Enable control flow integrity (CFI).
+      # CFI will increase compile time and code size
+      (( $_cfi )) && _flags+=('is_cfi=true')
+    fi
   fi
 
   msg2 'Building GN'
