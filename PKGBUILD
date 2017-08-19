@@ -6,7 +6,6 @@
 
 # Build options
 _clang=0  # Use Clang instead of GCC for compilation
-_vaapi=0  # Enable VA-API hardware video acceleration, might be problematic with AMD and NVIDIA
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
@@ -44,17 +43,15 @@ depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
          'ttf-font' 'systemd' 'dbus' 'libpulse' 'pciutils' 'json-glib'
          'desktop-file-utils' 'hicolor-icon-theme')
 depends+=(${_system_libs[@]})
-(( $_vaapi )) && depends+=('libva')
-makedepends=('python2' 'gperf' 'yasm' 'mesa' 'ninja' 'nodejs' 'git')
+makedepends=('python2' 'gperf' 'yasm' 'mesa' 'ninja' 'nodejs' 'git' 'libva')
 (( $_clang )) && makedepends+=('clang')
 optdepends=('pepper-flash: support for Flash content'
             'kdialog: needed for file dialogs in KDE'
             'gnome-keyring: for storing passwords in GNOME keyring'
-            'kwallet: for storing passwords in KWallet')
-(( $_vaapi )) && \
-  optdepends+=('libva-intel-driver: for hardware video acceleration with Intel GPUs'
-               'libva-mesa-driver: for hardware video acceleration with AMD/ATI GPUs'
-               'libva-vdpau-driver: for hardware video acceleration with NVIDIA GPUs')
+            'kwallet: for storing passwords in KWallet'
+            'libva-intel-driver: for hardware video acceleration with Intel GPUs'
+            'libva-mesa-driver: for hardware video acceleration with AMD/ATI GPUs'
+            'libva-vdpau-driver: for hardware video acceleration with NVIDIA GPUs')
 install=inox.install
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
@@ -149,10 +146,8 @@ prepare() {
   patch -Np1 -i ../chromium-gn-bootstrap-r8.patch
 
   # VA-API
-  if (( $_vaapi )); then
-    msg2 'Applying VA-API patches'
-    patch -Np1 -i ../chromium-vaapi.patch
-  fi
+  msg2 'Applying VA-API patches'
+  patch -Np1 -i ../chromium-vaapi.patch
 
   # Make it possible to remove third_party/adobe
   echo > "flapper_version.h"
