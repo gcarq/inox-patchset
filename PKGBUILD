@@ -85,7 +85,8 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0017-disable-new-avatar-menu.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0018-disable-first-run-behaviour.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0019-disable-battery-status-service.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0020-launcher-branding.patch)
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0020-launcher-branding.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0021-disable-rlz.patch)
 
 sha256sums=('0bfb6318af1c3cf82e8ac872e3da34cd3c013aadaab446d5097228101cec065e'
             '4dc3428f2c927955d9ae117f2fb24d098cc6dd67adb760ac9c82b522ec8b0587'
@@ -104,7 +105,6 @@ sha256sums=('0bfb6318af1c3cf82e8ac872e3da34cd3c013aadaab446d5097228101cec065e'
             '7b42f63ac928b7d1ff8e4d91cc620e944d581beb26c64fe7e1560f10a9c5ad94'
             '06345804c00d9618dad98a2dc04f31ef19912cdf6e9d6e577ef7ffb1fa57003f'
             'c454d6200e51f052dc301a98cf13e1c6989395975997d3d9671dd186a23bb709'
-            '301eef8e0a34fe136ff41948452c967fa12f195786c9b424d319d93763cf746e'
             '9036511e2e15b3587110601b671e6cdb1bb03bd03042db43b7393ed242b350d4'
             '293c31dc7df13bdef6087f839071c00dc096bfc93ffbce8615c2d157f0675033'
             'a9134b55d5521907f127e8e4e81e91a35226d55e9f034e7d589b357cf2566760'
@@ -123,7 +123,8 @@ sha256sums=('0bfb6318af1c3cf82e8ac872e3da34cd3c013aadaab446d5097228101cec065e'
             '888902c17b7de23eb6c979af2a262f7552c197fd96feb0e7e23e9160fc877741'
             'ef93487636bb3171f1f0325a24295142dd6c58937d4e916f6e5a20470ea4d3c7'
             '153b0f438b42550e33cb54a0176dd3685bcaa66953d42472c8e111c3f77a4f69'
-            'bfa530d317a5de1d038fd63f16a23694abc7a953456b30ae57ac649676137a2a')
+            'bfa530d317a5de1d038fd63f16a23694abc7a953456b30ae57ac649676137a2a'
+            'dbe942b1eaba525ca6b81d398462a70360fc2043cbfe5d4105657c3bd721e592')
 
 prepare() {
   cd "$srcdir/chromium-$pkgver"
@@ -174,6 +175,7 @@ prepare() {
   patch -Np1 -i ../0017-disable-new-avatar-menu.patch
   patch -Np1 -i ../0018-disable-first-run-behaviour.patch
   patch -Np1 -i ../0019-disable-battery-status-service.patch
+  patch -Np1 -i ../0021-disable-rlz.patch
 
   # Use Python 2
   find . -name '*.py' -exec sed -i -r 's|/usr/bin/python$|&2|g' {} +
