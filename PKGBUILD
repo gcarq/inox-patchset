@@ -66,6 +66,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         # Patches from Gentoo
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-gn-bootstrap-r8.patch
         # Misc
+        chromium-skia-blending.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-toolchain.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi.patch
         # Inox patchset
@@ -105,6 +106,7 @@ sha256sums=('0bfb6318af1c3cf82e8ac872e3da34cd3c013aadaab446d5097228101cec065e'
             '46dacc4fa52652b7d99b8996d6a97e5e3bac586f879aefb9fb95020d2c4e5aec'
             'd6fdcb922e5a7fbe15759d39ccc8ea4225821c44d98054ce0f23f9d1f00c9808'
             '06345804c00d9618dad98a2dc04f31ef19912cdf6e9d6e577ef7ffb1fa57003f'
+            'aca9a2e5f6ba561021ace2ef2a093717246bb964b593075ba90696c342032ea3'
             '8db6503fbf329fd56cc20d1d1c56ae11bc33247dbb48688a80a9691ca22c9255'
             'c454d6200e51f052dc301a98cf13e1c6989395975997d3d9671dd186a23bb709'
             '9036511e2e15b3587110601b671e6cdb1bb03bd03042db43b7393ed242b350d4'
@@ -155,6 +157,10 @@ prepare() {
   # TODO: remove when the commit arrives in stable
   # https://bugs.gentoo.org/show_bug.cgi?id=587408
   patch -Np1 -i ../chromium-toolchain.patch
+
+  # TODO: remove when the commit arrives in stable
+  # https://crbug.com/732341
+  patch -Np1 -i ../chromium-skia-blending.patch
 
   # Make it possible to remove third_party/adobe
   echo > "flapper_version.h"
