@@ -66,7 +66,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         # Patches from Gentoo
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-gn-bootstrap-r8.patch
         # Misc
-        chromium-skia-blending.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-skia-blending.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-toolchain.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi.patch
         # Inox patchset
