@@ -1,0 +1,122 @@
+From d7b1159d787de27d75032ec213903a03962ec839 Mon Sep 17 00:00:00 2001
+From: Greg Daniel <egdaniel@google.com>
+Date: Wed, 14 Jun 2017 13:37:12 -0400
+Subject: [PATCH] Revert "Revert "Go back to using dual source blending for lcd src-over even with non-opaque color""
+
+This reverts commit 7d6fe0b9964d139de64ca88c46d87eba41c7f84e.
+
+Reason for revert: Relanding with fix
+
+Original change's description:
+> Revert "Go back to using dual source blending for lcd src-over even with non-opaque color"
+> 
+> This reverts commit b54bdef86eb5cf63b94588afaa9197f49374a5f5.
+> 
+> Reason for revert: breaking some bots
+> Original change's description:
+> > Go back to using dual source blending for lcd src-over even with non-opaque color
+> > 
+> > This is change is currently still safe since earlier in Skia we are still requiring
+> > the dst to be opaque. The change is a workaround to spots where trying to read the
+> > dst to do in shader blending is failing for some reason. This also should give back
+> > a little performance since doing dual source blending should be better than shader
+> > blends.
+> > 
+> > Bug: chromium:732341
+> > Change-Id: I795f8a520f87f3fbf5d63a9509fbd9f394ea2b29
+> > Reviewed-on: https://skia-review.googlesource.com/19703
+> > Reviewed-by: Brian Salomon <bsalomon@google.com>
+> > Commit-Queue: Greg Daniel <egdaniel@google.com>
+> 
+> TBR=egdaniel@google.com,bsalomon@google.com
+> 
+> Change-Id: Ibb9bc1ef4ec5967dabcd62c81f62c0989c14fbb8
+> No-Presubmit: true
+> No-Tree-Checks: true
+> No-Try: true
+> Bug: chromium:732341
+> Reviewed-on: https://skia-review.googlesource.com/19815
+> Reviewed-by: Greg Daniel <egdaniel@google.com>
+> Commit-Queue: Greg Daniel <egdaniel@google.com>
+
+TBR=egdaniel@google.com,bsalomon@google.com
+Bug: chromium:732341
+
+Change-Id: I7481755a9aa64364371d8149af4458fc2c15c8aa
+Reviewed-on: https://skia-review.googlesource.com/19840
+Reviewed-by: Brian Salomon <bsalomon@google.com>
+Commit-Queue: Greg Daniel <egdaniel@google.com>
+---
+
+diff --git a/third_party/skia/src/gpu/effects/GrPorterDuffXferProcessor.cpp b/third_party/skia/src/gpu/effects/GrPorterDuffXferProcessor.cpp
+index 254b44b..0a0d226 100644
+--- a/third_party/skia/src/gpu/effects/GrPorterDuffXferProcessor.cpp
++++ b/third_party/skia/src/gpu/effects/GrPorterDuffXferProcessor.cpp
+@@ -764,7 +764,8 @@
+     BlendFormula blendFormula;
+     bool isLCD = coverage == GrProcessorAnalysisCoverage::kLCD;
+     if (isLCD) {
+-        if (SkBlendMode::kSrcOver == fBlendMode && color.isConstant() && color.isOpaque() &&
++        // See comment in MakeSrcOverXferProcessor about color.isOpaque here
++        if (SkBlendMode::kSrcOver == fBlendMode && color.isConstant() && /*color.isOpaque() &&*/
+             !caps.shaderCaps()->dualSourceBlendingSupport() &&
+             !caps.shaderCaps()->dstReadInShaderSupport()) {
+             // If we don't have dual source blending or in shader dst reads, we fall back to this
+@@ -779,7 +780,7 @@
+     }
+ 
+     if ((blendFormula.hasSecondaryOutput() && !caps.shaderCaps()->dualSourceBlendingSupport()) ||
+-        (isLCD && (SkBlendMode::kSrcOver != fBlendMode || !color.isOpaque()))) {
++        (isLCD && (SkBlendMode::kSrcOver != fBlendMode /*|| !color.isOpaque()*/))) {
+         return sk_sp<const GrXferProcessor>(new ShaderPDXferProcessor(hasMixedSamples, fBlendMode,
+                                                                       coverage));
+     }
+@@ -817,8 +818,8 @@
+             // and DstATop would also work). We also fall into the dst read case for src-over if we
+             // do not have dual source blending.
+             if (SkBlendMode::kSrcOver != mode ||
+-                !color.isOpaque() ||
+-                !caps.shaderCaps()->dualSourceBlendingSupport()) {
++                /*!color.isOpaque() ||*/ // See comment in MakeSrcOverXferProcessor about isOpaque.
++                (formula.hasSecondaryOutput() && !caps.shaderCaps()->dualSourceBlendingSupport())) {
+                 props |= AnalysisProperties::kReadsDstInShader;
+             }
+         }
+@@ -903,8 +904,10 @@
+ 
+     // Currently up the stack Skia is requiring that the dst is opaque or that the client has said
+     // the opaqueness doesn't matter. Thus for src-over we don't need to worry about the src color
+-    // being opaque or not. For now we disable the check for opaqueness, but in the future we should
+-    // pass down the knowledge about dst opaqueness and make the correct decision here.
++    // being opaque or not. This allows us to use faster code paths as well as avoid various bugs
++    // that occur with dst reads in the shader blending. For now we disable the check for
++    // opaqueness, but in the future we should pass down the knowledge about dst opaqueness and make
++    // the correct decision here.
+     //
+     // This also fixes a chrome bug on macs where we are getting random fuzziness when doing
+     // blending in the shader for non opaque sources.
+@@ -919,7 +922,8 @@
+ 
+     BlendFormula blendFormula;
+     blendFormula = get_lcd_blend_formula(SkBlendMode::kSrcOver);
+-    if (!color.isOpaque() ||
++    // See comment above regarding why the opaque check is commented out here.
++    if (/*!color.isOpaque() ||*/
+         (blendFormula.hasSecondaryOutput() && !caps.shaderCaps()->dualSourceBlendingSupport())) {
+         return sk_sp<GrXferProcessor>(
+                 new ShaderPDXferProcessor(hasMixedSamples, SkBlendMode::kSrcOver, coverage));
+diff --git a/third_party/skia/tests/GrPorterDuffTest.cpp b/third_party/skia/tests/GrPorterDuffTest.cpp
+index 78497d2..8a6e58e 100644
+--- a/third_party/skia/tests/GrPorterDuffTest.cpp
++++ b/third_party/skia/tests/GrPorterDuffTest.cpp
+@@ -1032,8 +1032,8 @@
+     // Test with non-opaque alpha
+     color = GrColorPackRGBA(123, 45, 67, 221);
+     coverage = GrProcessorAnalysisCoverage::kLCD;
+-    TEST_ASSERT(GrXPFactory::GetAnalysisProperties(xpf, color, coverage, caps) &
+-                GrXPFactory::AnalysisProperties::kRequiresDstTexture);
++    TEST_ASSERT(!(GrXPFactory::GetAnalysisProperties(xpf, color, coverage, caps) &
++                GrXPFactory::AnalysisProperties::kRequiresDstTexture));
+     sk_sp<const GrXferProcessor> xp(
+             GrXPFactory::MakeXferProcessor(xpf, color, coverage, false, caps));
+     if (!xp) {
