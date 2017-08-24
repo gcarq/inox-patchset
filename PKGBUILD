@@ -34,7 +34,7 @@ declare -rgA _system_libs=(
 )
 
 pkgname=inox
-pkgver=60.0.3112.101
+pkgver=60.0.3112.113
 pkgrel=1
 _launcher_ver=5
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
@@ -92,7 +92,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0021-disable-rlz.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0022-disable-profiler.patch)
 
-sha256sums=('0bfb6318af1c3cf82e8ac872e3da34cd3c013aadaab446d5097228101cec065e'
+sha256sums=('ebfce706a1ea02a92e35f360c7364d1184dacf040b59eade4cb51aa61a4fec59'
             '4dc3428f2c927955d9ae117f2fb24d098cc6dd67adb760ac9c82b522ec8b0587'
             'ff3f939a8757f482c1c5ba35c2c0f01ee80e2a2273c16238370081564350b148'
             '71471fa4690894420f9e04a2e9a622af620d92ac2714a35f9a4c4e90fa3968dd'
