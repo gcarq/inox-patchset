@@ -6,8 +6,6 @@
 
 # Build options
 _clang=0  # Use Clang instead of GCC for compilation
-_lto=0    # Use link-time optimization (LTO) if using Clang
-_cfi=0    # Use Control Flow Integrity (CFI) if using Clang and LTO
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
@@ -89,8 +87,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0018-disable-first-run-behaviour.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0019-disable-battery-status-service.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0020-launcher-branding.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0021-disable-rlz.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0022-disable-profiler.patch)
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0021-disable-rlz.patch)
 
 sha256sums=('ebfce706a1ea02a92e35f360c7364d1184dacf040b59eade4cb51aa61a4fec59'
             '4dc3428f2c927955d9ae117f2fb24d098cc6dd67adb760ac9c82b522ec8b0587'
@@ -129,8 +126,7 @@ sha256sums=('ebfce706a1ea02a92e35f360c7364d1184dacf040b59eade4cb51aa61a4fec59'
             'ef93487636bb3171f1f0325a24295142dd6c58937d4e916f6e5a20470ea4d3c7'
             '153b0f438b42550e33cb54a0176dd3685bcaa66953d42472c8e111c3f77a4f69'
             'bfa530d317a5de1d038fd63f16a23694abc7a953456b30ae57ac649676137a2a'
-            'dbe942b1eaba525ca6b81d398462a70360fc2043cbfe5d4105657c3bd721e592'
-            '3b9d21900e5e16da45fb2a17d8c2e474bcfa1f73d3d85d0c36c99f046f3bec43')
+            'dbe942b1eaba525ca6b81d398462a70360fc2043cbfe5d4105657c3bd721e592')
 
 prepare() {
   cd "$srcdir/chromium-$pkgver"
@@ -190,7 +186,6 @@ prepare() {
   patch -Np1 -i ../0018-disable-first-run-behaviour.patch
   patch -Np1 -i ../0019-disable-battery-status-service.patch
   patch -Np1 -i ../0021-disable-rlz.patch
-  patch -Np1 -i ../0022-disable-profiler.patch
 
   # Use Python 2
   find . -name '*.py' -exec sed -i -r 's|/usr/bin/python$|&2|g' {} +
@@ -280,11 +275,9 @@ build() {
     export CXX=c++
     export NM=nm
   else
-    # Disable Google's Clang plugins and use LLVM's lld linker to ensure
-    # LTO support
+    # Disable Google's Clang plugins and use LLVM's lld linker
     _flags+=('clang_use_chrome_plugins=false'
              'use_lld=true')
-
     # Set environment variables.
     # '-fno-plt' is default in Arch but officially not supported by Clang
     # and causes an error if used with an unpatched toolchain
@@ -294,27 +287,6 @@ build() {
     export NM=llvm-nm
     export CFLAGS="${CFLAGS//-fno-plt/} -Wno-unknown-warning-option"
     export CXXFLAGS="${CXXFLAGS//-fno-plt/} -Wno-unknown-warning-option"
-
-    if (( $_lto )); then
-      # Enable link-time optimizations (LTO).
-      # ThinLTO greatly reduces memory usage during linking in comparison
-      # to LTO but disables some optimizations and requires Clang 5
-      _flags+=('allow_posix_link_time_opt=true'
-               'use_thin_lto=true')
-
-      # Force lld linker.
-      # Optionally set cache directory and policy for ThinLTO if environment
-      # variables THINLTO_CACHE_DIR and THINLTO_CACE_SIZE are found.
-      # See https://clang.llvm.org/docs/ThinLTO.html for possible settings
-      local ldf="-fuse-ld=lld"
-      ldf+="${THINLTO_CACHE_DIR:+ -Wl,--thinlto-cache-dir=}${THINLTO_CACHE_DIR}"
-      ldf+="${THINLTO_CACHE_SIZE:+ -Wl,--thinlto-cache-policy,cache_size_bytes=}${THINLTO_CACHE_SIZE}"
-      export LDFLAGS="$LDFLAGS $ldf"
-
-      # Enable control flow integrity (CFI).
-      # CFI will increase compile time and code size
-      (( $_cfi )) && _flags+=('is_cfi=true')
-    fi
   fi
 
   msg2 'Building GN'
