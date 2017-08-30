@@ -37,3 +37,5 @@ makepkg.conf
 inox-*.tar.*z
 
 test*
+
+chromium-launcher
