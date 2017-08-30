@@ -129,7 +129,7 @@ sha256sums=('ebfce706a1ea02a92e35f360c7364d1184dacf040b59eade4cb51aa61a4fec59'
             '153b0f438b42550e33cb54a0176dd3685bcaa66953d42472c8e111c3f77a4f69'
             'bfa530d317a5de1d038fd63f16a23694abc7a953456b30ae57ac649676137a2a'
             'dbe942b1eaba525ca6b81d398462a70360fc2043cbfe5d4105657c3bd721e592'
-            '1d6af2de9c35f29669a8473d61a8e0d63aff244555c517e5fb06dee077f4af02')
+            '1da86b3d7ff97e756c964c3bacc2da312a36d913fdf1dd5562b4b152e2aa003c')
 
 prepare() {
   cd "$srcdir/chromium-$pkgver"

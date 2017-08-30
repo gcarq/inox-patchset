@@ -267,3 +267,22 @@
    // Only allow adding a callback if the task runner is set.
    DCHECK(g_task_runner.Get());
    DCHECK(g_task_runner.Get()->BelongsToCurrentThread());
+--- a/components/metrics/metrics_service.cc
++++ b/components/metrics/metrics_service.cc
+@@ -131,6 +131,7 @@
+ 
+ #include "base/bind.h"
+ #include "base/callback.h"
++#include "base/command_line.h"
+ #include "base/location.h"
+ #include "base/memory/ptr_util.h"
+ #include "base/metrics/histogram_base.h"
+@@ -922,6 +923,8 @@ void MetricsService::GetCurrentSynthetic
+ void MetricsService::RegisterMetricsProvider(
+     std::unique_ptr<MetricsProvider> provider) {
+   DCHECK_EQ(INITIALIZED, state_);
++  if (!base::CommandLine::ForCurrentProcess()->HasSwitch("enable-metrics"))
++    return;
+   metrics_providers_.push_back(std::move(provider));
+ }
+ 
