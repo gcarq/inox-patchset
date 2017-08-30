@@ -1,3 +1,17 @@
+--- a/chrome/browser/about_flags.cc
++++ b/chrome/browser/about_flags.cc
+@@ -1086,6 +1086,11 @@ const FeatureEntry::FeatureVariation kOm
+ //
+ // When adding a new choice, add it to the end of the list.
+ const FeatureEntry kFeatureEntries[] = {
++    {"enable-metrics",
++     "Record metrics",
++     "Record histograms and user actions.",
++     kOsAll, SINGLE_VALUE_TYPE("enable-metrics")},
++
+     {"ignore-gpu-blacklist", flag_descriptions::kIgnoreGpuBlacklistName,
+      flag_descriptions::kIgnoreGpuBlacklistDescription, kOsAll,
+      SINGLE_VALUE_TYPE(switches::kIgnoreGpuBlacklist)},
 --- a/base/metrics/histogram_base.h
 +++ b/base/metrics/histogram_base.h
 @@ -84,6 +84,12 @@ BASE_EXPORT HistogramBase* DeserializeHi
