@@ -9,7 +9,7 @@
 +      "keyword": "duckduckgo.com",
 +      "favicon_url": "https://duckduckgo.com/favicon.ico",
 +      "search_url": "https://duckduckgo.com/?q={searchTerms}",
-+      "suggest_url": "https://duckduckgo.com/?q={searchTerms}&language={language}&kac=1",
++      "suggest_url": "https://ac.duckduckgo.com/ac/?q={searchTerms}&type=list",
 +      "new_tab_url": "https://duckduckgo.com/",
 +      "type": "SEARCH_ENGINE_DUCKDUCKGO",
 +      "id": 11
