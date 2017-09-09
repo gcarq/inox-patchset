@@ -1,6 +1,6 @@
---- ./net/dns/host_resolver_impl.cc
-+++ ./net/dns/host_resolver_impl.cc.new
-@@ -78,10 +78,10 @@ const char kLocalhost[] = "localhost.";
+--- a/net/dns/host_resolver_impl.cc
++++ b/net/dns/host_resolver_impl.cc
+@@ -108,10 +108,10 @@ const unsigned kMinimumTTLSeconds = kCac
  // cached.
  const int kIPv6ProbePeriodMs = 1000;
  
@@ -14,4 +14,3 @@
  
  // We use a separate histogram name for each platform to facilitate the
  // display of error codes by their symbolic name (since each platform has
-
