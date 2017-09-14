@@ -34,7 +34,7 @@ build.sh
 chromium-*.tar.*z
 
 makepkg.conf
-inox-*.tar.*z
+inox-*.tar*
 
 test*
 chromium-freetype2/
