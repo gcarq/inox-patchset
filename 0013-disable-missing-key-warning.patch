@@ -1,5 +1,5 @@
---- ./chrome/browser/ui/startup/google_api_keys_infobar_delegate.cc
-+++ ./chrome/browser/ui/startup/google_api_keys_infobar_delegate.cc.new
+--- a/chrome/browser/ui/startup/google_api_keys_infobar_delegate.cc
++++ b/chrome/browser/ui/startup/google_api_keys_infobar_delegate.cc
 @@ -15,6 +15,7 @@
  
  // static
@@ -7,4 +7,4 @@
 +  return;
    if (google_apis::HasKeysConfigured())
      return;
-
+ 

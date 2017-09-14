@@ -12,7 +12,7 @@
 --- a/launcher.c
 +++ b/launcher.c
 @@ -85,7 +85,7 @@
-     fprintf(
+   fprintf(
        stderr,
        "\n"
 -      "Chromium launcher %s -- for Chromium help, see %s(1)\n"
