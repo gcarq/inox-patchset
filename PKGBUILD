@@ -8,7 +8,7 @@
 _clang=1  # Use Clang instead of GCC for compilation
 
 pkgname=inox
-pkgver=61.0.3163.79
+pkgver=61.0.3163.91
 pkgrel=1
 _launcher_ver=5
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
@@ -67,7 +67,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0020-launcher-branding.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0021-disable-rlz.patch)
 
-sha256sums=('bdbc139ed86f3b5d1ec3c3b00caeaef4f9ac2c363438f03dded56e217ad10727'
+sha256sums=('0a2b4423551217d3ada244730fdfe3454f2630c8551b0bb784b727dc8294f2aa'
             '4dc3428f2c927955d9ae117f2fb24d098cc6dd67adb760ac9c82b522ec8b0587'
             'ff3f939a8757f482c1c5ba35c2c0f01ee80e2a2273c16238370081564350b148'
             '71471fa4690894420f9e04a2e9a622af620d92ac2714a35f9a4c4e90fa3968dd'
