@@ -65,7 +65,8 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0018-disable-first-run-behaviour.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0019-disable-battery-status-service.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0020-launcher-branding.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0021-disable-rlz.patch)
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0021-disable-rlz.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/9001-disable-profiler.patch)
 
 sha256sums=('0a2b4423551217d3ada244730fdfe3454f2630c8551b0bb784b727dc8294f2aa'
             '4dc3428f2c927955d9ae117f2fb24d098cc6dd67adb760ac9c82b522ec8b0587'
@@ -107,7 +108,8 @@ sha256sums=('0a2b4423551217d3ada244730fdfe3454f2630c8551b0bb784b727dc8294f2aa'
             '73a9be95e0ec331fb0944b15038000626a43c3bc6f1004b66cc4c29b60fb3fb6'
             'c17556772059a64873ddac383f2976e3befb5c07c3019b641c989ffb5683c4cd'
             '80d2974001708c288a54c24e1dc896ef25916552b740765f6066a244c05ffcd5'
-            'dbe942b1eaba525ca6b81d398462a70360fc2043cbfe5d4105657c3bd721e592')
+            'dbe942b1eaba525ca6b81d398462a70360fc2043cbfe5d4105657c3bd721e592'
+            '814fa3b82c8330b944b138ece864be4761fe17f42061816028b5d8c1f2609c8a')
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
@@ -187,6 +189,7 @@ prepare() {
   patch -Np1 -i ../0018-disable-first-run-behaviour.patch
   patch -Np1 -i ../0019-disable-battery-status-service.patch
   patch -Np1 -i ../0021-disable-rlz.patch
+  patch -Np1 -i ../9001-disable-profiler.patch
 
   # Use Python 2
   find . -name '*.py' -exec sed -i -r 's|/usr/bin/python$|&2|g' {} +
