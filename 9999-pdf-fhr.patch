@@ -1,0 +1,27 @@
+--- a/chrome/browser/extensions/api/resources_private/resources_private_api.cc	2017-09-14 15:04:35.000000000 -0400
++++ b/chrome/browser/extensions/api/resources_private/resources_private_api.cc	2017-09-18 18:47:31.660828619 -0400
+@@ -35,23 +35,7 @@
+ }
+ 
+ void AddStringsForPdf(base::DictionaryValue* dict) {
+-  SetL10nString(dict, "passwordDialogTitle", IDS_PDF_PASSWORD_DIALOG_TITLE);
+-  SetL10nString(dict, "passwordPrompt", IDS_PDF_NEED_PASSWORD);
+-  SetL10nString(dict, "passwordSubmit", IDS_PDF_PASSWORD_SUBMIT);
+-  SetL10nString(dict, "passwordInvalid", IDS_PDF_PASSWORD_INVALID);
+-  SetL10nString(dict, "pageLoading", IDS_PDF_PAGE_LOADING);
+-  SetL10nString(dict, "pageLoadFailed", IDS_PDF_PAGE_LOAD_FAILED);
+-  SetL10nString(dict, "errorDialogTitle", IDS_PDF_ERROR_DIALOG_TITLE);
+-  SetL10nString(dict, "pageReload", IDS_PDF_PAGE_RELOAD_BUTTON);
+-  SetL10nString(dict, "bookmarks", IDS_PDF_BOOKMARKS);
+-  SetL10nString(dict, "labelPageNumber", IDS_PDF_LABEL_PAGE_NUMBER);
+-  SetL10nString(dict, "tooltipRotateCW", IDS_PDF_TOOLTIP_ROTATE_CW);
+-  SetL10nString(dict, "tooltipDownload", IDS_PDF_TOOLTIP_DOWNLOAD);
+-  SetL10nString(dict, "tooltipPrint", IDS_PDF_TOOLTIP_PRINT);
+-  SetL10nString(dict, "tooltipFitToPage", IDS_PDF_TOOLTIP_FIT_PAGE);
+-  SetL10nString(dict, "tooltipFitToWidth", IDS_PDF_TOOLTIP_FIT_WIDTH);
+-  SetL10nString(dict, "tooltipZoomIn", IDS_PDF_TOOLTIP_ZOOM_IN);
+-  SetL10nString(dict, "tooltipZoomOut", IDS_PDF_TOOLTIP_ZOOM_OUT);
++
+ }
+ 
+ }  // namespace

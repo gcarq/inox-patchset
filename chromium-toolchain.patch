@@ -1,0 +1,110 @@
+From 9c649b49ca85129ad295c641c4da31babfb585e7 Mon Sep 17 00:00:00 2001
+From: Paweł Hajdan, Jr <phajdan.jr@chromium.org>
+Date: Fri, 21 Jul 2017 17:44:26 +0000
+Subject: [PATCH] Create build/toolchain/linux/unbundle
+
+This will help Linux distro packagers use system toolchain.
+
+See included README file for context.
+
+Bug: none
+Change-Id: I82a5d34ab179b5f1ab1e0cbd12c51c3871ae876c
+Reviewed-on: https://chromium-review.googlesource.com/575984
+Reviewed-by: Brett Wilson <brettw@chromium.org>
+Cr-Commit-Position: refs/heads/master@{#488698}
+---
+
+diff --git a/build/toolchain/linux/unbundle/BUILD.gn b/build/toolchain/linux/unbundle/BUILD.gn
+new file mode 100644
+index 0000000..4719d54
+--- /dev/null
++++ b/build/toolchain/linux/unbundle/BUILD.gn
+@@ -0,0 +1,41 @@
++# Copyright 2017 The Chromium Authors. All rights reserved.
++# Use of this source code is governed by a BSD-style license that can be
++# found in the LICENSE file.
++
++import("//build/toolchain/gcc_toolchain.gni")
++
++gcc_toolchain("default") {
++  cc = getenv("CC")
++  cxx = getenv("CXX")
++  ar = getenv("AR")
++  nm = getenv("NM")
++  ld = cxx
++
++  extra_cflags = getenv("CFLAGS")
++  extra_cppflags = getenv("CPPFLAGS")
++  extra_cxxflags = getenv("CXXFLAGS")
++  extra_ldflags = getenv("LDFLAGS")
++
++  toolchain_args = {
++    current_cpu = current_cpu
++    current_os = current_os
++  }
++}
++
++gcc_toolchain("host") {
++  cc = getenv("BUILD_CC")
++  cxx = getenv("BUILD_CXX")
++  ar = getenv("BUILD_AR")
++  nm = getenv("BUILD_NM")
++  ld = cxx
++
++  extra_cflags = getenv("BUILD_CFLAGS")
++  extra_cppflags = getenv("BUILD_CPPFLAGS")
++  extra_cxxflags = getenv("BUILD_CXXFLAGS")
++  extra_ldflags = getenv("BUILD_LDFLAGS")
++
++  toolchain_args = {
++    current_cpu = current_cpu
++    current_os = current_os
++  }
++}
+diff --git a/build/toolchain/linux/unbundle/README.md b/build/toolchain/linux/unbundle/README.md
+new file mode 100644
+index 0000000..ac5808a
+--- /dev/null
++++ b/build/toolchain/linux/unbundle/README.md
+@@ -0,0 +1,41 @@
++# Overview
++
++This directory contains files that make it possible for Linux
++distributions to build Chromium using system toolchain.
++
++For more info on established way such builds are configured,
++please read the following:
++
++ - https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html
++
++Why do distros want CFLAGS, LDFLAGS, etc? Please read the following
++for some examples. This is not an exhaustive list.
++
++ - https://wiki.debian.org/Hardening
++ - https://wiki.ubuntu.com/DistCompilerFlags
++ - https://fedoraproject.org/wiki/Changes/Harden_All_Packages
++ - https://fedoraproject.org/wiki/Changes/Modernise_GCC_Flags
++ - https://fedoraproject.org/wiki/Packaging:Guidelines#Compiler_flags
++ - https://blog.flameeyes.eu/2010/09/are-we-done-with-ldflags/
++ - https://blog.flameeyes.eu/2008/08/flags-and-flags/
++
++# Usage
++
++Add the following to GN args:
++
++```
++custom_toolchain="//build/toolchain/linux/unbundle:default"
++host_toolchain="//build/toolchain/linux/unbundle:default"
++```
++
++See [more docs on GN](https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md).
++
++To cross-compile (not fully tested), add the following:
++
++```
++host_toolchain="//build/toolchain/linux/unbundle:host"
++v8_snapshot_toolchain="//build/toolchain/linux/unbundle:host"
++```
++
++Note: when cross-compiling for a 32-bit target, a matching 32-bit toolchain
++may be needed.
