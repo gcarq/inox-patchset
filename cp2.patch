@@ -1,0 +1,13 @@
+--- chrome/browser/pdf/pdf_extension_util.cc	2017-09-18 18:37:35.604435675 -0400
++++ chrome/browser/pdf/pdf_extension_util.cc.new	2017-09-18 18:37:47.781164940 -0400
+@@ -28,8 +28,8 @@
+ 
+ std::string GetManifest() {
+   std::string manifest_contents =
+-      ResourceBundle::GetSharedInstance().GetRawDataResource(
+-          IDR_PDF_MANIFEST).as_string();
++ //     ResourceBundle::GetSharedInstance().GetRawDataResource(
++ //         IDR_PDF_MANIFEST).as_string();
+   DCHECK(manifest_contents.find(kNameTag) != std::string::npos);
+   base::ReplaceFirstSubstringAfterOffset(
+       &manifest_contents, 0, kNameTag,

@@ -1,0 +1,19 @@
+--- a/chrome/browser/pdf/pdf_extension_util.cc	2017-09-18 18:39:21.151644410 -0400
++++ b/chrome/browser/pdf/pdf_extension_util.cc	2017-09-18 18:39:58.178500963 -0400
+@@ -26,16 +26,6 @@
+ const char kPdfResourceIdentifier[] = "chromium-pdf";
+ #endif
+ 
+-std::string GetManifest() {
+-  std::string manifest_contents =
+-      ResourceBundle::GetSharedInstance().GetRawDataResource(
+-          IDR_PDF_MANIFEST).as_string();
+-  DCHECK(manifest_contents.find(kNameTag) != std::string::npos);
+-  base::ReplaceFirstSubstringAfterOffset(
+-      &manifest_contents, 0, kNameTag,
+-      ChromeContentClient::kPDFExtensionPluginName);
+ 
+-  return manifest_contents;
+-}
+ 
+ }  // namespace pdf_extension_util

@@ -1,0 +1,25 @@
+--- a/chrome/browser/about_flags.cc
++++ b/chrome/browser/about_flags.cc
+@@ -1135,6 +1135,10 @@ const FeatureEntry kFeatureEntries[] = {
+      "Record metrics",
+      "Record histograms and user actions.",
+      kOsAll, SINGLE_VALUE_TYPE("enable-metrics")},
++    {"enable-thumbnails",
++     "Capture page thumbnails",
++     "Capture page thumbnails for top sites used on the New Tab Page.",
++     kOsAll, SINGLE_VALUE_TYPE("enable-thumbnails")},
+ 
+     {"ignore-gpu-blacklist", flag_descriptions::kIgnoreGpuBlacklistName,
+      flag_descriptions::kIgnoreGpuBlacklistDescription, kOsAll,
+--- a/chrome/browser/ui/tab_helpers.cc
++++ b/chrome/browser/ui/tab_helpers.cc
+@@ -256,7 +256,8 @@ void TabHelpers::AttachTabHelpers(WebCon
+   SadTabHelper::CreateForWebContents(web_contents);
+   TabContentsSyncedTabDelegate::CreateForWebContents(web_contents);
+   TabDialogs::CreateForWebContents(web_contents);
+-  ThumbnailTabHelper::CreateForWebContents(web_contents);
++  if (base::CommandLine::ForCurrentProcess()->HasSwitch("enable-thumbnails"))
++    ThumbnailTabHelper::CreateForWebContents(web_contents);
+   web_modal::WebContentsModalDialogManager::CreateForWebContents(web_contents);
+ 
+   if (banners::AppBannerManagerDesktop::IsEnabled())
