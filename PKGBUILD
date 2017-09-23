@@ -188,11 +188,10 @@ prepare() {
 
   # Use Python 2
   find . -name '*.py' -exec sed -i -r 's|/usr/bin/python$|&2|g' {} +
-  find . -name '*.py' -exec sed -i -r 's|/usr/bin/env python$|&2|g' {} +
 
   # There are still a lot of relative calls which need a workaround
   mkdir -p "$srcdir/python2-path"
-  ln -sf /usr/bin/python2 "$srcdir/python2-path/python"
+  ln -s /usr/bin/python2 "$srcdir/python2-path/python"
 
   # Setup nodejs dependency
   mkdir -p third_party/node/linux/node-linux-x64/bin
@@ -202,14 +201,11 @@ prepare() {
   # *should* do what the remove_bundled_libraries.py script does, with the
   # added benefit of not having to list all the remaining libraries
   local _lib
-  for _lib in ${!_system_libs[@]}; do
-    find -type f \( \
-      -path "*base/third_party/$_lib/*" -o \
-      -path "*build/secondary/third_party/$_lib/*" -o \
-      -path "*third_party/$_lib/*" \) \
-      \! -path "*base/third_party/icu/*" \
+  for _lib in ${!_system_libs[@]} ${_system_libs[libjpeg]+libjpeg_turbo}; do
+    find -type f -path "*third_party/$_lib/*" \
       \! -path "*third_party/$_lib/chromium/*" \
       \! -path "*third_party/$_lib/google/*" \
+      \! -path "*base/third_party/icu/*" \
       \! -regex '.*\.\(gn\|gni\|isolate\|py\)' \
       -delete
   done
