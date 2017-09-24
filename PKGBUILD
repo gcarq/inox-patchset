@@ -8,7 +8,7 @@
 _clang=1  # Use Clang instead of GCC for compilation
 
 pkgname=inox
-pkgver=61.0.3163.91
+pkgver=61.0.3163.100
 pkgrel=1
 _launcher_ver=5
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
@@ -107,7 +107,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
 4028-replace-google-search-engine-with-nosearch.patch
 )
 
-sha256sums=('0a2b4423551217d3ada244730fdfe3454f2630c8551b0bb784b727dc8294f2aa'
+sha256sums=('4135968cac6623c1d2b224494600cd274098cce41c298f8c3908b354a34c281b'
             '4dc3428f2c927955d9ae117f2fb24d098cc6dd67adb760ac9c82b522ec8b0587'
             'ff3f939a8757f482c1c5ba35c2c0f01ee80e2a2273c16238370081564350b148'
             '71471fa4690894420f9e04a2e9a622af620d92ac2714a35f9a4c4e90fa3968dd'
@@ -121,7 +121,7 @@ sha256sums=('0a2b4423551217d3ada244730fdfe3454f2630c8551b0bb784b727dc8294f2aa'
             '6e9a345f810d36068ee74ebba4708c70ab30421dad3571b6be5e9db635078ea8'
             'f94310a7ba9b8b777adfb4442bcc0a8f0a3d549b2cf4a156066f8e2e28e2f323'
             'd6fdcb922e5a7fbe15759d39ccc8ea4225821c44d98054ce0f23f9d1f00c9808'
-            'fc0e9abb77b6f8e21a7601ff53f267a854736d711b530be5bbd80d976678e98d'
+            '45d0e475179a16f614dd90f81be644f1e60f8f7a28c3f3599b583ee59f05963a'
             '11cffe305dd49027c91638261463871e9ecb0ecc6ecc02bfa37b203c5960ab58'
             '98784c4a0a793ecf34987bc8f91ae360d78596a4a59dd47651411381f752a080'
             'fe298059b6937b2816beba8660d42f8584bdc56c12849ac55d32e4cd6d8c4518'
@@ -151,7 +151,39 @@ sha256sums=('0a2b4423551217d3ada244730fdfe3454f2630c8551b0bb784b727dc8294f2aa'
             '8071dfa33d1d17abac81529b910ab006a7535c5edd8868f4244dd33cda6fa251'
             '814fa3b82c8330b944b138ece864be4761fe17f42061816028b5d8c1f2609c8a'
             'd32a51f2d24f0115f29fdcd5f5657c2b0dc39b4a472453bad88861181b005e00'
-            '9c07cee733016cda42db01a7f8b25129e0cf9a6640b80cf05bdab56976d8c001')
+            '9c07cee733016cda42db01a7f8b25129e0cf9a6640b80cf05bdab56976d8c001'
+            '0c0b5fc071d7a92d4b7b7746b6febaef8c76183be7f2bc0a2596dc4d2862829c'
+            '9a78e3e58cff87eb64debec2451903d363859ba8c3fbe0c0852a3a685bb0cdc0'
+            'f9dc7c5ded54858f0fd4d314df270634a9f7f0b904e00a927da81658aff2262d'
+            '502b4eca6edf10fe1d036ab2c65363b4300de91b381ce687e08bd96dc254c898'
+            '86b1e2afc0ca261ddbbc4c6a22af165c6cf99505194340b7236afb4896df9d33'
+            'b00f417be1befdc651abb521a6656f9864376cc0b40e78c8e6f9fcffe52f8697'
+            'cef5dae4b2a7d4cf5ca60d35235594018cfbe3d5c7532f5e64212dd82d39424b'
+            'e810acde4a2864a0cae22c13e3031ad59c4236bc2f9940676d861ab8920d2c14'
+            'dc5b12678bea3a694a722e3e88277300c4a15050ceb35c9f7d873a5f8ab1ba54'
+            '54a1ef701be320915ac271daf26e055c528633667bc7ecdffa2870b4d71f54af'
+            'fb3abae54309adf69b98bd2435fbc23f17bc526dbf1d1e97907da87e7cf0aeed'
+            'a92129a1d018906a299b9b05c4a96375b115fdd6a3c019d3b326a30a4c107181'
+            '21c06cd79dc72a5d007624eaad4f4bc9b17fa25f5fb4ccba84fd34fc2f9500c1'
+            'd33c371766dea11dcd2a015d88db34af55c00c8e4064917308337ff6c5386850'
+            '1ec1568f0b38f2b828e903e0a13d527afec7758f3d4ef80e0b2b99aee62d9b83'
+            '399e1e6dd0d83fc9af2b74817db730661b963e99befc172a1ce0717f869575e6'
+            '3e2c52e499809858aa3dd796d9a3fe65bca2a0f681bc430df61ba6bd2592d008'
+            '9bf6c2c54ae385b02325fda1782e56d7b9230a2b29e0e8caf84fd1866586c269'
+            '55a1c2406ea6ca2219267b48acd3aafa33d4ccf05c455a1bd1d78803e39c13b2'
+            '502b4eca6edf10fe1d036ab2c65363b4300de91b381ce687e08bd96dc254c898'
+            'b00f417be1befdc651abb521a6656f9864376cc0b40e78c8e6f9fcffe52f8697'
+            'd03463b10381f953b5c08f16b99edae22c07d22dbcde3ef5e690c05883a1c5d0'
+            '8898a49ef823492fa3086081e649fde37aa3443773c18508707fe2bdf17e15e1'
+            '7b2f3813260d81a0f3f27132f9051c3eac27644021795c1dfe0b33d1e4b111c3'
+            'cef5dae4b2a7d4cf5ca60d35235594018cfbe3d5c7532f5e64212dd82d39424b'
+            '1e917568c707a63df98083f51f14b760a0ff2fb86ac68852cd0690040002295f'
+            '1d7b96a95eeb747d1006664cf2e18f62ec0bc31da0e3765fda918c261d34d563'
+            'efe4a753739fa9a25c3b72c6f6a49c056df94b9774721b9c9a1cfcf6def8f5c4'
+            '55824714159f1614c65f4fda191523ffc39433647b4292e7c2265e35e8755825'
+            'bedce54479422789f809c97cc8397696f56f3f60e32559b5b1c1684b7c9df3fa'
+            'b2d2c94a0e5db91c0f0007126eaf79313a74361ce320f16fd13d348bd23de1b7'
+            'dade96fbca109c9b6be9e6216d87de4e3e5c9203fdd572ed3b6636a34308c3d9')
 
 
 
@@ -181,6 +213,8 @@ declare -rgA _system_libs=(
 depends+=(${_system_libs[@]})
 
 prepare() {
+  msg2 'Warning,  build this program may require near to 3.4 hours, even at an AMD FX 8350 at 4GHz, if you dont have a decent CPU you will wait an eternity,  and if you have a decent cpu  you will wait a long time, please consider it lol'
+
   cd "$srcdir/chromium-$pkgver"
 
   msg2 'Patching the sources'
