@@ -35,6 +35,8 @@ These patches are tested and functional on Arch Linux x86_64, but should run on 
 
 *The build process takes about 3 hours on a i5-3550 CPU @ 3.90GHz and 16GB ram. (without ccache)*
 
+**This build process needs a good IO, ram and CPU, because i've an amd FX 8350, i build with 8 threads  and it takes 3 hours too**
+
 * **Arch Linux**:
 If you are running Arch Linux you can download and build the source from AUR: [inox](https://aur.archlinux.org/packages/inox/)
 
