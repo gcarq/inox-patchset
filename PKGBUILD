@@ -297,7 +297,6 @@ fi
 # List of third-party components needed for build chromium. The rest is remove by remove_bundled_libraries srcipt in prepare().
 _keeplibs=(
            'base/third_party/dmg_fp'
-           'base/trace_event'
            'base/third_party/dynamic_annotations'
            'base/third_party/icu'
            'base/third_party/nspr'
