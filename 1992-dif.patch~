@@ -1,35 +1,5 @@
---- a/components/search_engines/prepopulated_engines.json
-+++ b/components/search_engines/prepopulated_engines.json
-@@ -38,6 +38,17 @@
-   // The following engines are included in country lists and are added to the
-   // list of search engines on the first run depending on user's country.
-   "elements": {
-+    "duckduckgo": {
-+      "name": "DuckDuckGo",
-+      "keyword": "duckduckgo.com",
-+      "favicon_url": "https://duckduckgo.com/favicon.ico",
-+      "search_url": "https://duckduckgo.com/?q={searchTerms}",
-+      "suggest_url": "https://ac.duckduckgo.com/ac/?q={searchTerms}&type=list",
-+      "new_tab_url": "https://duckduckgo.com/",
-+      "type": "SEARCH_ENGINE_DUCKDUCKGO",
-+      "id": 11
-+    },
-+
-     "aol": {
-       "name": "AOL",
-       "keyword": "aol.com",
---- a/components/search_engines/search_engine_type.h
-+++ b/components/search_engines/search_engine_type.h
-@@ -63,6 +63,7 @@ enum SearchEngineType {
-   SEARCH_ENGINE_YANDEX,
-   SEARCH_ENGINE_ZOZNAM,
-   SEARCH_ENGINE_360,
-+  SEARCH_ENGINE_DUCKDUCKGO,
-   SEARCH_ENGINE_MAX          // Bounding value needed for UMA histogram macro.
- };
- 
---- a/components/search_engines/template_url_prepopulate_data.cc
-+++ b/components/search_engines/template_url_prepopulate_data.cc
+--- template_url_prepopulate_data.cc	2017-09-20 18:05:19.000000000 -0400
++++ template_url_prepopulate_data.cc.new	2017-10-01 21:33:08.462712291 -0400
 @@ -50,7 +50,7 @@
  
  // Default (for countries with no better engine set)

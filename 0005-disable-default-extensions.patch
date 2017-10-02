@@ -64,10 +64,10 @@
    download_url_ = GetWebstoreInstallURL(extension_id, source);
    MaybeAppendAuthUserParameter(approval_->authuser, &download_url_);
  
-@@ -606,6 +607,7 @@ void WebstoreInstaller::DownloadCrx(
-       base::BindOnce(
-           &GetDownloadFilePath, download_directory, extension_id,
-           base::Bind(&WebstoreInstaller::StartDownload, this, extension_id)));
+@@ -603,6 +603,7 @@
+       GetExtensionFileTaskRunner().get(), FROM_HERE,
+       base::BindOnce(&GetDownloadFilePath, download_directory, extension_id),
+       base::BindOnce(&WebstoreInstaller::StartDownload, this, extension_id));
 +#endif /* 0 */
  }
  

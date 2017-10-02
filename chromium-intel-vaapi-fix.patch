@@ -1,0 +1,27 @@
+--- ./content/gpu/BUILD.gn~	2017-08-25 23:08:04.000000000 +0100
++++ ./content/gpu/BUILD.gn	2017-08-25 23:28:03.275905387 +0100
+@@ -7,6 +7,16 @@
+ import("//media/media_options.gni")
+ import("//ui/ozone/ozone.gni")
+ 
++# Unfortunately, using public_configs from media/gpu breaks unbundling
++import("//media/gpu/args.gni")
++if (is_desktop_linux && use_vaapi) {
++  import("//build/config/linux/pkg_config.gni")
++
++  pkg_config("libva_config") {
++    packages = [ "libva" ]
++  }
++}
++
+ # See //content/BUILD.gn for how this works.
+ group("gpu") {
+   visibility = [ "//content/*" ]  # This is an internal content API.
+@@ -115,6 +125,6 @@
+   }
+ 
+   if (is_desktop_linux) {
+-    public_configs = [ "//media/gpu:libva_config" ]
++    public_configs = [ ":libva_config" ]
+   }
+ }

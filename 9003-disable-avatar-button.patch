@@ -1,0 +1,34 @@
+--- a/chrome/browser/about_flags.cc
++++ b/chrome/browser/about_flags.cc
+@@ -1139,6 +1139,10 @@ const FeatureEntry kFeatureEntries[] = {
+      "Capture page thumbnails",
+      "Capture page thumbnails for top sites used on the New Tab Page.",
+      kOsAll, SINGLE_VALUE_TYPE("enable-thumbnails")},
++    {"enable-avatar-button",
++     "Show avatar button",
++     "Draw an avatar button on the window frame to allow switching browser profiles quickly.",
++     kOsAll, SINGLE_VALUE_TYPE("enable-avatar-button")},
+ 
+     {"ignore-gpu-blacklist", flag_descriptions::kIgnoreGpuBlacklistName,
+      flag_descriptions::kIgnoreGpuBlacklistDescription, kOsAll,
+--- a/chrome/browser/ui/views/frame/avatar_button_manager.cc
++++ b/chrome/browser/ui/views/frame/avatar_button_manager.cc
+@@ -2,6 +2,8 @@
+ // Use of this source code is governed by a BSD-style license that can be
+ // found in the LICENSE file.
+ 
++#include "base/command_line.h"
++
+ #include "chrome/browser/ui/views/frame/avatar_button_manager.h"
+ 
+ #include "chrome/browser/browser_process.h"
+@@ -15,6 +17,9 @@ AvatarButtonManager::AvatarButtonManager
+     : frame_view_(frame_view), view_(nullptr) {}
+ 
+ void AvatarButtonManager::Update(AvatarButtonStyle style) {
++  if (!base::CommandLine::ForCurrentProcess()->HasSwitch("enable-avatar-button"))
++    return;
++
+   BrowserView* browser_view = frame_view_->browser_view();
+   BrowserFrame* frame = frame_view_->frame();
+   Profile* profile = browser_view->browser()->profile();

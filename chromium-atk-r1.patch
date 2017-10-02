@@ -1,4 +1,4 @@
---- a/content/browser/accessibility/browser_accessibility_auralinux.cc.orig	2017-07-27 06:28:01.090257874 +0000
+--- a/content/browser/accessibility/browser_accessibility_auralinux.cc	2017-07-27 06:28:01.090257874 +0000
 +++ b/content/browser/accessibility/browser_accessibility_auralinux.cc	2017-07-27 06:28:21.174653680 +0000
 @@ -571,7 +571,7 @@
  // it's best to leave this out rather than break people's builds:

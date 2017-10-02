@@ -96,7 +96,7 @@
 @@ -45,7 +45,7 @@
          </paper-button>
        </div>
-       <div class="footer" slot="footer">
+       <div slot="footer">
 -        <paper-checkbox id="sendSettings" checked>
 +        <paper-checkbox id="sendSettings">
            $i18nRaw{resetPageFeedback}</paper-checkbox>

@@ -33,7 +33,7 @@
    if (ProfileHasResetTrigger()) {
 --- a/chrome/browser/ui/startup/startup_tab_provider.cc
 +++ b/chrome/browser/ui/startup/startup_tab_provider.cc
-@@ -176,13 +176,7 @@
+@@ -176,12 +176,12 @@
  }
  
  // static
@@ -43,8 +43,12 @@
 -    bool is_signin_in_progress) {
 -  return !has_seen_welcome_page && !is_signed_in && !is_signin_in_progress;
 -}
--
-+//kek
++//bool StartupTabProviderImpl::ShouldShowWelcomeForOnboarding(
++//    bool has_seen_welcome_page,
++//    bool is_signed_in,
++//    bool is_signin_in_progress) {
++//  return !has_seen_welcome_page && !is_signed_in && !is_signin_in_progress;
++//}
+ 
  // static
  StartupTabs StartupTabProviderImpl::GetStandardOnboardingTabsForState(
-     const StandardOnboardingTabsParams& params) {
