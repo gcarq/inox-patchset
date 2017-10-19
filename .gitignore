@@ -31,6 +31,7 @@
 src/
 pkg/
 build.sh
+clean.sh
 chromium-*.tar.*z
 
 makepkg.conf
