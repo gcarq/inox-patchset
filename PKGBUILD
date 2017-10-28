@@ -9,7 +9,7 @@ _clang=1  # Use Clang instead of GCC for compilation
 
 pkgname=inox
 pkgver=62.0.3202.75
-pkgrel=1
+pkgrel=2
 _launcher_ver=5
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
 arch=('i686' 'x86_64')
