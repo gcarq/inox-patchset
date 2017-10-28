@@ -9,7 +9,7 @@ _clang=1  # Use Clang instead of GCC for compilation
 
 pkgname=inox
 pkgver=62.0.3202.75
-pkgrel=1
+pkgrel=2
 _launcher_ver=5
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
 arch=('i686' 'x86_64')
@@ -80,7 +80,7 @@ sha256sums=('49cdfe457bcb941b56c13a75bbe2ff394fcb5baa8a49c9b470835fad60dd904c'
             'd6fdcb922e5a7fbe15759d39ccc8ea4225821c44d98054ce0f23f9d1f00c9808'
             'd81319f168dad0e411c8e810f73daa2f56ff579578771bd9c9bb1aa2d7c09a8b'
             'dd4fa56c084083a550799217ff65d6216c835a8ef2b7aa22bab3fe3932e4a9d6'
-            '477c6ac419f717e295199485c0015718c24eaf34fa7641dbdeefd6030f13f542'
+            '71b9f821d25fdb6980695b3b64ddca98f701b6c70a0cf977a6d5fd523b70e236'
             '605cca8be9828a29cc96d473847eef9452d572fe6a56dacd96426a202310ba58'
             'fb91a7e30e2615e4eb0626b0fdcf97b92d4a727a52023730f408b02fee436c8d'
             '7c6ff455d7fe9445a189fd2b309e9cf0c920187010276c79a032e913be2c949a'
