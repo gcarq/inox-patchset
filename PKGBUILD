@@ -39,6 +39,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         # Patches from Gentoo
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-gn-bootstrap-r17.patch
         # Misc
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-libva-version.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-r14.patch
         # Inox patchset
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0001-fix-building-without-safebrowsing.patch
@@ -79,6 +80,7 @@ sha256sums=('9f79760dc22f7183602a07af3d37d2226bd63ab0ca7163d88ac0d81982de9469'
             '35435e8dae76737baafecdc76d74a1c97281c4179e416556e033a06a31468e6d'
             'd6fdcb922e5a7fbe15759d39ccc8ea4225821c44d98054ce0f23f9d1f00c9808'
             'd81319f168dad0e411c8e810f73daa2f56ff579578771bd9c9bb1aa2d7c09a8b'
+            '4d0e95ab106eccc2e016c88a660712ee4393376e18a4793775fc9e22e8e7eb0b'
             'dd4fa56c084083a550799217ff65d6216c835a8ef2b7aa22bab3fe3932e4a9d6'
             '71b9f821d25fdb6980695b3b64ddca98f701b6c70a0cf977a6d5fd523b70e236'
             '605cca8be9828a29cc96d473847eef9452d572fe6a56dacd96426a202310ba58'
@@ -158,6 +160,7 @@ prepare() {
   echo > "flapper_version.h"
 
   msg2 'Applying VA-API patches'
+  patch -Np1 -i ../chromium-libva-version.patch
   patch -Np1 -i ../chromium-vaapi-r14.patch
 
   msg2 'Applying Inox patchset'
