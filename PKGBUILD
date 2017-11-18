@@ -289,6 +289,11 @@ build() {
     export CXXFLAGS="${CXXFLAGS//-fno-plt/} -Wno-unknown-warning-option"
   fi
 
+  # Set exclude_unwind_tables to save disk space
+  if check_option strip y; then
+    _flags+=('exclude_unwind_tables=true')
+  fi
+
   msg2 'Building GN'
   python2 tools/gn/bootstrap/bootstrap.py -s --no-clean
   msg2 'Configuring Chromium'
