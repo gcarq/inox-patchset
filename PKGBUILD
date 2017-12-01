@@ -4,9 +4,6 @@
 # Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
-# Build options
-_clang=1  # Use Clang instead of GCC for compilation
-
 pkgname=inox
 pkgver=62.0.3202.94
 pkgrel=1
@@ -18,8 +15,8 @@ license=('BSD')
 depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
          'ttf-font' 'systemd' 'dbus' 'libpulse' 'pciutils' 'json-glib'
          'desktop-file-utils' 'hicolor-icon-theme')
-makedepends=('python2' 'gperf' 'yasm' 'mesa' 'ninja' 'nodejs' 'git' 'libva')
-(( $_clang )) && makedepends+=('clang' 'lld' 'llvm')
+makedepends=('python2' 'gperf' 'yasm' 'mesa' 'ninja' 'nodejs' 'git' 'libva'
+             'clang' 'lld' 'llvm')
 optdepends=('pepper-flash: support for Flash content'
             'kdialog: needed for file dialogs in KDE'
             'gnome-keyring: for storing passwords in GNOME keyring'
@@ -112,7 +109,7 @@ declare -rgA _system_libs=(
   [flac]=flac
   #[freetype]=freetype2      # https://crbug.com/pdfium/733
   [harfbuzz-ng]=harfbuzz-icu
-  #[icu]=icu
+  #[icu]=icu                 # https://crbug.com/772655
   [libdrm]=
   [libjpeg]=libjpeg
   #[libpng]=libpng           # https://crbug.com/752403#c10
@@ -155,9 +152,6 @@ prepare() {
 
   # Fixes from Gentoo
   patch -Np1 -i ../chromium-gn-bootstrap-r17.patch
-
-  # Make it possible to remove third_party/adobe
-  echo > "flapper_version.h"
 
   msg2 'Applying VA-API patches'
   patch -Np1 -i ../chromium-libva-version.patch
@@ -222,7 +216,7 @@ prepare() {
 }
 
 build() {
-  make -C "chromium-launcher-$_launcher_ver"
+  make -C chromium-launcher-$_launcher_ver
 
   cd "$srcdir/chromium-$pkgver"
 
@@ -230,12 +224,22 @@ build() {
   export TMPDIR="$srcdir/temp"
   mkdir -p "$TMPDIR"
 
+  export CC=clang
+  export CXX=clang++
+  export AR=llvm-ar
+  export NM=llvm-nm
+  export CFLAGS="${CFLAGS//-fno-plt/} -Wno-unknown-warning-option"
+  export CXXFLAGS="${CXXFLAGS//-fno-plt/} -Wno-unknown-warning-option"
+
   # TODO: enable_mdns=false (linker error)
   # TODO: enable_reporting=false (compiler error)
   local _flags=(
+    'custom_toolchain="//build/toolchain/linux/unbundle:default"'
+    'host_toolchain="//build/toolchain/linux/unbundle:default"'
+    'use_lld=true'
+    'clang_use_chrome_plugins=false'
     'symbol_level=0'
     'is_debug=false'
-    'exclude_unwind_tables=true'
     'fatal_linker_warnings=false'
     'treat_warnings_as_errors=false'
     'fieldtrial_testing_like_official_build=true'
@@ -262,34 +266,6 @@ build() {
     'enable_hotwording=false'
   )
 
-  # Use the unbundle template to get compiler flags from environment
-  # variables like CFLAGS, otherwise they are ignored
-  _flags+=('custom_toolchain="//build/toolchain/linux/unbundle:default"'
-           'host_toolchain="//build/toolchain/linux/unbundle:default"')
-
-  if (( ! $_clang )); then
-    _flags+=('is_clang=false')
-    # Set environment variables
-    export AR=ar
-    export CC=gcc
-    export CXX=c++
-    export NM=nm
-  else
-    # Disable Google's Clang plugins and use LLVM's lld linker
-    _flags+=('clang_use_chrome_plugins=false'
-             'use_lld=true')
-    # Set environment variables.
-    # '-fno-plt' is default in Arch but officially not supported by Clang
-    # and causes an error if used with an unpatched toolchain
-    export AR=llvm-ar
-    export CC=clang
-    export CXX=clang++
-    export NM=llvm-nm
-    export CFLAGS="${CFLAGS//-fno-plt/} -Wno-unknown-warning-option"
-    export CXXFLAGS="${CXXFLAGS//-fno-plt/} -Wno-unknown-warning-option"
-  fi
-
-  # Set exclude_unwind_tables to save disk space
   if check_option strip y; then
     _flags+=('exclude_unwind_tables=true')
   fi
