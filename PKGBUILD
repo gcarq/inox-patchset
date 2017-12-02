@@ -5,7 +5,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=inox
-pkgver=62.0.3202.94
+pkgver=63.0.3239.70
 pkgrel=1
 _launcher_ver=5
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
@@ -30,14 +30,14 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/inox.desktop
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/product_logo_{16,22,24,32,48,64,128,256}.png
         # Patches from Arch Linux
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/breakpad-use-ucontext_t.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/crc32c-string-view-check.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-widevine.patch
         # Patches from Gentoo
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-gn-bootstrap-r17.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-clang-r1.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-webrtc-r0.patch
         # Misc
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-libva-version.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-r14.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-exclude-unwind-tables-r1.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-libva-r2.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-r15.patch
         # Inox patchset
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0001-fix-building-without-safebrowsing.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0003-disable-autofill-download-manager.patch
@@ -59,10 +59,10 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0019-disable-battery-status-service.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0020-launcher-branding.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0021-disable-rlz.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/9000-disable-metrics.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/9001-disable-profiler.patch)
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/9000-disable-metrics.patch)
 
-sha256sums=('cabc4d267bf08aabe11c5739048c43dde18c61acf595223a1c3aa1d3499558d4'
+
+sha256sums=('0f29df3f4768ae32abbe504ba99cfa3b72c820f175b96a43c737a3d66f83f959'
             '4dc3428f2c927955d9ae117f2fb24d098cc6dd67adb760ac9c82b522ec8b0587'
             'ff3f939a8757f482c1c5ba35c2c0f01ee80e2a2273c16238370081564350b148'
             '71471fa4690894420f9e04a2e9a622af620d92ac2714a35f9a4c4e90fa3968dd'
@@ -73,34 +73,33 @@ sha256sums=('cabc4d267bf08aabe11c5739048c43dde18c61acf595223a1c3aa1d3499558d4'
             '53a1e8da18069eb4d6ab3af9c923c22a0f020241a4839c3140e3601052ddf6ff'
             '896993987d4ef9f0ac7db454f288117316c2c80ed0b6764019afd760db222dad'
             '3df9b3bbdc07fde63d9e400954dcc6ab6e0e5454f0ef6447570eef0549337354'
-            '6e9a345f810d36068ee74ebba4708c70ab30421dad3571b6be5e9db635078ea8'
-            '35435e8dae76737baafecdc76d74a1c97281c4179e416556e033a06a31468e6d'
             'd6fdcb922e5a7fbe15759d39ccc8ea4225821c44d98054ce0f23f9d1f00c9808'
-            'd81319f168dad0e411c8e810f73daa2f56ff579578771bd9c9bb1aa2d7c09a8b'
-            '4d0e95ab106eccc2e016c88a660712ee4393376e18a4793775fc9e22e8e7eb0b'
-            'dd4fa56c084083a550799217ff65d6216c835a8ef2b7aa22bab3fe3932e4a9d6'
-            '71b9f821d25fdb6980695b3b64ddca98f701b6c70a0cf977a6d5fd523b70e236'
+            'ab5368a3e3a67fa63b33fefc6788ad5b4a79089ef4db1011a14c3bee9fdf70c6'
+            'bcb2f4588cf5dcf75cde855c7431e94fdcc34bdd68b876a90f65ab9938594562'
+            '40baddd39068962665d3bc3eb0dcff44a2e2b79a91de68b90acf4def99d2ab93'
+            '73275413f078b1217a11e5a099777c1ace11a667144d5106975d1ff650540321'
+            'a15b2ca40b5ca17d4763e41e226fb5faca22277027e8321675c87038dd9879d5'
+            'c78ce6bcd39031fc392f3356cf1e6f1b9b3c953a1c920c6ab26e4b81e8e48a18'
             '605cca8be9828a29cc96d473847eef9452d572fe6a56dacd96426a202310ba58'
             'fb91a7e30e2615e4eb0626b0fdcf97b92d4a727a52023730f408b02fee436c8d'
-            '7c6ff455d7fe9445a189fd2b309e9cf0c920187010276c79a032e913be2c949a'
-            'e154725477b8b39cb6c2ccdb02d66234b9b584367a97bb7e99a847d3dc58067a'
+            '94d20bc91ce6f4c9405293b4480670af9e7c3a79f2b87268e663dc2f063cb6e4'
+            '08a1dcbb5ae2cb38815026f2f723da383f4275c58dc992078e6c7b006c651ec1'
             'bd9194b0a1da60879ce36ac389da6b229be9be5ae6acfba04e3cb0e1cb15ea9f'
-            '9df213dabcf5e689a202541035c8326a94eb73c5741fcb59f022046405f6982a'
-            '25cc46b6a661bbcecb12840c6475287c6643258834daa99ba58b406f9914fdf1'
+            'e20a71da88b78dcd0d5b490f66ecebcca4aa2e0d7b22df453c7adc90c1da2c02'
+            'cf050473adae5b83680346b369997b5ead55dce282515f185e4096c5ed39f11d'
             '3190a507dfa00e863a0e622b5738db5cf19947f696ac7a790f427510cc15d1e1'
             '476593cf1e3bbf2539732567a70b0acea14033370317baf868f3d9701e4a1d5d'
-            '1a3233a14496819468b7f52e6d3f3f371942267eba9a9cb972e2edba0ad79836'
+            '6f0768e13f2218597f7c39f4398381934333ec302756147e488defa01cbb1c4c'
             'c79f12e444d2c7b9b61de8d6698033cc8a84bb35f949908b3a366105367237b0'
-            '28dddc8a0f59f0ffa5cb3c24b64afb04b3980e34be53c42619978129c8968698'
+            'bfb04c0c51b7f48e01ac514c5dfe26b3a93ffc2aa517f846c01d6f2668247a38'
             '795686bf0dd7bfac0f596155be8fc7ed3f6294a6b764f793cd1614085562ce38'
             '216829c72f1cc378bc66fb4f62f047cccd31684d946ba9a406b6e7a8f1351677'
-            'bf1d064fd909ec6a9acc5dd1aeee245bc31eeb90fc3733d9449eb1afe6f262ae'
-            '19e25b660adc437a7f5bae3a3e44baad6b3aff223aa7029233b4e103974fc1b2'
+            '438a53a389a39568038cd353b5a8cd07d6e4e28277326ae64cd7ecce7caf93fa'
+            'cb2bd17fbbd9184f15eb24d3b23deca92d06cb4b9ec31bd6944504e130d69ff8'
             'c17556772059a64873ddac383f2976e3befb5c07c3019b641c989ffb5683c4cd'
             '80d2974001708c288a54c24e1dc896ef25916552b740765f6066a244c05ffcd5'
             'dbe942b1eaba525ca6b81d398462a70360fc2043cbfe5d4105657c3bd721e592'
-            'b618c79506032422cd7f7a74b6d2bf9715857fe31e5f79c9dfc08a38b3d3ee58'
-            '814fa3b82c8330b944b138ece864be4761fe17f42061816028b5d8c1f2609c8a')
+            '42425ef9f374020ce583225ad4ac5201aa0d7d08b91a4ba2b52c0ea5ffb153b7')
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
@@ -108,7 +107,7 @@ declare -rgA _system_libs=(
   #[ffmpeg]=ffmpeg           # https://crbug.com/731766
   [flac]=flac
   #[freetype]=freetype2      # https://crbug.com/pdfium/733
-  [harfbuzz-ng]=harfbuzz-icu
+  #[harfbuzz-ng]=harfbuzz-icu  # need harfbuzz_from_pkgconfig target
   #[icu]=icu                 # https://crbug.com/772655
   [libdrm]=
   [libjpeg]=libjpeg
@@ -144,18 +143,16 @@ prepare() {
   sed "s/@WIDEVINE_VERSION@/Pinkie Pie/" ../chromium-widevine.patch |
     patch -Np1
 
-  # Fix build with glibc 2.26
-  patch -Np1 -i ../breakpad-use-ucontext_t.patch
-
-  # Fix incorrect inclusion of <string_view> in modes other than >= C++17
-  patch -Np1 -d third_party/crc32c/src <../crc32c-string-view-check.patch
-
   # Fixes from Gentoo
-  patch -Np1 -i ../chromium-gn-bootstrap-r17.patch
+  patch -Np1 -i ../chromium-clang-r1.patch
+  patch -Np1 -i ../chromium-webrtc-r0.patch
+
+  # Misc
+  patch -Np1 -i ../chromium-exclude-unwind-tables-r1.patch
 
   msg2 'Applying VA-API patches'
-  patch -Np1 -i ../chromium-libva-version.patch
-  patch -Np1 -i ../chromium-vaapi-r14.patch
+  patch -Np1 -i ../chromium-libva-r2.patch
+  patch -Np1 -i ../chromium-vaapi-r15.patch
 
   msg2 'Applying Inox patchset'
   # Apply patches to fix building
@@ -181,7 +178,6 @@ prepare() {
   patch -Np1 -i ../0019-disable-battery-status-service.patch
   patch -Np1 -i ../0021-disable-rlz.patch
   patch -Np1 -i ../9000-disable-metrics.patch
-  patch -Np1 -i ../9001-disable-profiler.patch
 
   # Use Python 2
   find . -name '*.py' -exec sed -i -r 's|/usr/bin/python$|&2|g' {} +
@@ -264,11 +260,8 @@ build() {
     'enable_google_now=false'
     'safe_browsing_mode=0'
     'enable_hotwording=false'
+    'use_system_harfbuzz=true'
   )
-
-  if check_option strip y; then
-    _flags+=('exclude_unwind_tables=true')
-  fi
 
   msg2 'Building GN'
   python2 tools/gn/bootstrap/bootstrap.py -s --no-clean
@@ -304,7 +297,8 @@ package() {
     cp out/Release/icudtl.dat "$pkgdir/usr/lib/$pkgname/"
   fi
 
-  install -Dm644 out/Release/chrome.1 "$pkgdir/usr/share/man/man1/$pkgname.1"
+  # TODO: Check
+  #install -Dm644 out/Release/chrome.1 "$pkgdir/usr/share/man/man1/$pkgname.1"
 
   install -Dm644 "$srcdir/$pkgname.desktop" \
     "$pkgdir/usr/share/applications/$pkgname.desktop"
