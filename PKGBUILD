@@ -5,7 +5,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=inox
-pkgver=63.0.3239.70
+pkgver=63.0.3239.84
 pkgrel=1
 _launcher_ver=5
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
@@ -62,7 +62,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/9000-disable-metrics.patch)
 
 
-sha256sums=('0f29df3f4768ae32abbe504ba99cfa3b72c820f175b96a43c737a3d66f83f959'
+sha256sums=('6de2754dfc333675ae6a67ae13c95666009b35c84f847b058edbf312e42fa3af'
             '4dc3428f2c927955d9ae117f2fb24d098cc6dd67adb760ac9c82b522ec8b0587'
             'ff3f939a8757f482c1c5ba35c2c0f01ee80e2a2273c16238370081564350b148'
             '71471fa4690894420f9e04a2e9a622af620d92ac2714a35f9a4c4e90fa3968dd'
@@ -79,7 +79,7 @@ sha256sums=('0f29df3f4768ae32abbe504ba99cfa3b72c820f175b96a43c737a3d66f83f959'
             '40baddd39068962665d3bc3eb0dcff44a2e2b79a91de68b90acf4def99d2ab93'
             '73275413f078b1217a11e5a099777c1ace11a667144d5106975d1ff650540321'
             'a15b2ca40b5ca17d4763e41e226fb5faca22277027e8321675c87038dd9879d5'
-            'c78ce6bcd39031fc392f3356cf1e6f1b9b3c953a1c920c6ab26e4b81e8e48a18'
+            '8a0ddd4464b5d89bff66e80913001d42e864f36d2d9896f5d43c2a785b021654'
             '605cca8be9828a29cc96d473847eef9452d572fe6a56dacd96426a202310ba58'
             'fb91a7e30e2615e4eb0626b0fdcf97b92d4a727a52023730f408b02fee436c8d'
             '94d20bc91ce6f4c9405293b4480670af9e7c3a79f2b87268e663dc2f063cb6e4'
