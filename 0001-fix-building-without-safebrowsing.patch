@@ -8,7 +8,7 @@
    }
  
   private:
-@@ -1678,7 +1677,7 @@ void ChromeContentBrowserClient::AppendE
+@@ -1682,7 +1681,7 @@ void ChromeContentBrowserClient::AppendE
        // Disable client-side phishing detection in the renderer if it is
        // disabled in the Profile preferences or the browser process.
        if (!prefs->GetBoolean(prefs::kSafeBrowsingEnabled) ||
@@ -17,7 +17,7 @@
          command_line->AppendSwitch(
              switches::kDisableClientSidePhishingDetection);
        }
-@@ -2255,15 +2254,9 @@ void ChromeContentBrowserClient::AllowCe
+@@ -2259,15 +2258,9 @@ void ChromeContentBrowserClient::AllowCe
    // Otherwise, display an SSL blocking page. The interstitial page takes
    // ownership of ssl_blocking_page.
  
@@ -34,7 +34,7 @@
  }
  
  void ChromeContentBrowserClient::SelectClientCertificate(
-@@ -2452,8 +2445,6 @@ bool ChromeContentBrowserClient::CanCrea
+@@ -2456,8 +2449,6 @@ bool ChromeContentBrowserClient::CanCrea
  void ChromeContentBrowserClient::ResourceDispatcherHostCreated() {
    DCHECK_CURRENTLY_ON(BrowserThread::UI);
  
@@ -43,7 +43,7 @@
    for (size_t i = 0; i < extra_parts_.size(); ++i)
      extra_parts_[i]->ResourceDispatcherHostCreated();
  
-@@ -2970,17 +2961,6 @@ void ChromeContentBrowserClient::ExposeI
+@@ -2974,17 +2965,6 @@ void ChromeContentBrowserClient::ExposeI
                                        base::RetainedRef(context)));
    }
  
@@ -61,7 +61,7 @@
  #if defined(OS_WIN)
    if (base::FeatureList::IsEnabled(features::kModuleDatabase)) {
      // Add the ModuleEventSink interface. This is the interface used by renderer
-@@ -3559,12 +3539,6 @@ ChromeContentBrowserClient::CreateURLLoa
+@@ -3563,12 +3543,6 @@ ChromeContentBrowserClient::CreateURLLoa
  
    std::vector<std::unique_ptr<content::URLLoaderThrottle>> result;
  
@@ -74,7 +74,7 @@
    return result;
  }
  
-@@ -3620,18 +3594,3 @@ void ChromeContentBrowserClient::SetDefa
+@@ -3624,18 +3598,3 @@ void ChromeContentBrowserClient::SetDefa
      const storage::QuotaSettings* settings) {
    g_default_quota_settings = settings;
  }
@@ -1321,6 +1321,7 @@
                               ? IDS_SETTINGS_CHANGE_PASSWORD_TITLE_SOFTER
 --- a/chrome/renderer/chrome_content_renderer_client.cc
 +++ b/chrome/renderer/chrome_content_renderer_client.cc
+<<<<<<< HEAD
 @@ -58,7 +58,6 @@
  #include "chrome/renderer/prerender/prerender_dispatcher.h"
  #include "chrome/renderer/prerender/prerender_helper.h"
@@ -1378,6 +1379,9 @@
  // URL to something invalid to prevent the request and cause an error.
  #if BUILDFLAG(ENABLE_EXTENSIONS)
 @@ -1373,9 +1352,7 @@ bool ChromeContentRendererClient::IsExte
+=======
+@@ -1387,6 +1387,8 @@ bool ChromeContentRendererClient::IsExte
+>>>>>>> 63.0.3239.84: Update to stable
  
  std::unique_ptr<blink::WebSocketHandshakeThrottle>
  ChromeContentRendererClient::CreateWebSocketHandshakeThrottle() {
