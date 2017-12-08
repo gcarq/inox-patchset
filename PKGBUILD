@@ -27,15 +27,14 @@ optdepends=('pepper-flash: support for Flash content'
 install=inox.install
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/inox.desktop
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/product_logo_{16,22,24,32,48,64,128,256}.png
         # Patches from Arch Linux
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-exclude_unwind_tables.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-widevine.patch
         # Patches from Gentoo
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-clang-r1.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-webrtc-r0.patch
         # Misc
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-exclude-unwind-tables-r1.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-libva-r2.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-r15.patch
         # Inox patchset
@@ -64,7 +63,6 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
 
 sha256sums=('6de2754dfc333675ae6a67ae13c95666009b35c84f847b058edbf312e42fa3af'
             '4dc3428f2c927955d9ae117f2fb24d098cc6dd67adb760ac9c82b522ec8b0587'
-            'ff3f939a8757f482c1c5ba35c2c0f01ee80e2a2273c16238370081564350b148'
             '71471fa4690894420f9e04a2e9a622af620d92ac2714a35f9a4c4e90fa3968dd'
             '4a533acefbbc1567b0d74a1c0903e9179b8c59c1beabe748850795815366e509'
             '7b88830c5e0e9819f514ad68aae885d427541a907e25607e47dee1b0f38975fd'
@@ -73,10 +71,10 @@ sha256sums=('6de2754dfc333675ae6a67ae13c95666009b35c84f847b058edbf312e42fa3af'
             '53a1e8da18069eb4d6ab3af9c923c22a0f020241a4839c3140e3601052ddf6ff'
             '896993987d4ef9f0ac7db454f288117316c2c80ed0b6764019afd760db222dad'
             '3df9b3bbdc07fde63d9e400954dcc6ab6e0e5454f0ef6447570eef0549337354'
+            'e53dc6f259acd39df13874f8a0f440528fae764b859dd71447991a5b1fac7c9c'
             'd6fdcb922e5a7fbe15759d39ccc8ea4225821c44d98054ce0f23f9d1f00c9808'
             'ab5368a3e3a67fa63b33fefc6788ad5b4a79089ef4db1011a14c3bee9fdf70c6'
             'bcb2f4588cf5dcf75cde855c7431e94fdcc34bdd68b876a90f65ab9938594562'
-            '40baddd39068962665d3bc3eb0dcff44a2e2b79a91de68b90acf4def99d2ab93'
             '73275413f078b1217a11e5a099777c1ace11a667144d5106975d1ff650540321'
             'a15b2ca40b5ca17d4763e41e226fb5faca22277027e8321675c87038dd9879d5'
             '8a0ddd4464b5d89bff66e80913001d42e864f36d2d9896f5d43c2a785b021654'
@@ -104,15 +102,15 @@ sha256sums=('6de2754dfc333675ae6a67ae13c95666009b35c84f847b058edbf312e42fa3af'
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
 declare -rgA _system_libs=(
-  #[ffmpeg]=ffmpeg           # https://crbug.com/731766
+  #[ffmpeg]=ffmpeg              # https://crbug.com/731766
   [flac]=flac
-  #[freetype]=freetype2      # https://crbug.com/pdfium/733
-  #[harfbuzz-ng]=harfbuzz-icu  # need harfbuzz_from_pkgconfig target
-  #[icu]=icu                 # https://crbug.com/772655
+  #[freetype]=freetype2         # https://crbug.com/pdfium/733
+  #[harfbuzz-ng]=harfbuzz-icu   # https://crbug.com/768938
+  #[icu]=icu                    # https://crbug.com/772655
   [libdrm]=
   [libjpeg]=libjpeg
-  #[libpng]=libpng           # https://crbug.com/752403#c10
-  #[libvpx]=libvpx           # https://bugs.gentoo.org/611394
+  #[libpng]=libpng              # https://crbug.com/752403#c10
+  #[libvpx]=libvpx              # https://bugs.gentoo.org/611394
   [libwebp]=libwebp
   [libxml]=libxml2
   [libxslt]=libxslt
@@ -143,12 +141,20 @@ prepare() {
   sed "s/@WIDEVINE_VERSION@/Pinkie Pie/" ../chromium-widevine.patch |
     patch -Np1
 
+  # https://chromium-review.googlesource.com/c/chromium/src/+/712575
+  patch -Np1 -i ../chromium-exclude_unwind_tables.patch
+
   # Fixes from Gentoo
   patch -Np1 -i ../chromium-clang-r1.patch
   patch -Np1 -i ../chromium-webrtc-r0.patch
 
-  # Misc
-  patch -Np1 -i ../chromium-exclude-unwind-tables-r1.patch
+  # Remove compiler flags not supported by our system clang
+  sed -i \
+    -e '/"-Wno-enum-compare-switch"/d' \
+    -e '/"-Wno-null-pointer-arithmetic"/d' \
+    -e '/"-Wno-tautological-unsigned-zero-compare"/d' \
+    -e '/"-Wno-tautological-unsigned-enum-zero-compare"/d' \
+    build/config/compiler/BUILD.gn
 
   msg2 'Applying VA-API patches'
   patch -Np1 -i ../chromium-libva-r2.patch
@@ -216,6 +222,11 @@ build() {
 
   cd "$srcdir/chromium-$pkgver"
 
+  if check_buildoption ccache y; then
+    # Avoid falling back to preprocessor mode when sources contain time macros
+    export CCACHE_SLOPPINESS=time_macros
+  fi
+
   export PATH="$srcdir/python2-path:$PATH"
   export TMPDIR="$srcdir/temp"
   mkdir -p "$TMPDIR"
@@ -224,8 +235,6 @@ build() {
   export CXX=clang++
   export AR=llvm-ar
   export NM=llvm-nm
-  export CFLAGS="${CFLAGS//-fno-plt/} -Wno-unknown-warning-option"
-  export CXXFLAGS="${CXXFLAGS//-fno-plt/} -Wno-unknown-warning-option"
 
   # TODO: enable_mdns=false (linker error)
   # TODO: enable_reporting=false (compiler error)
@@ -263,6 +272,10 @@ build() {
     'use_system_harfbuzz=true'
   )
 
+  if check_option strip y; then
+    _flags+=('exclude_unwind_tables=true')
+  fi
+
   msg2 'Building GN'
   python2 tools/gn/bootstrap/bootstrap.py -s --no-clean
   msg2 'Configuring Chromium'
@@ -274,41 +287,43 @@ build() {
 }
 
 package() {
-  cd "$srcdir/chromium-launcher-$_launcher_ver"
-  make PREFIX=/usr DESTDIR="$pkgdir" install-strip
+  cd chromium-launcher-$_launcher_ver
+  make PREFIX=/usr DESTDIR="$pkgdir" install
   install -Dm644 LICENSE \
     "$pkgdir/usr/share/licenses/$pkgname/LICENSE.launcher"
 
   cd "$srcdir/chromium-$pkgver"
 
   install -D out/Release/chrome "$pkgdir/usr/lib/$pkgname/$pkgname"
-
-  install -Dm4755 out/Release/chrome_sandbox \
-    "$pkgdir/usr/lib/$pkgname/chrome-sandbox"
-
+  install -Dm4755 out/Release/chrome_sandbox "$pkgdir/usr/lib/$pkgname/chrome-sandbox"
   install -D out/Release/chromedriver "$pkgdir/usr/lib/$pkgname/inoxdriver"
+  ln -s /usr/lib/$pkgname/inoxdriver "$pkgdir/usr/bin/inoxdriver"
+
+  install -Dm644 chrome/installer/linux/common/desktop.template \
+    "$pkgdir/usr/share/applications/$pkgname.desktop"
+  install -Dm644 chrome/app/resources/manpage.1.in \
+    "$pkgdir/usr/share/man/man1/$pkgname.1"
+  sed -i \
+    -e "s/@@MENUNAME@@/${pkgname^}/g" \
+    -e "s/@@PACKAGE@@/$pkgname/g" \
+    -e "s/@@USR_BIN_SYMLINK_NAME@@/$pkgname/g" \
+    "$pkgdir/usr/share/applications/$pkgname.desktop" \
+    "$pkgdir/usr/share/man/man1/$pkgname.1"
 
   cp -a \
     out/Release/{chrome_{100,200}_percent,resources}.pak \
     out/Release/{*.bin,libwidevinecdmadapter.so} \
-    out/Release/locales "$pkgdir/usr/lib/$pkgname/"
+    "$pkgdir/usr/lib/$pkgname/"
+  install -Dm644 -t "$pkgdir/usr/lib/$pkgname/locales" out/Release/locales/*.pak
 
   if [[ -z ${_system_libs[icu]+set} ]]; then
     cp out/Release/icudtl.dat "$pkgdir/usr/lib/$pkgname/"
   fi
 
-  # TODO: Check
-  #install -Dm644 out/Release/chrome.1 "$pkgdir/usr/share/man/man1/$pkgname.1"
-
-  install -Dm644 "$srcdir/$pkgname.desktop" \
-    "$pkgdir/usr/share/applications/$pkgname.desktop"
-
   for size in 16 22 24 32 48 64 128 256; do
     install -Dm644 "$srcdir/product_logo_$size.png" \
       "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/$pkgname.png"
   done
-
-  ln -s /usr/lib/$pkgname/inoxdriver "$pkgdir/usr/bin/inoxdriver"
 
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
