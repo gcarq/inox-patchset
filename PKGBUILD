@@ -27,6 +27,7 @@ optdepends=('pepper-flash: support for Flash content'
 install=inox.install
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
+        chromium-$pkgver.txt::https://chromium.googlesource.com/chromium/src.git/+/$pkgver?format=TEXT
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/product_logo_{16,22,24,32,48,64,128,256}.png
         # Patches from Arch Linux
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-exclude_unwind_tables.patch
@@ -63,6 +64,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
 
 sha256sums=('6de2754dfc333675ae6a67ae13c95666009b35c84f847b058edbf312e42fa3af'
             '4dc3428f2c927955d9ae117f2fb24d098cc6dd67adb760ac9c82b522ec8b0587'
+            '782a512b8bcf4aa6e58036cc3454d037d0eea69f27d5b673902d494c3fb5b20d'
             '71471fa4690894420f9e04a2e9a622af620d92ac2714a35f9a4c4e90fa3968dd'
             '4a533acefbbc1567b0d74a1c0903e9179b8c59c1beabe748850795815366e509'
             '7b88830c5e0e9819f514ad68aae885d427541a907e25607e47dee1b0f38975fd'
@@ -127,8 +129,8 @@ prepare() {
 
   msg2 'Applying build patches'
   # https://crbug.com/710701
-  local _chrome_build_hash=$(curl -s https://chromium.googlesource.com/chromium/src.git/+/$pkgver?format=TEXT |
-    base64 -d | grep -Po '^parent \K[0-9a-f]{40}$')
+  local _chrome_build_hash=$(base64 -d ../chromium-$pkgver.txt |
+    grep -Po '^parent \K[0-9a-f]{40}$')
   if [[ -z $_chrome_build_hash ]]; then
     error "Unable to fetch Chrome build hash."
     return 1
