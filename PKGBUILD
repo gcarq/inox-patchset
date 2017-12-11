@@ -5,7 +5,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=inox
-pkgver=62.0.3202.94
+pkgver=63.0.3239.84
 pkgrel=1
 _launcher_ver=5
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
@@ -27,17 +27,17 @@ optdepends=('pepper-flash: support for Flash content'
 install=inox.install
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/inox.desktop
+        chromium-$pkgver.txt::https://chromium.googlesource.com/chromium/src.git/+/$pkgver?format=TEXT
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/product_logo_{16,22,24,32,48,64,128,256}.png
         # Patches from Arch Linux
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/breakpad-use-ucontext_t.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/crc32c-string-view-check.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-exclude_unwind_tables.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-widevine.patch
         # Patches from Gentoo
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-gn-bootstrap-r17.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-clang-r1.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-webrtc-r0.patch
         # Misc
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-libva-version.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-r14.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-libva-r2.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-r15.patch
         # Inox patchset
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0001-fix-building-without-safebrowsing.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0003-disable-autofill-download-manager.patch
@@ -59,12 +59,12 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0019-disable-battery-status-service.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0020-launcher-branding.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0021-disable-rlz.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/9000-disable-metrics.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/9001-disable-profiler.patch)
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/9000-disable-metrics.patch)
 
-sha256sums=('cabc4d267bf08aabe11c5739048c43dde18c61acf595223a1c3aa1d3499558d4'
+
+sha256sums=('6de2754dfc333675ae6a67ae13c95666009b35c84f847b058edbf312e42fa3af'
             '4dc3428f2c927955d9ae117f2fb24d098cc6dd67adb760ac9c82b522ec8b0587'
-            'ff3f939a8757f482c1c5ba35c2c0f01ee80e2a2273c16238370081564350b148'
+            '782a512b8bcf4aa6e58036cc3454d037d0eea69f27d5b673902d494c3fb5b20d'
             '71471fa4690894420f9e04a2e9a622af620d92ac2714a35f9a4c4e90fa3968dd'
             '4a533acefbbc1567b0d74a1c0903e9179b8c59c1beabe748850795815366e509'
             '7b88830c5e0e9819f514ad68aae885d427541a907e25607e47dee1b0f38975fd'
@@ -73,47 +73,46 @@ sha256sums=('cabc4d267bf08aabe11c5739048c43dde18c61acf595223a1c3aa1d3499558d4'
             '53a1e8da18069eb4d6ab3af9c923c22a0f020241a4839c3140e3601052ddf6ff'
             '896993987d4ef9f0ac7db454f288117316c2c80ed0b6764019afd760db222dad'
             '3df9b3bbdc07fde63d9e400954dcc6ab6e0e5454f0ef6447570eef0549337354'
-            '6e9a345f810d36068ee74ebba4708c70ab30421dad3571b6be5e9db635078ea8'
-            '35435e8dae76737baafecdc76d74a1c97281c4179e416556e033a06a31468e6d'
+            'e53dc6f259acd39df13874f8a0f440528fae764b859dd71447991a5b1fac7c9c'
             'd6fdcb922e5a7fbe15759d39ccc8ea4225821c44d98054ce0f23f9d1f00c9808'
-            'd81319f168dad0e411c8e810f73daa2f56ff579578771bd9c9bb1aa2d7c09a8b'
-            '4d0e95ab106eccc2e016c88a660712ee4393376e18a4793775fc9e22e8e7eb0b'
-            'dd4fa56c084083a550799217ff65d6216c835a8ef2b7aa22bab3fe3932e4a9d6'
-            '71b9f821d25fdb6980695b3b64ddca98f701b6c70a0cf977a6d5fd523b70e236'
+            'ab5368a3e3a67fa63b33fefc6788ad5b4a79089ef4db1011a14c3bee9fdf70c6'
+            'bcb2f4588cf5dcf75cde855c7431e94fdcc34bdd68b876a90f65ab9938594562'
+            '73275413f078b1217a11e5a099777c1ace11a667144d5106975d1ff650540321'
+            'a15b2ca40b5ca17d4763e41e226fb5faca22277027e8321675c87038dd9879d5'
+            '8a0ddd4464b5d89bff66e80913001d42e864f36d2d9896f5d43c2a785b021654'
             '605cca8be9828a29cc96d473847eef9452d572fe6a56dacd96426a202310ba58'
             'fb91a7e30e2615e4eb0626b0fdcf97b92d4a727a52023730f408b02fee436c8d'
-            '7c6ff455d7fe9445a189fd2b309e9cf0c920187010276c79a032e913be2c949a'
-            'e154725477b8b39cb6c2ccdb02d66234b9b584367a97bb7e99a847d3dc58067a'
+            '94d20bc91ce6f4c9405293b4480670af9e7c3a79f2b87268e663dc2f063cb6e4'
+            '08a1dcbb5ae2cb38815026f2f723da383f4275c58dc992078e6c7b006c651ec1'
             'bd9194b0a1da60879ce36ac389da6b229be9be5ae6acfba04e3cb0e1cb15ea9f'
-            '9df213dabcf5e689a202541035c8326a94eb73c5741fcb59f022046405f6982a'
-            '25cc46b6a661bbcecb12840c6475287c6643258834daa99ba58b406f9914fdf1'
+            'e20a71da88b78dcd0d5b490f66ecebcca4aa2e0d7b22df453c7adc90c1da2c02'
+            'cf050473adae5b83680346b369997b5ead55dce282515f185e4096c5ed39f11d'
             '3190a507dfa00e863a0e622b5738db5cf19947f696ac7a790f427510cc15d1e1'
             '476593cf1e3bbf2539732567a70b0acea14033370317baf868f3d9701e4a1d5d'
-            '1a3233a14496819468b7f52e6d3f3f371942267eba9a9cb972e2edba0ad79836'
+            '6f0768e13f2218597f7c39f4398381934333ec302756147e488defa01cbb1c4c'
             'c79f12e444d2c7b9b61de8d6698033cc8a84bb35f949908b3a366105367237b0'
-            '28dddc8a0f59f0ffa5cb3c24b64afb04b3980e34be53c42619978129c8968698'
+            'bfb04c0c51b7f48e01ac514c5dfe26b3a93ffc2aa517f846c01d6f2668247a38'
             '795686bf0dd7bfac0f596155be8fc7ed3f6294a6b764f793cd1614085562ce38'
             '216829c72f1cc378bc66fb4f62f047cccd31684d946ba9a406b6e7a8f1351677'
-            'bf1d064fd909ec6a9acc5dd1aeee245bc31eeb90fc3733d9449eb1afe6f262ae'
-            '19e25b660adc437a7f5bae3a3e44baad6b3aff223aa7029233b4e103974fc1b2'
+            '438a53a389a39568038cd353b5a8cd07d6e4e28277326ae64cd7ecce7caf93fa'
+            'cb2bd17fbbd9184f15eb24d3b23deca92d06cb4b9ec31bd6944504e130d69ff8'
             'c17556772059a64873ddac383f2976e3befb5c07c3019b641c989ffb5683c4cd'
             '80d2974001708c288a54c24e1dc896ef25916552b740765f6066a244c05ffcd5'
             'dbe942b1eaba525ca6b81d398462a70360fc2043cbfe5d4105657c3bd721e592'
-            'b618c79506032422cd7f7a74b6d2bf9715857fe31e5f79c9dfc08a38b3d3ee58'
-            '814fa3b82c8330b944b138ece864be4761fe17f42061816028b5d8c1f2609c8a')
+            '42425ef9f374020ce583225ad4ac5201aa0d7d08b91a4ba2b52c0ea5ffb153b7')
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
 declare -rgA _system_libs=(
-  #[ffmpeg]=ffmpeg           # https://crbug.com/731766
+  #[ffmpeg]=ffmpeg              # https://crbug.com/731766
   [flac]=flac
-  #[freetype]=freetype2      # https://crbug.com/pdfium/733
-  [harfbuzz-ng]=harfbuzz-icu
-  #[icu]=icu                 # https://crbug.com/772655
+  #[freetype]=freetype2         # https://crbug.com/pdfium/733
+  #[harfbuzz-ng]=harfbuzz-icu   # https://crbug.com/768938
+  #[icu]=icu                    # https://crbug.com/772655
   [libdrm]=
   [libjpeg]=libjpeg
-  #[libpng]=libpng           # https://crbug.com/752403#c10
-  #[libvpx]=libvpx           # https://bugs.gentoo.org/611394
+  #[libpng]=libpng              # https://crbug.com/752403#c10
+  #[libvpx]=libvpx              # https://bugs.gentoo.org/611394
   [libwebp]=libwebp
   [libxml]=libxml2
   [libxslt]=libxslt
@@ -130,8 +129,8 @@ prepare() {
 
   msg2 'Applying build patches'
   # https://crbug.com/710701
-  local _chrome_build_hash=$(curl -s https://chromium.googlesource.com/chromium/src.git/+/$pkgver?format=TEXT |
-    base64 -d | grep -Po '^parent \K[0-9a-f]{40}$')
+  local _chrome_build_hash=$(base64 -d ../chromium-$pkgver.txt |
+    grep -Po '^parent \K[0-9a-f]{40}$')
   if [[ -z $_chrome_build_hash ]]; then
     error "Unable to fetch Chrome build hash."
     return 1
@@ -144,18 +143,24 @@ prepare() {
   sed "s/@WIDEVINE_VERSION@/Pinkie Pie/" ../chromium-widevine.patch |
     patch -Np1
 
-  # Fix build with glibc 2.26
-  patch -Np1 -i ../breakpad-use-ucontext_t.patch
-
-  # Fix incorrect inclusion of <string_view> in modes other than >= C++17
-  patch -Np1 -d third_party/crc32c/src <../crc32c-string-view-check.patch
+  # https://chromium-review.googlesource.com/c/chromium/src/+/712575
+  patch -Np1 -i ../chromium-exclude_unwind_tables.patch
 
   # Fixes from Gentoo
-  patch -Np1 -i ../chromium-gn-bootstrap-r17.patch
+  patch -Np1 -i ../chromium-clang-r1.patch
+  patch -Np1 -i ../chromium-webrtc-r0.patch
+
+  # Remove compiler flags not supported by our system clang
+  sed -i \
+    -e '/"-Wno-enum-compare-switch"/d' \
+    -e '/"-Wno-null-pointer-arithmetic"/d' \
+    -e '/"-Wno-tautological-unsigned-zero-compare"/d' \
+    -e '/"-Wno-tautological-unsigned-enum-zero-compare"/d' \
+    build/config/compiler/BUILD.gn
 
   msg2 'Applying VA-API patches'
-  patch -Np1 -i ../chromium-libva-version.patch
-  patch -Np1 -i ../chromium-vaapi-r14.patch
+  patch -Np1 -i ../chromium-libva-r2.patch
+  patch -Np1 -i ../chromium-vaapi-r15.patch
 
   msg2 'Applying Inox patchset'
   # Apply patches to fix building
@@ -181,7 +186,6 @@ prepare() {
   patch -Np1 -i ../0019-disable-battery-status-service.patch
   patch -Np1 -i ../0021-disable-rlz.patch
   patch -Np1 -i ../9000-disable-metrics.patch
-  patch -Np1 -i ../9001-disable-profiler.patch
 
   # Use Python 2
   find . -name '*.py' -exec sed -i -r 's|/usr/bin/python$|&2|g' {} +
@@ -220,6 +224,11 @@ build() {
 
   cd "$srcdir/chromium-$pkgver"
 
+  if check_buildoption ccache y; then
+    # Avoid falling back to preprocessor mode when sources contain time macros
+    export CCACHE_SLOPPINESS=time_macros
+  fi
+
   export PATH="$srcdir/python2-path:$PATH"
   export TMPDIR="$srcdir/temp"
   mkdir -p "$TMPDIR"
@@ -228,8 +237,6 @@ build() {
   export CXX=clang++
   export AR=llvm-ar
   export NM=llvm-nm
-  export CFLAGS="${CFLAGS//-fno-plt/} -Wno-unknown-warning-option"
-  export CXXFLAGS="${CXXFLAGS//-fno-plt/} -Wno-unknown-warning-option"
 
   # TODO: enable_mdns=false (linker error)
   # TODO: enable_reporting=false (compiler error)
@@ -264,6 +271,7 @@ build() {
     'enable_google_now=false'
     'safe_browsing_mode=0'
     'enable_hotwording=false'
+    'use_system_harfbuzz=true'
   )
 
   if check_option strip y; then
@@ -281,40 +289,43 @@ build() {
 }
 
 package() {
-  cd "$srcdir/chromium-launcher-$_launcher_ver"
-  make PREFIX=/usr DESTDIR="$pkgdir" install-strip
+  cd chromium-launcher-$_launcher_ver
+  make PREFIX=/usr DESTDIR="$pkgdir" install
   install -Dm644 LICENSE \
     "$pkgdir/usr/share/licenses/$pkgname/LICENSE.launcher"
 
   cd "$srcdir/chromium-$pkgver"
 
   install -D out/Release/chrome "$pkgdir/usr/lib/$pkgname/$pkgname"
-
-  install -Dm4755 out/Release/chrome_sandbox \
-    "$pkgdir/usr/lib/$pkgname/chrome-sandbox"
-
+  install -Dm4755 out/Release/chrome_sandbox "$pkgdir/usr/lib/$pkgname/chrome-sandbox"
   install -D out/Release/chromedriver "$pkgdir/usr/lib/$pkgname/inoxdriver"
+  ln -s /usr/lib/$pkgname/inoxdriver "$pkgdir/usr/bin/inoxdriver"
+
+  install -Dm644 chrome/installer/linux/common/desktop.template \
+    "$pkgdir/usr/share/applications/$pkgname.desktop"
+  install -Dm644 chrome/app/resources/manpage.1.in \
+    "$pkgdir/usr/share/man/man1/$pkgname.1"
+  sed -i \
+    -e "s/@@MENUNAME@@/${pkgname^}/g" \
+    -e "s/@@PACKAGE@@/$pkgname/g" \
+    -e "s/@@USR_BIN_SYMLINK_NAME@@/$pkgname/g" \
+    "$pkgdir/usr/share/applications/$pkgname.desktop" \
+    "$pkgdir/usr/share/man/man1/$pkgname.1"
 
   cp -a \
     out/Release/{chrome_{100,200}_percent,resources}.pak \
     out/Release/{*.bin,libwidevinecdmadapter.so} \
-    out/Release/locales "$pkgdir/usr/lib/$pkgname/"
+    "$pkgdir/usr/lib/$pkgname/"
+  install -Dm644 -t "$pkgdir/usr/lib/$pkgname/locales" out/Release/locales/*.pak
 
   if [[ -z ${_system_libs[icu]+set} ]]; then
     cp out/Release/icudtl.dat "$pkgdir/usr/lib/$pkgname/"
   fi
 
-  install -Dm644 out/Release/chrome.1 "$pkgdir/usr/share/man/man1/$pkgname.1"
-
-  install -Dm644 "$srcdir/$pkgname.desktop" \
-    "$pkgdir/usr/share/applications/$pkgname.desktop"
-
   for size in 16 22 24 32 48 64 128 256; do
     install -Dm644 "$srcdir/product_logo_$size.png" \
       "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/$pkgname.png"
   done
-
-  ln -s /usr/lib/$pkgname/inoxdriver "$pkgdir/usr/bin/inoxdriver"
 
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
