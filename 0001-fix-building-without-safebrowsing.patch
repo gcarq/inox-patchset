@@ -1321,7 +1321,6 @@
                               ? IDS_SETTINGS_CHANGE_PASSWORD_TITLE_SOFTER
 --- a/chrome/renderer/chrome_content_renderer_client.cc
 +++ b/chrome/renderer/chrome_content_renderer_client.cc
-<<<<<<< HEAD
 @@ -58,7 +58,6 @@
  #include "chrome/renderer/prerender/prerender_dispatcher.h"
  #include "chrome/renderer/prerender/prerender_helper.h"
@@ -1379,9 +1378,6 @@
  // URL to something invalid to prevent the request and cause an error.
  #if BUILDFLAG(ENABLE_EXTENSIONS)
 @@ -1373,9 +1352,7 @@ bool ChromeContentRendererClient::IsExte
-=======
-@@ -1387,6 +1387,8 @@ bool ChromeContentRendererClient::IsExte
->>>>>>> 63.0.3239.84: Update to stable
  
  std::unique_ptr<blink::WebSocketHandshakeThrottle>
  ChromeContentRendererClient::CreateWebSocketHandshakeThrottle() {
