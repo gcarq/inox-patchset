@@ -1273,7 +1273,7 @@
      # "Safe Browsing Basic" files used for safe browsing in full mode
 --- a/chrome/browser/net/system_network_context_manager.cc
 +++ b/chrome/browser/net/system_network_context_manager.cc
-@@ -43,17 +43,11 @@ content::mojom::NetworkContextParamsPtr
+@@ -49,17 +49,11 @@ content::mojom::NetworkContextParamsPtr
  // Called on IOThread to disable QUIC for HttpNetworkSessions not using the
  // network service. Note that re-enabling QUIC dynamically is not supported for
  // simpliciy and requires a browser restart.
@@ -1292,7 +1292,7 @@
  }
  
  }  // namespace
-@@ -116,11 +110,7 @@ void SystemNetworkContextManager::Disabl
+@@ -131,11 +125,7 @@ void SystemNetworkContextManager::Disabl
    if (!io_thread)
      return;
  
@@ -1321,7 +1321,7 @@
                               ? IDS_SETTINGS_CHANGE_PASSWORD_TITLE_SOFTER
 --- a/chrome/renderer/chrome_content_renderer_client.cc
 +++ b/chrome/renderer/chrome_content_renderer_client.cc
-@@ -58,7 +58,6 @@
+@@ -60,7 +60,6 @@
  #include "chrome/renderer/prerender/prerender_dispatcher.h"
  #include "chrome/renderer/prerender/prerender_helper.h"
  #include "chrome/renderer/prerender/prerenderer_client.h"
@@ -1329,7 +1329,7 @@
  #include "chrome/renderer/searchbox/search_bouncer.h"
  #include "chrome/renderer/searchbox/searchbox.h"
  #include "chrome/renderer/searchbox/searchbox_extension.h"
-@@ -80,9 +79,6 @@
+@@ -82,9 +81,6 @@
  #include "components/network_hints/renderer/prescient_networking_dispatcher.h"
  #include "components/password_manager/content/renderer/credential_manager_client.h"
  #include "components/pdf/renderer/pepper_pdf_host.h"
@@ -1339,7 +1339,7 @@
  #include "components/signin/core/common/profile_management_switches.h"
  #include "components/spellcheck/spellcheck_build_features.h"
  #include "components/startup_metric_utils/common/startup_metric.mojom.h"
-@@ -442,9 +438,6 @@ void ChromeContentRendererClient::Render
+@@ -449,9 +445,6 @@ void ChromeContentRendererClient::Render
      thread->AddObserver(spellcheck_.get());
    }
  #endif
@@ -1349,7 +1349,7 @@
    prerender_dispatcher_.reset(new prerender::PrerenderDispatcher());
    subresource_filter_ruleset_dealer_.reset(
        new subresource_filter::UnverifiedRulesetDealer());
-@@ -557,10 +550,6 @@ void ChromeContentRendererClient::Render
+@@ -564,10 +557,6 @@ void ChromeContentRendererClient::Render
    new nacl::NaClHelper(render_frame);
  #endif
  
@@ -1360,7 +1360,7 @@
  #if BUILDFLAG(ENABLE_PRINTING)
    new printing::PrintRenderFrameHelper(
        render_frame, base::MakeUnique<ChromePrintRenderFrameHelperDelegate>());
-@@ -1268,16 +1257,6 @@ bool ChromeContentRendererClient::WillSe
+@@ -1282,16 +1271,6 @@ bool ChromeContentRendererClient::WillSe
      const blink::WebURL& url,
      std::vector<std::unique_ptr<content::URLLoaderThrottle>>* throttles,
      GURL* new_url) {
@@ -1377,7 +1377,7 @@
  // Check whether the request should be allowed. If not allowed, we reset the
  // URL to something invalid to prevent the request and cause an error.
  #if BUILDFLAG(ENABLE_EXTENSIONS)
-@@ -1373,9 +1352,7 @@ bool ChromeContentRendererClient::IsExte
+@@ -1387,9 +1366,7 @@ bool ChromeContentRendererClient::IsExte
  
  std::unique_ptr<blink::WebSocketHandshakeThrottle>
  ChromeContentRendererClient::CreateWebSocketHandshakeThrottle() {
@@ -1388,28 +1388,31 @@
  }
  
  std::unique_ptr<blink::WebSpeechSynthesizer>
-@@ -1663,10 +1640,3 @@ ChromeContentRendererClient::GetTaskSche
-   return task_scheduler_util::
+@@ -1681,13 +1658,6 @@ ChromeContentRendererClient::GetTaskSche
        GetRendererTaskSchedulerInitParamsFromCommandLine();
  }
--
+ 
 -void ChromeContentRendererClient::InitSafeBrowsingIfNecessary() {
 -  if (safe_browsing_)
 -    return;
 -  RenderThread::Get()->GetConnector()->BindInterface(
 -      content::mojom::kBrowserServiceName, &safe_browsing_);
 -}
+-
+ bool ChromeContentRendererClient::OverrideLegacySymantecCertConsoleMessage(
+     const GURL& url,
+     base::Time cert_validity_start,
 --- a/chrome/renderer/chrome_content_renderer_client.h
 +++ b/chrome/renderer/chrome_content_renderer_client.h
-@@ -18,7 +18,6 @@
- #include "base/strings/string16.h"
+@@ -19,7 +19,6 @@
  #include "chrome/renderer/media/chrome_key_systems_provider.h"
+ #include "components/nacl/common/features.h"
  #include "components/rappor/public/interfaces/rappor_recorder.mojom.h"
 -#include "components/safe_browsing/common/safe_browsing.mojom.h"
  #include "components/spellcheck/spellcheck_build_features.h"
  #include "content/public/renderer/content_renderer_client.h"
  #include "extensions/features/features.h"
-@@ -26,6 +25,7 @@
+@@ -27,6 +26,7 @@
  #include "media/media_features.h"
  #include "ppapi/features/features.h"
  #include "printing/features/features.h"
@@ -1417,7 +1420,7 @@
  #include "v8/include/v8.h"
  
  #if defined (OS_CHROMEOS)
-@@ -69,10 +69,6 @@ namespace prerender {
+@@ -70,10 +70,6 @@ namespace prerender {
  class PrerenderDispatcher;
  }
  
@@ -1428,7 +1431,7 @@
  namespace subresource_filter {
  class UnverifiedRulesetDealer;
  }
-@@ -238,9 +234,6 @@ class ChromeContentRendererClient : publ
+@@ -244,9 +240,6 @@ class ChromeContentRendererClient : publ
    static GURL GetNaClContentHandlerURL(const std::string& actual_mime_type,
                                         const content::WebPluginInfo& plugin);
  
@@ -1438,7 +1441,7 @@
    void GetNavigationErrorStringsInternal(
        content::RenderFrame* render_frame,
        const blink::WebURLRequest& failed_request,
-@@ -272,12 +265,9 @@ class ChromeContentRendererClient : publ
+@@ -278,12 +271,9 @@ class ChromeContentRendererClient : publ
  
    chrome::ChromeKeySystemsProvider key_systems_provider_;
  
