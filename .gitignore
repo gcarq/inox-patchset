@@ -40,3 +40,4 @@ inox-*.tar*
 test*
 chromium-freetype2/
 *.log
+chromium-*.txt
