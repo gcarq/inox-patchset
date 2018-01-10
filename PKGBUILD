@@ -5,8 +5,8 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=inox
-pkgver=63.0.3239.108
-pkgrel=2
+pkgver=63.0.3239.132
+pkgrel=1
 _launcher_ver=5
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
 arch=('x86_64')
@@ -32,6 +32,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         # Patches from Arch Linux
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-exclude_unwind_tables.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-omnibox-unescape-fragment.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-skia-harmony.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-widevine.patch
         # Patches from Gentoo
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-clang-r1.patch
@@ -63,9 +64,9 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/9000-disable-metrics.patch)
 
 
-sha256sums=('47d80798194da78bdd519b7ce012425b13cf89d6eb287e22a34342a245c31a2b'
+sha256sums=('84c46c2c42faaa102abe0647ee1213615a2522627124924c2741ddc2161b3d8d'
             '4dc3428f2c927955d9ae117f2fb24d098cc6dd67adb760ac9c82b522ec8b0587'
-            '6da2cc8e4ae13547763f946c331b2f819fbb8af01681b8b90564a95f8a423e58'
+            'ab330f30c14ea3b5e77976d674304b91cfb02251fe8771cecb0bb4092c7f6b74'
             '71471fa4690894420f9e04a2e9a622af620d92ac2714a35f9a4c4e90fa3968dd'
             '4a533acefbbc1567b0d74a1c0903e9179b8c59c1beabe748850795815366e509'
             '7b88830c5e0e9819f514ad68aae885d427541a907e25607e47dee1b0f38975fd'
@@ -76,6 +77,7 @@ sha256sums=('47d80798194da78bdd519b7ce012425b13cf89d6eb287e22a34342a245c31a2b'
             '3df9b3bbdc07fde63d9e400954dcc6ab6e0e5454f0ef6447570eef0549337354'
             'e53dc6f259acd39df13874f8a0f440528fae764b859dd71447991a5b1fac7c9c'
             '814eb2cecb10cb697e24036b08aac41e88d0e38971741f9e946200764e2401ae'
+            'feca54ab09ac0fc9d0626770a6b899a6ac5a12173c7d0c1005bc3964ec83e7b3'
             'd6fdcb922e5a7fbe15759d39ccc8ea4225821c44d98054ce0f23f9d1f00c9808'
             'ab5368a3e3a67fa63b33fefc6788ad5b4a79089ef4db1011a14c3bee9fdf70c6'
             'bcb2f4588cf5dcf75cde855c7431e94fdcc34bdd68b876a90f65ab9938594562'
@@ -140,7 +142,7 @@ prepare() {
   local _chrome_build_hash=$(base64 -d ../chromium-$pkgver.txt |
     grep -Po '^parent \K[0-9a-f]{40}$')
   if [[ -z $_chrome_build_hash ]]; then
-    error "Unable to fetch Chrome build hash."
+    error "Unable to find Chrome build hash."
     return 1
   fi
   echo "LASTCHANGE=$_chrome_build_hash-" >build/util/LASTCHANGE
@@ -156,6 +158,9 @@ prepare() {
 
   # https://crbug.com/789163
   patch -Np1 -i ../chromium-omnibox-unescape-fragment.patch
+
+  # https://crbug.com/skia/6663#c10
+  patch -Np4 -i ../chromium-skia-harmony.patch
 
   # Fixes from Gentoo
   patch -Np1 -i ../chromium-clang-r1.patch
