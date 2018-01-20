@@ -1,9 +1,16 @@
 --- a/chrome/browser/search/search.cc
 +++ b/chrome/browser/search/search.cc
-@@ -154,22 +154,6 @@ struct NewTabURLDetails {
-         GetDefaultSearchProviderTemplateURL(profile);
-     if (!profile || !template_url)
-       return NewTabURLDetails(local_url, NEW_TAB_URL_BAD);
+@@ -147,29 +147,7 @@ struct NewTabURLDetails {
+ 
+     const GURL local_url(chrome::kChromeSearchLocalNtpUrl);
+ 
+-    if (ShouldShowLocalNewTab(profile))
+-      return NewTabURLDetails(local_url, NEW_TAB_URL_VALID);
+-
+-    const TemplateURL* template_url =
+-        GetDefaultSearchProviderTemplateURL(profile);
+-    if (!profile || !template_url)
+-      return NewTabURLDetails(local_url, NEW_TAB_URL_BAD);
 -
 -    GURL search_provider_url(template_url->new_tab_url_ref().ReplaceSearchTerms(
 -        TemplateURLRef::SearchTermsArgs(base::string16()),
@@ -20,6 +27,7 @@
 -      return NewTabURLDetails(local_url, NEW_TAB_URL_BLOCKED);
 -
 -    return NewTabURLDetails(search_provider_url, NEW_TAB_URL_VALID);
++    return NewTabURLDetails(local_url, NEW_TAB_URL_VALID);
    }
  
    const GURL url;
