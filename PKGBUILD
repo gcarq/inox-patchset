@@ -5,8 +5,8 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=inox
-pkgver=63.0.3239.132
-pkgrel=2
+pkgver=64.0.3282.119
+pkgrel=1
 _launcher_ver=5
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
 arch=('x86_64')
@@ -16,7 +16,7 @@ depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
          'ttf-font' 'systemd' 'dbus' 'libpulse' 'pciutils' 'json-glib'
          'desktop-file-utils' 'hicolor-icon-theme')
 makedepends=('python2' 'gperf' 'yasm' 'mesa' 'ninja' 'nodejs' 'git' 'libva'
-             'clang' 'lld' 'llvm')
+             'clang' 'llvm')
 optdepends=('pepper-flash: support for Flash content'
             'kdialog: needed for file dialogs in KDE'
             'gnome-keyring: for storing passwords in GNOME keyring'
@@ -30,14 +30,14 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-$pkgver.txt::https://chromium.googlesource.com/chromium/src.git/+/$pkgver?format=TEXT
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/product_logo_{16,22,24,32,48,64,128,256}.png
         # Patches from Arch Linux
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-disable-SharedArrayBuffer-by-default.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-use-fromUTF8-for-UnicodeString-construction.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-exclude_unwind_tables.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-omnibox-unescape-fragment.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-skia-harmony.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-widevine.patch
         # Patches from Gentoo
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-clang-r1.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-webrtc-r0.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-clang-r2.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-memcpy-r0.patch
         # Misc
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-libva-r2.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-r15.patch
@@ -65,9 +65,9 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/9000-disable-metrics.patch)
 
 
-sha256sums=('84c46c2c42faaa102abe0647ee1213615a2522627124924c2741ddc2161b3d8d'
+sha256sums=('342ea80a925d85f5155b2b423a0d3cbcf2ee5729bf107c601d7d902315d03127'
             '4dc3428f2c927955d9ae117f2fb24d098cc6dd67adb760ac9c82b522ec8b0587'
-            'ab330f30c14ea3b5e77976d674304b91cfb02251fe8771cecb0bb4092c7f6b74'
+            'a86a8ec67aed5a94557257b9826c5b8fe37005e8376e75986fee77acd066539a'
             '71471fa4690894420f9e04a2e9a622af620d92ac2714a35f9a4c4e90fa3968dd'
             '4a533acefbbc1567b0d74a1c0903e9179b8c59c1beabe748850795815366e509'
             '7b88830c5e0e9819f514ad68aae885d427541a907e25607e47dee1b0f38975fd'
@@ -76,13 +76,13 @@ sha256sums=('84c46c2c42faaa102abe0647ee1213615a2522627124924c2741ddc2161b3d8d'
             '53a1e8da18069eb4d6ab3af9c923c22a0f020241a4839c3140e3601052ddf6ff'
             '896993987d4ef9f0ac7db454f288117316c2c80ed0b6764019afd760db222dad'
             '3df9b3bbdc07fde63d9e400954dcc6ab6e0e5454f0ef6447570eef0549337354'
-            '1e040caa43ba34c627fe3750fb44c781a74298d010ef40657ab8deb4780db70b'
-            'e53dc6f259acd39df13874f8a0f440528fae764b859dd71447991a5b1fac7c9c'
+            'f846218089a7b095d275e9cb3b74b28586d72f2137968c8c4e09b6f8232d694b'
+            '9478f1ec1a3c53425306cf41c2d0555c215a4f106955d9d6adfff38044530ce8'
             '814eb2cecb10cb697e24036b08aac41e88d0e38971741f9e946200764e2401ae'
             'feca54ab09ac0fc9d0626770a6b899a6ac5a12173c7d0c1005bc3964ec83e7b3'
             'd6fdcb922e5a7fbe15759d39ccc8ea4225821c44d98054ce0f23f9d1f00c9808'
-            'ab5368a3e3a67fa63b33fefc6788ad5b4a79089ef4db1011a14c3bee9fdf70c6'
-            'bcb2f4588cf5dcf75cde855c7431e94fdcc34bdd68b876a90f65ab9938594562'
+            '4495e8b29dae242c79ffe4beefc5171eb3c7aacb7e9aebfd2d4d69b9d8c958d3'
+            'f6227987c30f8b8a1e0cb5f3863698543a890e6f4bd20ff9384735e1122e66da'
             '73275413f078b1217a11e5a099777c1ace11a667144d5106975d1ff650540321'
             'a15b2ca40b5ca17d4763e41e226fb5faca22277027e8321675c87038dd9879d5'
             '22726f4f16c7ac9d0c1afc47d6aa40bc02f6de42cfa86a9153781e1d50b58181'
@@ -110,17 +110,18 @@ sha256sums=('84c46c2c42faaa102abe0647ee1213615a2522627124924c2741ddc2161b3d8d'
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
 readonly -A _system_libs=(
-  #[ffmpeg]=ffmpeg         # https://crbug.com/731766
+  #[ffmpeg]=ffmpeg            # https://crbug.com/731766
   [flac]=flac
-  #[freetype]=freetype2    # Using 'use_system_freetype=true' until M65
-  #[harfbuzz-ng]=harfbuzz  # Using 'use_system_harfbuzz=true' until M65
-  #[icu]=icu               # https://crbug.com/772655 + need M64 for ICU 60
+  #[fontconfig]=fontconfig    # Enable for M65
+  #[freetype]=freetype2       # Using 'use_system_freetype=true' until M65
+  #[harfbuzz-ng]=harfbuzz     # Using 'use_system_harfbuzz=true' until M65
+  [icu]=icu
   [libdrm]=
   [libjpeg]=libjpeg
-  #[libpng]=libpng         # https://crbug.com/752403#c10
-  #[libvpx]=libvpx         # https://bugs.gentoo.org/611394
+  #[libpng]=libpng            # https://crbug.com/752403#c10
+  #[libvpx]=libvpx            # https://bugs.gentoo.org/611394
   [libwebp]=libwebp
-  [libxml]=libxml2
+  #[libxml]=libxml2           # https://crbug.com/736026
   [libxslt]=libxslt
   [opus]=opus
   [re2]=re2
@@ -158,25 +159,25 @@ prepare() {
   # https://chromium-review.googlesource.com/c/chromium/src/+/712575
   patch -Np1 -i ../chromium-exclude_unwind_tables.patch
 
+  # https://crbug.com/772655
+  patch -Np1 -i ../chromium-use-fromUTF8-for-UnicodeString-construction.patch
+
   # https://crbug.com/789163
   patch -Np1 -i ../chromium-omnibox-unescape-fragment.patch
-
-  # https://crbug.com/798864
-  patch -Np1 -i ../chromium-disable-SharedArrayBuffer-by-default.patch
 
   # https://crbug.com/skia/6663#c10
   patch -Np4 -i ../chromium-skia-harmony.patch
 
   # Fixes from Gentoo
-  patch -Np1 -i ../chromium-clang-r1.patch
-  patch -Np1 -i ../chromium-webrtc-r0.patch
+  patch -Np1 -i ../chromium-memcpy-r0.patch
+  patch -Np1 -i ../chromium-clang-r2.patch
 
   # Remove compiler flags not supported by our system clang
   sed -i \
     -e '/"-Wno-enum-compare-switch"/d' \
     -e '/"-Wno-null-pointer-arithmetic"/d' \
     -e '/"-Wno-tautological-unsigned-zero-compare"/d' \
-    -e '/"-Wno-tautological-unsigned-enum-zero-compare"/d' \
+    -e '/"-Wno-tautological-constant-compare"/d'
     build/config/compiler/BUILD.gn
 
   msg2 'Applying VA-API patches'
@@ -266,7 +267,7 @@ build() {
   local _flags=(
     'custom_toolchain="//build/toolchain/linux/unbundle:default"'
     'host_toolchain="//build/toolchain/linux/unbundle:default"'
-    'use_lld=true'
+    'use_lld=false'
     'clang_use_chrome_plugins=false'
     'symbol_level=0'
     'is_debug=false'
