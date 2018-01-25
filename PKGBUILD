@@ -177,7 +177,7 @@ prepare() {
     -e '/"-Wno-enum-compare-switch"/d' \
     -e '/"-Wno-null-pointer-arithmetic"/d' \
     -e '/"-Wno-tautological-unsigned-zero-compare"/d' \
-    -e '/"-Wno-tautological-constant-compare"/d'
+    -e '/"-Wno-tautological-constant-compare"/d' \
     build/config/compiler/BUILD.gn
 
   msg2 'Applying VA-API patches'
