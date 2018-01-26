@@ -39,8 +39,10 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-clang-r2.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-memcpy-r0.patch
         # Misc
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-libva-r2.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-r15.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-move.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-init.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-rgbx.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-r16.patch
         # Inox patchset
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0001-fix-building-without-safebrowsing.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0003-disable-autofill-download-manager.patch
@@ -83,9 +85,11 @@ sha256sums=('342ea80a925d85f5155b2b423a0d3cbcf2ee5729bf107c601d7d902315d03127'
             'd6fdcb922e5a7fbe15759d39ccc8ea4225821c44d98054ce0f23f9d1f00c9808'
             '4495e8b29dae242c79ffe4beefc5171eb3c7aacb7e9aebfd2d4d69b9d8c958d3'
             'f6227987c30f8b8a1e0cb5f3863698543a890e6f4bd20ff9384735e1122e66da'
-            '73275413f078b1217a11e5a099777c1ace11a667144d5106975d1ff650540321'
-            'a15b2ca40b5ca17d4763e41e226fb5faca22277027e8321675c87038dd9879d5'
-            '3805b5fc088f716a659095e652c313b1b8548ad622cda5ef4290c04e20895d97'
+            '1336c9a790c0bd7fa8cc00d0c58d6f6374cc311beb1a9db0a1696f4ddb21bfde'
+            '8a81a14af625c8b79006d1b9b4321d5487bc2e56a3fb3a677f9a8dab369be7af'
+            '0a9186ab591773f8fb6cbc908f9bbf4bc1508f1095b6c1cd7479aac945045373'
+            'b82047df666e6bbf66e0c0911d20c5001bd1100fd08adafa92cac5f02a887a01'
+            'd1e112adb135a823907aae33b189cb775d48e6afa785a26a452fc833824cd2e8'
             '605cca8be9828a29cc96d473847eef9452d572fe6a56dacd96426a202310ba58'
             'fb91a7e30e2615e4eb0626b0fdcf97b92d4a727a52023730f408b02fee436c8d'
             '6ba0ad7d91b2f3bbf03fc4a3236a04310a0c57505e1688c7e11ace9dcea1dded'
@@ -100,7 +104,7 @@ sha256sums=('342ea80a925d85f5155b2b423a0d3cbcf2ee5729bf107c601d7d902315d03127'
             'f80106b8127b60a62c006653154a26ebe68dd4aec5c551bae5321fa4e5ccef3f'
             '795686bf0dd7bfac0f596155be8fc7ed3f6294a6b764f793cd1614085562ce38'
             '5dc10c49cfc3ea65505e07366420eda0fc4878d0b0cebbfbcd8ad7daa88b3ded'
-            '023d8150ead7c8611621f300719d75106816d683a3e00be41e483254ce4ebadd'
+            'a1a5cb2c68abb02e7cdad3108a5a4d00beac86ae9341df98eb20495fcc400d45'
             'cb2bd17fbbd9184f15eb24d3b23deca92d06cb4b9ec31bd6944504e130d69ff8'
             'c17556772059a64873ddac383f2976e3befb5c07c3019b641c989ffb5683c4cd'
             '80d2974001708c288a54c24e1dc896ef25916552b740765f6066a244c05ffcd5'
@@ -181,8 +185,10 @@ prepare() {
     build/config/compiler/BUILD.gn
 
   msg2 'Applying VA-API patches'
-  patch -Np1 -i ../chromium-libva-r2.patch
-  patch -Np1 -i ../chromium-vaapi-r15.patch
+  patch -Np1 -i ../chromium-vaapi-move.patch
+  patch -Np1 -i ../chromium-vaapi-init.patch
+  patch -Np1 -i ../chromium-vaapi-rgbx.patch
+  patch -Np1 -i ../chromium-vaapi-r16.patch
 
   msg2 'Applying Inox patchset'
   # Apply patches to fix building
