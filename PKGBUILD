@@ -39,8 +39,10 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-clang-r2.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-memcpy-r0.patch
         # Misc
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-libva-r2.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-r15.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-move.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-init.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-rgbx.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-r16.patch
         # Inox patchset
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0001-fix-building-without-safebrowsing.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0003-disable-autofill-download-manager.patch
@@ -83,29 +85,31 @@ sha256sums=('342ea80a925d85f5155b2b423a0d3cbcf2ee5729bf107c601d7d902315d03127'
             'd6fdcb922e5a7fbe15759d39ccc8ea4225821c44d98054ce0f23f9d1f00c9808'
             '4495e8b29dae242c79ffe4beefc5171eb3c7aacb7e9aebfd2d4d69b9d8c958d3'
             'f6227987c30f8b8a1e0cb5f3863698543a890e6f4bd20ff9384735e1122e66da'
-            '73275413f078b1217a11e5a099777c1ace11a667144d5106975d1ff650540321'
-            'a15b2ca40b5ca17d4763e41e226fb5faca22277027e8321675c87038dd9879d5'
-            '22726f4f16c7ac9d0c1afc47d6aa40bc02f6de42cfa86a9153781e1d50b58181'
+            '1336c9a790c0bd7fa8cc00d0c58d6f6374cc311beb1a9db0a1696f4ddb21bfde'
+            '8a81a14af625c8b79006d1b9b4321d5487bc2e56a3fb3a677f9a8dab369be7af'
+            '0a9186ab591773f8fb6cbc908f9bbf4bc1508f1095b6c1cd7479aac945045373'
+            'b82047df666e6bbf66e0c0911d20c5001bd1100fd08adafa92cac5f02a887a01'
+            'd1e112adb135a823907aae33b189cb775d48e6afa785a26a452fc833824cd2e8'
             '605cca8be9828a29cc96d473847eef9452d572fe6a56dacd96426a202310ba58'
             'fb91a7e30e2615e4eb0626b0fdcf97b92d4a727a52023730f408b02fee436c8d'
-            '94d20bc91ce6f4c9405293b4480670af9e7c3a79f2b87268e663dc2f063cb6e4'
-            '08a1dcbb5ae2cb38815026f2f723da383f4275c58dc992078e6c7b006c651ec1'
-            'bd9194b0a1da60879ce36ac389da6b229be9be5ae6acfba04e3cb0e1cb15ea9f'
-            'e20a71da88b78dcd0d5b490f66ecebcca4aa2e0d7b22df453c7adc90c1da2c02'
+            '6ba0ad7d91b2f3bbf03fc4a3236a04310a0c57505e1688c7e11ace9dcea1dded'
+            '2e8ba84204840f5f57b68456a70895c7ab07286efb4b165911e3f0c8072ded62'
+            '7781ecd43e3c28f7d1e9158e043d6f98a190b5ee3c2c5ebe91644ea27e0b42ee'
+            'daf9dcbeed8c6cd5d0012086680e8ee252121f56d96624d920d5b46d300a4052'
             'cf050473adae5b83680346b369997b5ead55dce282515f185e4096c5ed39f11d'
             '3190a507dfa00e863a0e622b5738db5cf19947f696ac7a790f427510cc15d1e1'
             '476593cf1e3bbf2539732567a70b0acea14033370317baf868f3d9701e4a1d5d'
-            '6f0768e13f2218597f7c39f4398381934333ec302756147e488defa01cbb1c4c'
+            '0b7332739e7f5eabb54213449fabed35e98d46c334a9e15398582659755a89c3'
             'c79f12e444d2c7b9b61de8d6698033cc8a84bb35f949908b3a366105367237b0'
-            'bfb04c0c51b7f48e01ac514c5dfe26b3a93ffc2aa517f846c01d6f2668247a38'
+            'f80106b8127b60a62c006653154a26ebe68dd4aec5c551bae5321fa4e5ccef3f'
             '795686bf0dd7bfac0f596155be8fc7ed3f6294a6b764f793cd1614085562ce38'
-            '216829c72f1cc378bc66fb4f62f047cccd31684d946ba9a406b6e7a8f1351677'
-            '438a53a389a39568038cd353b5a8cd07d6e4e28277326ae64cd7ecce7caf93fa'
+            '5dc10c49cfc3ea65505e07366420eda0fc4878d0b0cebbfbcd8ad7daa88b3ded'
+            'a1a5cb2c68abb02e7cdad3108a5a4d00beac86ae9341df98eb20495fcc400d45'
             'cb2bd17fbbd9184f15eb24d3b23deca92d06cb4b9ec31bd6944504e130d69ff8'
             'c17556772059a64873ddac383f2976e3befb5c07c3019b641c989ffb5683c4cd'
             '80d2974001708c288a54c24e1dc896ef25916552b740765f6066a244c05ffcd5'
             'dbe942b1eaba525ca6b81d398462a70360fc2043cbfe5d4105657c3bd721e592'
-            '42425ef9f374020ce583225ad4ac5201aa0d7d08b91a4ba2b52c0ea5ffb153b7')
+            '52412cb1da3169f246bb99f1299c91e1da3c14ca23876475918f534bb887f8c4')
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
@@ -181,8 +185,10 @@ prepare() {
     build/config/compiler/BUILD.gn
 
   msg2 'Applying VA-API patches'
-  patch -Np1 -i ../chromium-libva-r2.patch
-  patch -Np1 -i ../chromium-vaapi-r15.patch
+  patch -Np1 -i ../chromium-vaapi-move.patch
+  patch -Np1 -i ../chromium-vaapi-init.patch
+  patch -Np1 -i ../chromium-vaapi-rgbx.patch
+  patch -Np1 -i ../chromium-vaapi-r16.patch
 
   msg2 'Applying Inox patchset'
   # Apply patches to fix building
@@ -287,6 +293,7 @@ build() {
     'linux_use_bundled_binutils=false'
     'use_custom_libcxx=false'
     'use_system_libjpeg=true'
+    'use_system_libpng=true'
     'use_vaapi=true'
     'enable_hangout_services_extension=false'
     'enable_widevine=true'
@@ -296,7 +303,6 @@ build() {
     'enable_remoting=false'
     'enable_google_now=false'
     'safe_browsing_mode=0'
-    'enable_hotwording=false'
   )
 
   if check_option strip y; then
