@@ -45,6 +45,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-r16.patch
         # Inox patchset
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0001-fix-building-without-safebrowsing.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0002-fix-building-without-reporting.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0003-disable-autofill-download-manager.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0004-disable-google-url-tracker.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0005-disable-default-extensions.patch
@@ -65,8 +66,6 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0020-launcher-branding.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0021-disable-rlz.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/9000-disable-metrics.patch)
-
-
 sha256sums=('342ea80a925d85f5155b2b423a0d3cbcf2ee5729bf107c601d7d902315d03127'
             '4dc3428f2c927955d9ae117f2fb24d098cc6dd67adb760ac9c82b522ec8b0587'
             'a86a8ec67aed5a94557257b9826c5b8fe37005e8376e75986fee77acd066539a'
@@ -90,6 +89,7 @@ sha256sums=('342ea80a925d85f5155b2b423a0d3cbcf2ee5729bf107c601d7d902315d03127'
             '0a9186ab591773f8fb6cbc908f9bbf4bc1508f1095b6c1cd7479aac945045373'
             'b82047df666e6bbf66e0c0911d20c5001bd1100fd08adafa92cac5f02a887a01'
             'd1e112adb135a823907aae33b189cb775d48e6afa785a26a452fc833824cd2e8'
+            '300a7f3f0aba2037d159e5815f5cb3f2699c0ac26cbbb61209bbf01ac1eb2efb'
             '605cca8be9828a29cc96d473847eef9452d572fe6a56dacd96426a202310ba58'
             'fb91a7e30e2615e4eb0626b0fdcf97b92d4a727a52023730f408b02fee436c8d'
             '6ba0ad7d91b2f3bbf03fc4a3236a04310a0c57505e1688c7e11ace9dcea1dded'
@@ -193,6 +193,7 @@ prepare() {
   msg2 'Applying Inox patchset'
   # Apply patches to fix building
   patch -Np1 -i ../0001-fix-building-without-safebrowsing.patch
+  patch -Np1 -i ../0002-fix-building-without-reporting.patch
 
   # Apply Inox patches
   patch -Np1 -i ../0003-disable-autofill-download-manager.patch
@@ -268,8 +269,6 @@ build() {
   export AR=llvm-ar
   export NM=llvm-nm
 
-  # TODO: enable_mdns=false (linker error)
-  # TODO: enable_reporting=false (compiler error)
   local _flags=(
     'custom_toolchain="//build/toolchain/linux/unbundle:default"'
     'host_toolchain="//build/toolchain/linux/unbundle:default"'
@@ -302,6 +301,7 @@ build() {
     'enable_nacl_nonsfi=false'
     'enable_remoting=false'
     'enable_google_now=false'
+    'enable_reporting=false'
     'safe_browsing_mode=0'
   )
 
