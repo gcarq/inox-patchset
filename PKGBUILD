@@ -5,7 +5,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=inox
-pkgver=64.0.3282.140
+pkgver=64.0.3282.186
 pkgrel=1
 _launcher_ver=5
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
@@ -16,7 +16,7 @@ depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
          'ttf-font' 'systemd' 'dbus' 'libpulse' 'pciutils' 'json-glib'
          'desktop-file-utils' 'hicolor-icon-theme')
 makedepends=('python2' 'gperf' 'yasm' 'mesa' 'ninja' 'nodejs' 'git' 'libva'
-             'clang' 'llvm')
+             'clang' 'llvm' 'lld')
 optdepends=('pepper-flash: support for Flash content'
             'kdialog: needed for file dialogs in KDE'
             'gnome-keyring: for storing passwords in GNOME keyring'
@@ -31,7 +31,6 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/product_logo_{16,22,24,32,48,64,128,256}.png
         # Patches from Arch Linux
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-use-fromUTF8-for-UnicodeString-construction.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-exclude_unwind_tables.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-omnibox-unescape-fragment.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-skia-harmony.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-widevine.patch
@@ -66,9 +65,9 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0020-launcher-branding.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0021-disable-rlz.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/9000-disable-metrics.patch)
-sha256sums=('146afbab37982c52251e5c71b6e19e6e7053b527217fe1da9966c794478c29ce'
+sha256sums=('5fd0218759231ac00cc729235823592f6fd1e4a00ff64780a5fed7ab210f1860'
             '4dc3428f2c927955d9ae117f2fb24d098cc6dd67adb760ac9c82b522ec8b0587'
-            'cc3a328836af87f3a262ac7a7bc848e0f3a4b2f9f0346ef76b9b059c6f6d32bc'
+            'e73f69942af1ba730a700151973fa6309b0586ff45bf35a7fea43f52b54a9cb5'
             '71471fa4690894420f9e04a2e9a622af620d92ac2714a35f9a4c4e90fa3968dd'
             '4a533acefbbc1567b0d74a1c0903e9179b8c59c1beabe748850795815366e509'
             '7b88830c5e0e9819f514ad68aae885d427541a907e25607e47dee1b0f38975fd'
@@ -78,7 +77,6 @@ sha256sums=('146afbab37982c52251e5c71b6e19e6e7053b527217fe1da9966c794478c29ce'
             '896993987d4ef9f0ac7db454f288117316c2c80ed0b6764019afd760db222dad'
             '3df9b3bbdc07fde63d9e400954dcc6ab6e0e5454f0ef6447570eef0549337354'
             'f846218089a7b095d275e9cb3b74b28586d72f2137968c8c4e09b6f8232d694b'
-            '9478f1ec1a3c53425306cf41c2d0555c215a4f106955d9d6adfff38044530ce8'
             '814eb2cecb10cb697e24036b08aac41e88d0e38971741f9e946200764e2401ae'
             'feca54ab09ac0fc9d0626770a6b899a6ac5a12173c7d0c1005bc3964ec83e7b3'
             'd6fdcb922e5a7fbe15759d39ccc8ea4225821c44d98054ce0f23f9d1f00c9808'
@@ -123,7 +121,7 @@ readonly -A _system_libs=(
   [libdrm]=
   [libjpeg]=libjpeg
   #[libpng]=libpng            # https://crbug.com/752403#c10
-  #[libvpx]=libvpx            # https://bugs.gentoo.org/611394
+  [libvpx]=libvpx
   [libwebp]=libwebp
   #[libxml]=libxml2           # https://crbug.com/736026
   [libxslt]=libxslt
@@ -159,9 +157,6 @@ prepare() {
   # (Version string doesn't seem to matter so let's go with "Pinkie Pie")
   sed "s/@WIDEVINE_VERSION@/Pinkie Pie/" ../chromium-widevine.patch |
     patch -Np1
-
-  # https://chromium-review.googlesource.com/c/chromium/src/+/712575
-  patch -Np1 -i ../chromium-exclude_unwind_tables.patch
 
   # https://crbug.com/772655
   patch -Np1 -i ../chromium-use-fromUTF8-for-UnicodeString-construction.patch
@@ -305,7 +300,11 @@ build() {
   )
 
   if check_option strip y; then
-    _flags+=('exclude_unwind_tables=true')
+    # https://chromium-review.googlesource.com/c/chromium/src/+/712575
+    # _flags+=('exclude_unwind_tables=true')
+    CFLAGS+='   -fno-unwind-tables -fno-asynchronous-unwind-tables'
+    CXXFLAGS+=' -fno-unwind-tables -fno-asynchronous-unwind-tables'
+    CPPFLAGS+=' -DNO_UNWIND_TABLES'
   fi
 
   msg2 'Building GN'
