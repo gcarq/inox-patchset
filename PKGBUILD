@@ -5,7 +5,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=inox
-pkgver=64.0.3282.186
+pkgver=65.0.3325.109
 pkgrel=1
 _launcher_ver=5
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
@@ -30,17 +30,16 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-$pkgver.txt::https://chromium.googlesource.com/chromium/src.git/+/$pkgver?format=TEXT
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/product_logo_{16,22,24,32,48,64,128,256}.png
         # Patches from Arch Linux
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-use-fromUTF8-for-UnicodeString-construction.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-omnibox-unescape-fragment.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-freetype-r0.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-skia-harmony.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-widevine.patch
         # Patches from Gentoo
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-clang-r2.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-memcpy-r0.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-clang-r3.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-math.h-r0.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-stdint.patch
         # Misc
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-move.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-init.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-rgbx.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-init-r16.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-r16.patch
         # Inox patchset
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0001-fix-building-without-safebrowsing.patch
@@ -65,9 +64,9 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0020-launcher-branding.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0021-disable-rlz.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/9000-disable-metrics.patch)
-sha256sums=('5fd0218759231ac00cc729235823592f6fd1e4a00ff64780a5fed7ab210f1860'
+sha256sums=('1fe7ef0c79a30885e2ed6f0dfb9ef128b55e69d1233a88f740bf9d88a6eb1bd7'
             '4dc3428f2c927955d9ae117f2fb24d098cc6dd67adb760ac9c82b522ec8b0587'
-            'e73f69942af1ba730a700151973fa6309b0586ff45bf35a7fea43f52b54a9cb5'
+            '5f43be5517f051a98fd1510bf113b5ae74503f064fc1ff60a9082170dbc6b9e7'
             '71471fa4690894420f9e04a2e9a622af620d92ac2714a35f9a4c4e90fa3968dd'
             '4a533acefbbc1567b0d74a1c0903e9179b8c59c1beabe748850795815366e509'
             '7b88830c5e0e9819f514ad68aae885d427541a907e25607e47dee1b0f38975fd'
@@ -76,55 +75,56 @@ sha256sums=('5fd0218759231ac00cc729235823592f6fd1e4a00ff64780a5fed7ab210f1860'
             '53a1e8da18069eb4d6ab3af9c923c22a0f020241a4839c3140e3601052ddf6ff'
             '896993987d4ef9f0ac7db454f288117316c2c80ed0b6764019afd760db222dad'
             '3df9b3bbdc07fde63d9e400954dcc6ab6e0e5454f0ef6447570eef0549337354'
-            'f846218089a7b095d275e9cb3b74b28586d72f2137968c8c4e09b6f8232d694b'
-            '814eb2cecb10cb697e24036b08aac41e88d0e38971741f9e946200764e2401ae'
+            '0cd3517c2aad5de6c2fa3a6c8bf09cd351613718202a7eb7269263559fa64346'
             'feca54ab09ac0fc9d0626770a6b899a6ac5a12173c7d0c1005bc3964ec83e7b3'
             'd6fdcb922e5a7fbe15759d39ccc8ea4225821c44d98054ce0f23f9d1f00c9808'
             '4495e8b29dae242c79ffe4beefc5171eb3c7aacb7e9aebfd2d4d69b9d8c958d3'
-            'f6227987c30f8b8a1e0cb5f3863698543a890e6f4bd20ff9384735e1122e66da'
-            '1336c9a790c0bd7fa8cc00d0c58d6f6374cc311beb1a9db0a1696f4ddb21bfde'
-            '8a81a14af625c8b79006d1b9b4321d5487bc2e56a3fb3a677f9a8dab369be7af'
-            '0a9186ab591773f8fb6cbc908f9bbf4bc1508f1095b6c1cd7479aac945045373'
-            'b82047df666e6bbf66e0c0911d20c5001bd1100fd08adafa92cac5f02a887a01'
-            'd1e112adb135a823907aae33b189cb775d48e6afa785a26a452fc833824cd2e8'
-            '300a7f3f0aba2037d159e5815f5cb3f2699c0ac26cbbb61209bbf01ac1eb2efb'
-            '605cca8be9828a29cc96d473847eef9452d572fe6a56dacd96426a202310ba58'
+            '4a4c3efd94fce25dd9e961a3ffb3c3cbcac4d5e02e4614f1e3df7f59078d20b4'
+            'fe0ab86aa5b0072db730eccda3e1582ebed4af25815bfd49fe0da24cf63ca902'
+            'c00d2506f1078b38a8ebec474a7318e76a61db1298afb40088a34210f137210f'
+            'acae2de43c123f19523c4fca3af19c671acbe76f76bd40e285fe3b08cddb7044'
+            '0cff8bb83da23cef479639d73856cfddf8ce756eeee43c8cd26427fcf87eba06'
+            'ae84e4eed9969057dd9d3ecff040e02480993c17ff05e9674d5e24e398704a60'
+            'b7261e4063b0532139b72f20675bb58c743d95022c7368019deb012b2c777f83'
+            'ef9000eaaa5c0a28f0e4cb31139c7f2b454192532d8469329f5f6f95c21769e0'
             'fb91a7e30e2615e4eb0626b0fdcf97b92d4a727a52023730f408b02fee436c8d'
-            '6ba0ad7d91b2f3bbf03fc4a3236a04310a0c57505e1688c7e11ace9dcea1dded'
-            '2e8ba84204840f5f57b68456a70895c7ab07286efb4b165911e3f0c8072ded62'
+            '72cd12b9064573fc1c7d88d606985ef180efdcec3815b0185c6038ec8216a471'
+            '034cce5fb219a293284a4c01f7e4d7ad6ab262eb6fb9065dc65a4b18e885da7f'
             '7781ecd43e3c28f7d1e9158e043d6f98a190b5ee3c2c5ebe91644ea27e0b42ee'
-            'daf9dcbeed8c6cd5d0012086680e8ee252121f56d96624d920d5b46d300a4052'
+            'a5dde3ff6cd4adeef7eb099839d8d17a3bfeb89ec6bb66eba3e89d741743c9c0'
             'cf050473adae5b83680346b369997b5ead55dce282515f185e4096c5ed39f11d'
             '3190a507dfa00e863a0e622b5738db5cf19947f696ac7a790f427510cc15d1e1'
-            '476593cf1e3bbf2539732567a70b0acea14033370317baf868f3d9701e4a1d5d'
-            '0b7332739e7f5eabb54213449fabed35e98d46c334a9e15398582659755a89c3'
-            'c79f12e444d2c7b9b61de8d6698033cc8a84bb35f949908b3a366105367237b0'
+            '6fdea7a737959b226165dc3b6dd347de1e09e6e237acc444116df007ba0a7c57'
+            '6427fea42b1cc6cf9aaae883c75c2209360344125827e1d6b15666faaf3c10a9'
+            '60ecb418ff8728f67ac9617216f68dcc1ba0fa4d4e47e2da1fc4e63b5c91bfea'
             'f80106b8127b60a62c006653154a26ebe68dd4aec5c551bae5321fa4e5ccef3f'
             '795686bf0dd7bfac0f596155be8fc7ed3f6294a6b764f793cd1614085562ce38'
             '5dc10c49cfc3ea65505e07366420eda0fc4878d0b0cebbfbcd8ad7daa88b3ded'
-            'a1a5cb2c68abb02e7cdad3108a5a4d00beac86ae9341df98eb20495fcc400d45'
+            'e407da0596e044971631c0883a83bd75665535f1b913df32ba08ca8cd5d4b16e'
             'cb2bd17fbbd9184f15eb24d3b23deca92d06cb4b9ec31bd6944504e130d69ff8'
             'c17556772059a64873ddac383f2976e3befb5c07c3019b641c989ffb5683c4cd'
             '80d2974001708c288a54c24e1dc896ef25916552b740765f6066a244c05ffcd5'
             'dbe942b1eaba525ca6b81d398462a70360fc2043cbfe5d4105657c3bd721e592'
-            '52412cb1da3169f246bb99f1299c91e1da3c14ca23876475918f534bb887f8c4')
+            '8ff834ed3f34fbbc969d2ec0abb3010033d1f3a3aa2db9fc81608e955a7d561c')
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
 readonly -A _system_libs=(
   #[ffmpeg]=ffmpeg            # https://crbug.com/731766
   [flac]=flac
-  #[fontconfig]=fontconfig    # Enable for M65
-  #[freetype]=freetype2       # Using 'use_system_freetype=true' until M65
-  #[harfbuzz-ng]=harfbuzz     # Using 'use_system_harfbuzz=true' until M65
+  [fontconfig]=fontconfig
+  [freetype]=freetype2
+  [harfbuzz-ng]=harfbuzz
   [icu]=icu
   [libdrm]=
+  #[libevent]=
   [libjpeg]=libjpeg
   #[libpng]=libpng            # https://crbug.com/752403#c10
   [libvpx]=libvpx
   [libwebp]=libwebp
   #[libxml]=libxml2           # https://crbug.com/736026
   [libxslt]=libxslt
+  #[openh264]=
   [opus]=opus
   [re2]=re2
   [snappy]=snappy
@@ -134,10 +134,8 @@ readonly -A _system_libs=(
 readonly _unwanted_bundled_libs=(
   ${!_system_libs[@]}
   ${_system_libs[libjpeg]+libjpeg_turbo}
-  freetype
-  harfbuzz-ng
 )
-depends+=(${_system_libs[@]} freetype2 harfbuzz)
+depends+=(${_system_libs[@]})
 
 prepare() {
   cd "$srcdir/chromium-$pkgver"
@@ -158,18 +156,17 @@ prepare() {
   sed "s/@WIDEVINE_VERSION@/Pinkie Pie/" ../chromium-widevine.patch |
     patch -Np1
 
-  # https://crbug.com/772655
-  patch -Np1 -i ../chromium-use-fromUTF8-for-UnicodeString-construction.patch
-
-  # https://crbug.com/789163
-  patch -Np1 -i ../chromium-omnibox-unescape-fragment.patch
-
   # https://crbug.com/skia/6663#c10
   patch -Np4 -i ../chromium-skia-harmony.patch
 
+  # freetype - fix 'pstables.h' include
+  patch -Np1 -i ../chromium-freetype-r0.patch
+
   # Fixes from Gentoo
-  patch -Np1 -i ../chromium-memcpy-r0.patch
   patch -Np1 -i ../chromium-clang-r2.patch
+  patch -Np1 -i ../chromium-clang-r3.patch
+  patch -Np1 -i ../chromium-math.h-r0.patch
+  patch -Np1 -i ../chromium-stdint.patch
 
   # Remove compiler flags not supported by our system clang
   sed -i \
@@ -180,9 +177,7 @@ prepare() {
     build/config/compiler/BUILD.gn
 
   msg2 'Applying VA-API patches'
-  patch -Np1 -i ../chromium-vaapi-move.patch
-  patch -Np1 -i ../chromium-vaapi-init.patch
-  patch -Np1 -i ../chromium-vaapi-rgbx.patch
+  patch -Np1 -i ../chromium-vaapi-init-r16.patch
   patch -Np1 -i ../chromium-vaapi-r16.patch
 
   msg2 'Applying Inox patchset'
@@ -231,7 +226,7 @@ prepare() {
       \! -path "*third_party/$_lib/chromium/*" \
       \! -path "*third_party/$_lib/google/*" \
       \! -path './base/third_party/icu/*' \
-      \! -path './third_party/freetype/src/src/psnames/pstables.h' \
+      \! -path './third_party/freetype/include/pstables.h' \
       \! -path './third_party/yasm/run_yasm.py' \
       \! -regex '.*\.\(gn\|gni\|isolate\)' \
       -delete
@@ -277,9 +272,6 @@ build() {
     'ffmpeg_branding="Chrome"'
     'proprietary_codecs=true'
     'link_pulseaudio=true'
-    'use_system_freetype=true'
-    'use_system_harfbuzz=true'
-    'use_gconf=false'
     'use_gnome_keyring=false'
     'use_gold=false'
     'use_sysroot=false'
