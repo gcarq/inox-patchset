@@ -5,7 +5,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=inox
-pkgver=65.0.3325.146
+pkgver=65.0.3325.162
 pkgrel=1
 _launcher_ver=5
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
@@ -62,9 +62,9 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0020-launcher-branding.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0021-disable-rlz.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/9000-disable-metrics.patch)
-sha256sums=('cb4f2f3f5a3344f7c452b61f8086d4b4e56af6f5bc34309c3ede8be6b4ab81a3'
+sha256sums=('627e7bfd84795de1553fac305239130d25186acf2d3c77d39d824327cd116cce'
             '4dc3428f2c927955d9ae117f2fb24d098cc6dd67adb760ac9c82b522ec8b0587'
-            'adfeb830af4c9b55c4a6481ef245e82ad2b9fc3cfe0fe339b30baa8573f701e7'
+            'bed2a7ef4b1ebd53b28e2f38963a2dd761267ccc8818693c34ce8596db53dd4c'
             '71471fa4690894420f9e04a2e9a622af620d92ac2714a35f9a4c4e90fa3968dd'
             '4a533acefbbc1567b0d74a1c0903e9179b8c59c1beabe748850795815366e509'
             '7b88830c5e0e9819f514ad68aae885d427541a907e25607e47dee1b0f38975fd'
@@ -105,7 +105,7 @@ sha256sums=('cb4f2f3f5a3344f7c452b61f8086d4b4e56af6f5bc34309c3ede8be6b4ab81a3'
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
-readonly -A _system_libs=(
+declare -gA _system_libs=(
   #[ffmpeg]=ffmpeg            # https://crbug.com/731766
   [flac]=flac
   [fontconfig]=fontconfig
@@ -125,7 +125,7 @@ readonly -A _system_libs=(
   [yasm]=
   [zlib]=minizip
 )
-readonly _unwanted_bundled_libs=(
+_unwanted_bundled_libs=(
   ${!_system_libs[@]}
   ${_system_libs[libjpeg]+libjpeg_turbo}
 )
