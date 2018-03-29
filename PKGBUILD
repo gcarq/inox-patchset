@@ -158,14 +158,6 @@ prepare() {
   patch -Np1 -i ../chromium-math.h-r0.patch
   patch -Np1 -i ../chromium-stdint.patch
 
-  # Remove compiler flags not supported by our system clang
-  sed -i \
-    -e '/"-Wno-enum-compare-switch"/d' \
-    -e '/"-Wno-null-pointer-arithmetic"/d' \
-    -e '/"-Wno-tautological-unsigned-zero-compare"/d' \
-    -e '/"-Wno-tautological-constant-compare"/d' \
-    build/config/compiler/BUILD.gn
-
   msg2 'Applying VA-API patches'
   patch -Np1 -i ../chromium-vaapi-init-r16.patch
   patch -Np1 -i ../chromium-vaapi-r16.patch
