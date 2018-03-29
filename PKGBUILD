@@ -30,6 +30,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-$pkgver.txt::https://chromium.googlesource.com/chromium/src.git/+/$pkgver?format=TEXT
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/product_logo_{16,22,24,32,48,64,128,256}.png
         # Patches from Arch Linux
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/fix-crash-in-is_cfi-true-builds-with-unbundled-ICU.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-skia-harmony.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-widevine.patch
         # Patches from Gentoo
@@ -73,6 +74,7 @@ sha256sums=('93666448c6b96ec83e6a35a64cff40db4eb92a154fe1db4e7dab4761d0e38687'
             '53a1e8da18069eb4d6ab3af9c923c22a0f020241a4839c3140e3601052ddf6ff'
             '896993987d4ef9f0ac7db454f288117316c2c80ed0b6764019afd760db222dad'
             '3df9b3bbdc07fde63d9e400954dcc6ab6e0e5454f0ef6447570eef0549337354'
+            'e3fb73b43bb8c69ff517e66b2cac73d6e759fd240003eb35598df9af442422fe'
             'feca54ab09ac0fc9d0626770a6b899a6ac5a12173c7d0c1005bc3964ec83e7b3'
             'd6fdcb922e5a7fbe15759d39ccc8ea4225821c44d98054ce0f23f9d1f00c9808'
             '4495e8b29dae242c79ffe4beefc5171eb3c7aacb7e9aebfd2d4d69b9d8c958d3'
@@ -149,6 +151,9 @@ prepare() {
   # (Version string doesn't seem to matter so let's go with "Pinkie Pie")
   sed "s/@WIDEVINE_VERSION@/Pinkie Pie/" ../chromium-widevine.patch |
     patch -Np1
+
+  # https://crbug.com/822820
+  patch -Np1 -i ../fix-crash-in-is_cfi-true-builds-with-unbundled-ICU.patch
 
   # https://crbug.com/skia/6663#c10
   patch -Np4 -i ../chromium-skia-harmony.patch
@@ -245,6 +250,7 @@ build() {
     'custom_toolchain="//build/toolchain/linux/unbundle:default"'
     'host_toolchain="//build/toolchain/linux/unbundle:default"'
     'clang_use_chrome_plugins=false'
+    'is_cfi=true'
     'symbol_level=0'
     'is_debug=false'
     'fatal_linker_warnings=false'
