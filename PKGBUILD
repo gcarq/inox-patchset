@@ -5,9 +5,9 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=inox
-pkgver=65.0.3325.181
+pkgver=66.0.3359.66
 pkgrel=1
-_launcher_ver=5
+_launcher_ver=6
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
 arch=('x86_64')
 url="https://www.chromium.org/Home"
@@ -15,8 +15,8 @@ license=('BSD')
 depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
          'ttf-font' 'systemd' 'dbus' 'libpulse' 'pciutils' 'json-glib'
          'desktop-file-utils' 'hicolor-icon-theme')
-makedepends=('python2' 'gperf' 'yasm' 'mesa' 'ninja' 'nodejs' 'git' 'libva'
-             'clang' 'llvm' 'lld')
+makedepends=('python' 'python2' 'gperf' 'yasm' 'mesa' 'ninja' 'nodejs' 'git'
+             'clang' 'lld' 'llvm' 'libva')
 optdepends=('pepper-flash: support for Flash content'
             'kdialog: needed for file dialogs in KDE'
             'gnome-keyring: for storing passwords in GNOME keyring'
@@ -30,16 +30,19 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-$pkgver.txt::https://chromium.googlesource.com/chromium/src.git/+/$pkgver?format=TEXT
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/product_logo_{16,22,24,32,48,64,128,256}.png
         # Patches from Arch Linux
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/allow-stat-in-Linux-for-GPU-process-for-a-list-of-files.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/fix-crash-in-is_cfi-true-builds-with-unbundled-ICU.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-skia-harmony.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-widevine.patch
         # Patches from Gentoo
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-clang-r2.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-clang-r4.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-ffmpeg-r1.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-ffmpeg-clang.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-math.h-r0.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-stdint.patch
         # Misc
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-init-r16.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-r16.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-r17.patch
         # Inox patchset
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0001-fix-building-without-safebrowsing.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0002-fix-building-without-reporting.patch
@@ -146,6 +149,10 @@ prepare() {
   fi
   echo "LASTCHANGE=$_chrome_build_hash-" >build/util/LASTCHANGE
 
+  # Allow building against system libraries in official builds
+  sed -i 's/OFFICIAL_BUILD/GOOGLE_CHROME_BUILD/' \
+    tools/generate_shim_headers/generate_shim_headers.py
+
   # Enable support for the Widevine CDM plugin
   # libwidevinecdm.so is not included, but can be copied over from Chrome
   # (Version string doesn't seem to matter so let's go with "Pinkie Pie")
@@ -155,17 +162,22 @@ prepare() {
   # https://crbug.com/822820
   patch -Np1 -i ../fix-crash-in-is_cfi-true-builds-with-unbundled-ICU.patch
 
+  # https://crbug.com/817400
+  patch -Np1 -i ../allow-stat-in-Linux-for-GPU-process-for-a-list-of-files.patch
+
   # https://crbug.com/skia/6663#c10
   patch -Np4 -i ../chromium-skia-harmony.patch
 
   # Fixes from Gentoo
   patch -Np1 -i ../chromium-clang-r2.patch
+  patch -Np1 -i ../chromium-clang-r4.patch
+  patch -Np1 -i ../chromium-ffmpeg-r1.patch
+  patch -Np1 -i ../chromium-ffmpeg-clang.patch
   patch -Np1 -i ../chromium-math.h-r0.patch
   patch -Np1 -i ../chromium-stdint.patch
 
   msg2 'Applying VA-API patches'
-  patch -Np1 -i ../chromium-vaapi-init-r16.patch
-  patch -Np1 -i ../chromium-vaapi-r16.patch
+  patch -Np1 -i ../chromium-vaapi-r17.patch
 
   msg2 'Applying Inox patchset'
   # Apply patches to fix building
@@ -193,14 +205,9 @@ prepare() {
   patch -Np1 -i ../0021-disable-rlz.patch
   patch -Np1 -i ../9000-disable-metrics.patch
 
-  # Use Python 2
-  find . -name '*.py' -exec sed -i -r 's|/usr/bin/python$|&2|g' {} +
+  # Force script incompatible with Python 3 to use /usr/bin/python2
+  sed -i '1s|python$|&2|' third_party/dom_distiller_js/protoc_plugins/*.py
 
-  # There are still a lot of relative calls which need a workaround
-  mkdir -p "$srcdir/python2-path"
-  ln -s /usr/bin/python2 "$srcdir/python2-path/python"
-
-  # Setup nodejs dependency
   mkdir -p third_party/node/linux/node-linux-x64/bin
   ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/
 
@@ -237,10 +244,6 @@ build() {
     export CCACHE_SLOPPINESS=time_macros
   fi
 
-  export PATH="$srcdir/python2-path:$PATH"
-  export TMPDIR="$srcdir/temp"
-  mkdir -p "$TMPDIR"
-
   export CC=clang
   export CXX=clang++
   export AR=llvm-ar
@@ -250,10 +253,8 @@ build() {
     'custom_toolchain="//build/toolchain/linux/unbundle:default"'
     'host_toolchain="//build/toolchain/linux/unbundle:default"'
     'clang_use_chrome_plugins=false'
-    'is_cfi=true'
-    'symbol_level=0'
+    'is_official_build=true' # implies is_cfi=true on x86_64
     'is_debug=false'
-    'fatal_linker_warnings=false'
     'treat_warnings_as_errors=false'
     'fieldtrial_testing_like_official_build=true'
     'remove_webcore_debug_symbols=true'
@@ -261,7 +262,6 @@ build() {
     'proprietary_codecs=true'
     'link_pulseaudio=true'
     'use_gnome_keyring=false'
-    'use_gold=false'
     'use_sysroot=false'
     'linux_use_bundled_binutils=false'
     'use_custom_libcxx=false'
@@ -277,7 +277,15 @@ build() {
     'safe_browsing_mode=0'
   )
 
+  # Facilitate deterministic builds (taken from build/config/compiler/BUILD.gn)
+  CFLAGS+='   -Wno-builtin-macro-redefined'
+  CXXFLAGS+=' -Wno-builtin-macro-redefined'
+  CPPFLAGS+=' -D__DATE__=  -D__TIME__=  -D__TIMESTAMP__='
+
   if check_option strip y; then
+    _flags+=('symbol_level=0')
+
+    # Mimic exclude_unwind_tables=true
     CFLAGS+='   -fno-unwind-tables -fno-asynchronous-unwind-tables'
     CXXFLAGS+=' -fno-unwind-tables -fno-asynchronous-unwind-tables'
     CPPFLAGS+=' -DNO_UNWIND_TABLES'
