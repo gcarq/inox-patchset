@@ -5,7 +5,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=inox
-pkgver=66.0.3359.66
+pkgver=66.0.3359.117
 pkgrel=1
 _launcher_ver=6
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
@@ -27,22 +27,16 @@ optdepends=('pepper-flash: support for Flash content'
 install=inox.install
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
-        chromium-$pkgver.txt::https://chromium.googlesource.com/chromium/src.git/+/$pkgver?format=TEXT
+        chromium-$pkgver.txt::https://chromium.googlesource.com/chromium/src/+/$pkgver?format=TEXT
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/product_logo_{16,22,24,32,48,64,128,256}.png
         # Patches from Arch Linux
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/allow-stat-in-Linux-for-GPU-process-for-a-list-of-files.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/blink-tools-$pkgver.tar.gz
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/fix-crash-in-is_cfi-true-builds-with-unbundled-ICU.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/fix-frame-buttons-rendering-too-large-when-using-OSX.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-skia-harmony.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-widevine.patch
-        # Patches from Gentoo
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-clang-r2.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-clang-r4.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-ffmpeg-r1.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-ffmpeg-clang.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-math.h-r0.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-stdint.patch
         # Misc
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-r17.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-r18.patch
         # Inox patchset
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0001-fix-building-without-safebrowsing.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0002-fix-building-without-reporting.patch
@@ -66,9 +60,10 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0020-launcher-branding.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0021-disable-rlz.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/9000-disable-metrics.patch)
-sha256sums=('93666448c6b96ec83e6a35a64cff40db4eb92a154fe1db4e7dab4761d0e38687'
-            '4dc3428f2c927955d9ae117f2fb24d098cc6dd67adb760ac9c82b522ec8b0587'
-            '2771c049b66c9aba3b945fe065f2610f164d55506eb5d71751a26aaf8b40d4ee'
+noextract=(blink-tools-$pkgver.tar.gz)
+sha256sums=('77c5a334644fdc303697b3864c9a6b709cee23ee384f4134308e820af4568ed6'
+            '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
+            'bf9600489198c5a873ef7b12e8ba42e04c667a59b898592ad1b416f66df13d7e'
             '71471fa4690894420f9e04a2e9a622af620d92ac2714a35f9a4c4e90fa3968dd'
             '4a533acefbbc1567b0d74a1c0903e9179b8c59c1beabe748850795815366e509'
             '7b88830c5e0e9819f514ad68aae885d427541a907e25607e47dee1b0f38975fd'
@@ -77,36 +72,34 @@ sha256sums=('93666448c6b96ec83e6a35a64cff40db4eb92a154fe1db4e7dab4761d0e38687'
             '53a1e8da18069eb4d6ab3af9c923c22a0f020241a4839c3140e3601052ddf6ff'
             '896993987d4ef9f0ac7db454f288117316c2c80ed0b6764019afd760db222dad'
             '3df9b3bbdc07fde63d9e400954dcc6ab6e0e5454f0ef6447570eef0549337354'
+            '922db9d6a69a22003caa72c507e1ccbf0c4ee2c254f00e243c97ca572bf1ec56'
             'e3fb73b43bb8c69ff517e66b2cac73d6e759fd240003eb35598df9af442422fe'
+            'bd5e0e61df3f89172590801aea7c8ac75162c10c7fe83e262e96a14388d1633a'
             'feca54ab09ac0fc9d0626770a6b899a6ac5a12173c7d0c1005bc3964ec83e7b3'
             'd6fdcb922e5a7fbe15759d39ccc8ea4225821c44d98054ce0f23f9d1f00c9808'
-            '4495e8b29dae242c79ffe4beefc5171eb3c7aacb7e9aebfd2d4d69b9d8c958d3'
-            'fe0ab86aa5b0072db730eccda3e1582ebed4af25815bfd49fe0da24cf63ca902'
-            'c00d2506f1078b38a8ebec474a7318e76a61db1298afb40088a34210f137210f'
-            'acae2de43c123f19523c4fca3af19c671acbe76f76bd40e285fe3b08cddb7044'
-            '5bc4f5dc5e9c8d71cf273338f65e82efcebc902e645affb35659532dcf9ad1af'
-            'ae84e4eed9969057dd9d3ecff040e02480993c17ff05e9674d5e24e398704a60'
-            'b7261e4063b0532139b72f20675bb58c743d95022c7368019deb012b2c777f83'
-            'ef9000eaaa5c0a28f0e4cb31139c7f2b454192532d8469329f5f6f95c21769e0'
+            '514f40accb2b4bc439df43f11bb7154a812eeb9fa61777b3d986cfa6bb109ebd'
+            '6c5f41579c43b192aaa2fd2fa4de06280cb3d4b500621961cb5bfb48d95d471e'
+            'aa86ff1fc7b21d9d4523a681eeb46314f00e90558e9069252ab7c4f7b593f5f1'
+            'f639f11ced3432cb12a19528e4d9a7f1bbcb2f9fd46f2969d8d0b567e27ec407'
             'fb91a7e30e2615e4eb0626b0fdcf97b92d4a727a52023730f408b02fee436c8d'
-            '72cd12b9064573fc1c7d88d606985ef180efdcec3815b0185c6038ec8216a471'
-            '034cce5fb219a293284a4c01f7e4d7ad6ab262eb6fb9065dc65a4b18e885da7f'
-            '7781ecd43e3c28f7d1e9158e043d6f98a190b5ee3c2c5ebe91644ea27e0b42ee'
-            'a5dde3ff6cd4adeef7eb099839d8d17a3bfeb89ec6bb66eba3e89d741743c9c0'
-            'cf050473adae5b83680346b369997b5ead55dce282515f185e4096c5ed39f11d'
-            '3190a507dfa00e863a0e622b5738db5cf19947f696ac7a790f427510cc15d1e1'
+            '7193573d2c4c5e9af35c5364ae6b92d714ebdd8224221cd7326a3afde5abc5a1'
+            'f93dd17ffd5407cb2384be5e90b5ef00e02762ab456656072ecb67d9e1b61ad4'
+            'a28f1428accff9e967c4d0f970fac05c156b96534bc9eefb60f0175116ed7db2'
+            'f657866cbce253c6854cf30c9564ef59198509ed8274832d4d3e0bad303a89ca'
+            '306b29cdfd2def2353b6c4a582fb6fcc7989a6fe009412d4abf2e2daf84ff9d1'
+            '3a8979ca0cae33a836d27f825ac2e15028c2656efce2ee70c1f8ce7d094f5c1c'
             '6fdea7a737959b226165dc3b6dd347de1e09e6e237acc444116df007ba0a7c57'
             '6427fea42b1cc6cf9aaae883c75c2209360344125827e1d6b15666faaf3c10a9'
             '60ecb418ff8728f67ac9617216f68dcc1ba0fa4d4e47e2da1fc4e63b5c91bfea'
-            'f80106b8127b60a62c006653154a26ebe68dd4aec5c551bae5321fa4e5ccef3f'
-            '795686bf0dd7bfac0f596155be8fc7ed3f6294a6b764f793cd1614085562ce38'
-            '5dc10c49cfc3ea65505e07366420eda0fc4878d0b0cebbfbcd8ad7daa88b3ded'
+            'c918a2495273f1ae6ab94d3c215b97c00943a5e8cf14c7025c58a955dca71f53'
+            '44db6f3733332167518e947c72c9661b74c757aeed1b4912f94f3f34aeea067a'
+            '7e12969dda184e24eccd6e5bf2b8244ba1336c2dc2dbf0494c153d09923723fd'
             'e407da0596e044971631c0883a83bd75665535f1b913df32ba08ca8cd5d4b16e'
-            'cb2bd17fbbd9184f15eb24d3b23deca92d06cb4b9ec31bd6944504e130d69ff8'
-            'c17556772059a64873ddac383f2976e3befb5c07c3019b641c989ffb5683c4cd'
+            'a6d29b8c041e0a367ad68e817c703e03bed63bff26c47d7d94ae280af45b9457'
+            'e297609b4673e3b35c5843a9c3e49ab1b04bc9a02e9e178d5cee58b6ca8cda01'
             '80d2974001708c288a54c24e1dc896ef25916552b740765f6066a244c05ffcd5'
             'dbe942b1eaba525ca6b81d398462a70360fc2043cbfe5d4105657c3bd721e592'
-            '8ff834ed3f34fbbc969d2ec0abb3010033d1f3a3aa2db9fc81608e955a7d561c')
+            'f53b4d111fc119bd61ca662aab7db530649086ef6af1cd8c779027da088143a9')
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
@@ -120,7 +113,7 @@ declare -gA _system_libs=(
   [libdrm]=
   [libjpeg]=libjpeg
   #[libpng]=libpng            # https://crbug.com/752403#c10
-  [libvpx]=libvpx
+  #[libvpx]=libvpx
   [libwebp]=libwebp
   #[libxml]=libxml2           # https://crbug.com/736026
   [libxslt]=libxslt
@@ -138,6 +131,9 @@ depends+=(${_system_libs[@]})
 
 prepare() {
   cd "$srcdir/chromium-$pkgver"
+
+  # https://crbug.com/832283
+  tar xfC ../blink-tools-$pkgver.tar.gz third_party/blink/tools/
 
   msg2 'Applying build patches'
   # https://crbug.com/710701
@@ -159,25 +155,21 @@ prepare() {
   sed "s/@WIDEVINE_VERSION@/Pinkie Pie/" ../chromium-widevine.patch |
     patch -Np1
 
+  # Work around broken screen sharing in Google Meet
+  # https://crbug.com/829916#c16
+  sed -i 's/"Chromium/"Chrome/' chrome/common/chrome_content_client_constants.cc
+
   # https://crbug.com/822820
   patch -Np1 -i ../fix-crash-in-is_cfi-true-builds-with-unbundled-ICU.patch
 
-  # https://crbug.com/817400
-  patch -Np1 -i ../allow-stat-in-Linux-for-GPU-process-for-a-list-of-files.patch
+  # https://crbug.com/821881
+  patch -Np1 -i ../fix-frame-buttons-rendering-too-large-when-using-OSX.patch
 
   # https://crbug.com/skia/6663#c10
   patch -Np4 -i ../chromium-skia-harmony.patch
 
-  # Fixes from Gentoo
-  patch -Np1 -i ../chromium-clang-r2.patch
-  patch -Np1 -i ../chromium-clang-r4.patch
-  patch -Np1 -i ../chromium-ffmpeg-r1.patch
-  patch -Np1 -i ../chromium-ffmpeg-clang.patch
-  patch -Np1 -i ../chromium-math.h-r0.patch
-  patch -Np1 -i ../chromium-stdint.patch
-
   msg2 'Applying VA-API patches'
-  patch -Np1 -i ../chromium-vaapi-r17.patch
+  patch -Np1 -i ../chromium-vaapi-r18.patch
 
   msg2 'Applying Inox patchset'
   # Apply patches to fix building
