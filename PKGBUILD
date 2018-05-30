@@ -5,7 +5,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=inox
-pkgver=67.0.3396.48
+pkgver=67.0.3396.62
 pkgrel=1
 _launcher_ver=6
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
@@ -31,10 +31,10 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/product_logo_{16,22,24,32,48,64,128,256}.png
         # Patches from Arch Linux
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-arflags.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-clang-compiler-flags.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-enable_widevine.patch
+	https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-ffmpeg-r1.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-skia-harmony.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-widevine.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-widevine-r2.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/remove-dependency-on-ffmpeg-internals-for-start-time.patch
         # Misc
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-r18.patch
         # Inox patchset
@@ -60,9 +60,9 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0020-launcher-branding.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0021-disable-rlz.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/9000-disable-metrics.patch)
-sha256sums=('f6350ea68257309cd99b19b3b686715074ae768c48e4e09d56601209f1c20986'
+sha256sums=('d5ee63932ff1c8c4a5f69c834f6577e7127b416681eddd23bc54886caffd770d'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
-            '2cd032d4811542ea8bb488b94681ed72eb02077b7c10b6dc8853aebb12d114e1'
+            'ec97a018339a7037c588e1e5bd3d9b9fa59a21fa03b4f3a80e6c5ad463c2ba28'
             '71471fa4690894420f9e04a2e9a622af620d92ac2714a35f9a4c4e90fa3968dd'
             '4a533acefbbc1567b0d74a1c0903e9179b8c59c1beabe748850795815366e509'
             '7b88830c5e0e9819f514ad68aae885d427541a907e25607e47dee1b0f38975fd'
@@ -72,12 +72,12 @@ sha256sums=('f6350ea68257309cd99b19b3b686715074ae768c48e4e09d56601209f1c20986'
             '896993987d4ef9f0ac7db454f288117316c2c80ed0b6764019afd760db222dad'
             '3df9b3bbdc07fde63d9e400954dcc6ab6e0e5454f0ef6447570eef0549337354'
             'ebf0054a2f8ad4d7e4da438e143d8674c88a31385f409068c3729c5b222e3973'
-            '4b7cf89fb16f9f99988b96746bfde4e61cb5c6dcbe61272a638ee2c99810a387'
-            '85861bfc26eb66280b622669d6a36ece19c555003bbf79e55966c3ac6f7af822'
-            'feca54ab09ac0fc9d0626770a6b899a6ac5a12173c7d0c1005bc3964ec83e7b3'
-            'd6fdcb922e5a7fbe15759d39ccc8ea4225821c44d98054ce0f23f9d1f00c9808'
-            'b838eb3168328b35cb6fabad59c9c0882c47472fcc3202ea80acef83602c4fdc'
-            'c605713244775e1b834c5bb6e86734800a84527b306b97266c60c5be46fcaa7a'
+            'aa885330bc4180b78d915f9dfdfc3210038a0acab7b16735ea9828ab6a633bde'
+            '04727ad3eadd51206468482025363e0faf816e31a9f28b2f0c540a076cdbb15f'
+            '068e11a910779d39c5f223018c8f3503734cb3b303471858006cb81ed4886c1b'
+            'd6af7a4afcdfce965d9ebcf177ab8189c7006c587c30e940255163db3da4b6c8'
+            'a7dbcbfc5ec18606c260df67b98fb2440fe59a4c9ede0823fc43f3bcf439887b'
+            '46036bdd0ce5be85e61c1f49cd3a13fbe4395e45ae05f46ce6fb15574b60df02'
             'b9fc0089687e67453dba9190a069414f4621143349371fd523eb816e2e46662c'
             'f639f11ced3432cb12a19528e4d9a7f1bbcb2f9fd46f2969d8d0b567e27ec407'
             '372a17710c9ae647ad597284491c5e91ea40cc9ea3750f35531b874dfed3f728'
@@ -103,7 +103,7 @@ sha256sums=('f6350ea68257309cd99b19b3b686715074ae768c48e4e09d56601209f1c20986'
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
 declare -gA _system_libs=(
-  #[ffmpeg]=ffmpeg            # https://crbug.com/731766
+  [ffmpeg]=ffmpeg
   [flac]=flac
   [fontconfig]=fontconfig
   [freetype]=freetype2
@@ -112,7 +112,7 @@ declare -gA _system_libs=(
   [libdrm]=
   [libjpeg]=libjpeg
   #[libpng]=libpng            # https://crbug.com/752403#c10
-  #[libvpx]=libvpx
+  #[libvpx]=libvpx            # needs unreleased libvpx
   [libwebp]=libwebp
   #[libxml]=libxml2           # https://crbug.com/736026
   [libxslt]=libxslt
@@ -131,36 +131,27 @@ depends+=(${_system_libs[@]})
 prepare() {
   cd "$srcdir/chromium-$pkgver"
 
-  msg2 'Applying build patches'
-  # https://crbug.com/710701
-  local _chrome_build_hash=$(base64 -d ../chromium-$pkgver.txt |
-    grep -Po '^parent \K[0-9a-f]{40}$')
-  if [[ -z $_chrome_build_hash ]]; then
-    error "Unable to find Chrome build hash."
-    return 1
-  fi
-  echo "LASTCHANGE=$_chrome_build_hash-" >build/util/LASTCHANGE
-
   # Allow building against system libraries in official builds
   sed -i 's/OFFICIAL_BUILD/GOOGLE_CHROME_BUILD/' \
     tools/generate_shim_headers/generate_shim_headers.py
 
-  # Enable support for the Widevine CDM plugin
-  # libwidevinecdm.so is not included, but can be copied over from Chrome
-  # (Version string doesn't seem to matter so let's go with "Pinkie Pie")
-  sed "s/@WIDEVINE_VERSION@/Pinkie Pie/" ../chromium-widevine.patch |
-    patch -Np1
-
-  # Work around broken screen sharing in Google Meet
-  # https://crbug.com/829916#c16
-  sed -i 's/"Chromium/"Chrome/' chrome/common/chrome_content_client_constants.cc
-
-  patch -Np1 -i ../chromium-arflags.patch
-  patch -Np1 -i ../chromium-clang-compiler-flags.patch
-  patch -Np1 -i ../chromium-enable_widevine.patch
+  # https://crbug.com/731766
+  patch -Np1 -i ../remove-dependency-on-ffmpeg-internals-for-start-time.patch
 
   # https://crbug.com/skia/6663#c10
   patch -Np4 -i ../chromium-skia-harmony.patch
+
+  # Fixes from Gentoo
+  patch -Np1 -i ../chromium-ffmpeg-r1.patch
+  patch -Np1 -i ../chromium-widevine-r2.patch
+
+  # Remove compiler flags not supported by our system clang
+  sed -i \
+    -e '/"-Wno-ignored-pragma-optimize"/d' \
+    build/config/compiler/BUILD.gn
+
+  # Reformat arflags for compatibility with llvm  
+  patch -Np1 -i ../chromium-arflags.patch
 
   msg2 'Applying VA-API patches'
   patch -Np1 -i ../chromium-vaapi-r18.patch
@@ -202,13 +193,10 @@ prepare() {
   # added benefit of not having to list all the remaining libraries
   local _lib
   for _lib in ${_unwanted_bundled_libs[@]}; do
-    find -type f -path "*third_party/$_lib/*" \
-      \! -path "*third_party/$_lib/chromium/*" \
-      \! -path "*third_party/$_lib/google/*" \
-      \! -path './base/third_party/icu/*' \
-      \! -path './third_party/crashpad/crashpad/third_party/zlib/zlib_crashpad.h' \
-      \! -path './third_party/pdfium/third_party/freetype/include/pstables.h' \
-      \! -path './third_party/yasm/run_yasm.py' \
+    find "third_party/$_lib" -type f \
+      \! -path "third_party/$_lib/chromium/*" \
+      \! -path "third_party/$_lib/google/*" \
+      \! -path 'third_party/yasm/run_yasm.py' \
       \! -regex '.*\.\(gn\|gni\|isolate\)' \
       -delete
   done
