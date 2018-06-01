@@ -31,7 +31,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/product_logo_{16,22,24,32,48,64,128,256}.png
         # Patches from Arch Linux
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-arflags.patch
-	https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-ffmpeg-r1.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-ffmpeg-r1.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-skia-harmony.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-widevine-r2.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/remove-dependency-on-ffmpeg-internals-for-start-time.patch
@@ -73,7 +73,7 @@ sha256sums=('d5ee63932ff1c8c4a5f69c834f6577e7127b416681eddd23bc54886caffd770d'
             '3df9b3bbdc07fde63d9e400954dcc6ab6e0e5454f0ef6447570eef0549337354'
             'ebf0054a2f8ad4d7e4da438e143d8674c88a31385f409068c3729c5b222e3973'
             'aa885330bc4180b78d915f9dfdfc3210038a0acab7b16735ea9828ab6a633bde'
-            '04727ad3eadd51206468482025363e0faf816e31a9f28b2f0c540a076cdbb15f'
+            'feca54ab09ac0fc9d0626770a6b899a6ac5a12173c7d0c1005bc3964ec83e7b3'
             '068e11a910779d39c5f223018c8f3503734cb3b303471858006cb81ed4886c1b'
             'd6af7a4afcdfce965d9ebcf177ab8189c7006c587c30e940255163db3da4b6c8'
             'a7dbcbfc5ec18606c260df67b98fb2440fe59a4c9ede0823fc43f3bcf439887b'
@@ -88,7 +88,7 @@ sha256sums=('d5ee63932ff1c8c4a5f69c834f6577e7127b416681eddd23bc54886caffd770d'
             '306b29cdfd2def2353b6c4a582fb6fcc7989a6fe009412d4abf2e2daf84ff9d1'
             '3a8979ca0cae33a836d27f825ac2e15028c2656efce2ee70c1f8ce7d094f5c1c'
             '6fdea7a737959b226165dc3b6dd347de1e09e6e237acc444116df007ba0a7c57'
-            '6427fea42b1cc6cf9aaae883c75c2209360344125827e1d6b15666faaf3c10a9'
+            'a251a247e204e494bc88755a0cd793185aea3331d678c62432b2d57fb326e823'
             '60ecb418ff8728f67ac9617216f68dcc1ba0fa4d4e47e2da1fc4e63b5c91bfea'
             '9dfb678f76d3429f4fc3014a5de914535a7f7f64a3c185551b3f8bde9d647551'
             '44db6f3733332167518e947c72c9661b74c757aeed1b4912f94f3f34aeea067a'
@@ -96,7 +96,7 @@ sha256sums=('d5ee63932ff1c8c4a5f69c834f6577e7127b416681eddd23bc54886caffd770d'
             '38583c9e1313e46e7444d990a00e64fb4a07fbb7f3d926737c97b0bfa2e44e33'
             'a6d29b8c041e0a367ad68e817c703e03bed63bff26c47d7d94ae280af45b9457'
             'e297609b4673e3b35c5843a9c3e49ab1b04bc9a02e9e178d5cee58b6ca8cda01'
-            '80d2974001708c288a54c24e1dc896ef25916552b740765f6066a244c05ffcd5'
+            '7e8f34e146284aa63d34d50663e52a94f8cbeaaa431ba27bdc948592dd930662'
             '80e6512b928082a0b59465e1dcbab5e6284b545933f42d262194b1a86811a243'
             'd950ffdb1fd573f1e9049293a36025d71a1c08ad772ffe92fe4c7d1761469c4d')
 
@@ -150,7 +150,7 @@ prepare() {
     -e '/"-Wno-ignored-pragma-optimize"/d' \
     build/config/compiler/BUILD.gn
 
-  # Reformat arflags for compatibility with llvm  
+  # Reformat arflags for compatibility with llvm
   patch -Np1 -i ../chromium-arflags.patch
 
   msg2 'Applying VA-API patches'

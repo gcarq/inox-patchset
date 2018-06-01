@@ -7,8 +7,8 @@
 -CHROMIUM_NAME    = chromium$(CHROMIUM_SUFFIX)
 +CHROMIUM_NAME    = inox$(CHROMIUM_SUFFIX)
  CHROMIUM_BINARY  = /usr/lib/$(CHROMIUM_NAME)/$(CHROMIUM_NAME)
+ CHROMIUM_VENDOR  = $(shell . /etc/os-release; echo $$NAME)
  PEPPER_FLASH_DIR = /usr/lib/PepperFlash
- 
 --- a/launcher.c
 +++ b/launcher.c
 @@ -85,7 +85,7 @@
