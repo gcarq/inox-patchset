@@ -302,7 +302,7 @@ package() {
 
   cp \
     out/Release/{chrome_{100,200}_percent,resources}.pak \
-    out/Release/{*.bin} \
+    out/Release/*.bin \
     "$pkgdir/usr/lib/$pkgname/"
   install -Dm644 -t "$pkgdir/usr/lib/$pkgname/locales" out/Release/locales/*.pak
 
