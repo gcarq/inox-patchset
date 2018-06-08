@@ -1,6 +1,6 @@
 --- a/chrome/common/chrome_paths_linux.cc
 +++ b/chrome/common/chrome_paths_linux.cc
-@@ -87,11 +87,7 @@ bool GetDefaultUserDataDirectory(base::F
+@@ -87,11 +87,7 @@
          GetXDGDirectory(env.get(), kXdgConfigHomeEnvVar, kDotConfigDir);
    }
  
@@ -15,7 +15,7 @@
  
 --- a/chrome/app/chromium_strings.grd
 +++ b/chrome/app/chromium_strings.grd
-@@ -130,10 +130,10 @@ If you update this file, be sure also to
+@@ -130,10 +130,10 @@
          Disconnecting <ph name="USERNAME">$1<ex>someone@example.com</ex></ph> will clear your history, bookmarks, settings, and other Chromium data stored on this device. Data stored in your Google Account will not be cleared and can be managed on <ph name="GOOGLE_DASHBOARD_LINK">&lt;a target="_blank" href="$2"&gt;</ph>Google Dashboard<ph name="END_GOOGLE_DASHBOARD_LINK">&lt;/a&gt;</ph>.
        </message>
        <message name="IDS_PRODUCT_NAME" desc="The Chrome application name">
@@ -28,7 +28,7 @@
        </message>
        <if expr="is_win">
          <message name="IDS_SXS_SHORTCUT_NAME" desc="Unused in Chromium builds" translateable="false">
-@@ -143,7 +143,7 @@ If you update this file, be sure also to
+@@ -143,7 +143,7 @@
          <message name="IDS_SHORTCUT_NAME_DEV" desc="Unused in Chromium builds" translateable="false">
          </message>
          <message name="IDS_PRODUCT_DESCRIPTION" desc="Browser description">
@@ -37,7 +37,7 @@
          </message>
        </if>
        <if expr="chromeos">
-@@ -166,7 +166,7 @@ If you update this file, be sure also to
+@@ -166,7 +166,7 @@
          sign in to Chromium
        </message>
        <message name="IDS_TASK_MANAGER_TITLE" desc="The title of the Task Manager window">
@@ -46,25 +46,7 @@
        </message>
        <message name="IDS_SESSION_CRASHED_VIEW_UMA_OPTIN" desc="Text besides the checkbox to let users optin to UMA in the restore from previous crash bubble.">
          Help make Chromium better by sending crash reports and <ph name="UMA_LINK">$1<ex>usage statistics</ex></ph> to Google
-@@ -174,7 +174,7 @@ If you update this file, be sure also to
-       <if expr="not chromeos">
-         <!-- Browser Window Title Format -->
-         <message name="IDS_BROWSER_WINDOW_TITLE_FORMAT" desc="The format for titles displayed in tabs and popup windows">
--          <ph name="PAGE_TITLE">$1<ex>Google</ex></ph> - Chromium
-+          <ph name="PAGE_TITLE">$1<ex>Google</ex></ph> - Inox
-         </message>
-       </if>
-       <if expr="chromeos">
-@@ -266,7 +266,7 @@ If you update this file, be sure also to
-       </if>
-       <if expr="not chromeos">
-         <message name="IDS_OPTIONS_RELAUNCH_REQUIRED" desc="The message displayed for an option that requires a relaunch to take effect. This appears in a message box if an option is changed that requires a relaunch.">
--          Please close all Chromium windows and relaunch Chromium for this change to take effect.
-+          Please close all Inox windows and relaunch Inox for this change to take effect.
-         </message>
-       </if>
-       <if expr="chromeos">
-@@ -595,7 +595,7 @@ Chromium is unable to recover your setti
+@@ -590,7 +590,7 @@
  
        <if expr="use_titlecase and not chromeos">
          <message name="IDS_ABOUT" desc="In Title Case: The text label of the About Chrome menu item">
@@ -73,7 +55,7 @@
          </message>
          <message name="IDS_UPDATE_NOW" desc="In Title Case: The text label of the Update Chrome Now menu item">
            Update &amp;Chromium
-@@ -603,7 +603,7 @@ Chromium is unable to recover your setti
+@@ -598,7 +598,7 @@
        </if>
        <if expr="not use_titlecase and not chromeos">
          <message name="IDS_ABOUT" desc="The text label of the About Chrome menu item">
@@ -82,7 +64,7 @@
          </message>
          <message name="IDS_UPDATE_NOW" desc="The text label of the Update Chrome Now menu item">
            Update &amp;Chromium
-@@ -620,7 +620,7 @@ Chromium is unable to recover your setti
+@@ -615,7 +615,7 @@
  
        <if expr="is_macosx">
          <message name="IDS_APP_MENU_PRODUCT_NAME" desc="The application's short name, used for the Mac's application menu, activity monitor, etc. This should be less than 16 characters. Example: Chrome, not Google Chrome.">
@@ -93,7 +75,7 @@
            Chromium Helper
 --- a/chrome/test/chromedriver/chrome/chrome_finder.cc
 +++ b/chrome/test/chromedriver/chrome/chrome_finder.cc
-@@ -91,15 +91,12 @@ void GetApplicationDirs(std::vector<base
+@@ -94,15 +94,12 @@
  bool FindChrome(base::FilePath* browser_exe) {
    base::FilePath browser_exes_array[] = {
  #if defined(OS_WIN)
@@ -115,7 +97,7 @@
        base::FilePath()
 --- a/chrome/common/chrome_paths.cc
 +++ b/chrome/common/chrome_paths.cc
-@@ -58,7 +58,7 @@ const base::FilePath::CharType kFilepath
+@@ -59,7 +59,7 @@
  #if defined(GOOGLE_CHROME_BUILD)
      FILE_PATH_LITERAL("/usr/share/google-chrome/extensions");
  #else
