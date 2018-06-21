@@ -5,7 +5,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=inox
-pkgver=67.0.3396.62
+pkgver=67.0.3396.87
 pkgrel=1
 _launcher_ver=6
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
@@ -27,7 +27,6 @@ optdepends=('pepper-flash: support for Flash content'
 install=inox.install
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver.tar.xz
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
-        chromium-$pkgver.txt::https://chromium.googlesource.com/chromium/src/+/$pkgver?format=TEXT
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/product_logo_{16,22,24,32,48,64,128,256}.png
         # Patches from Arch Linux
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-arflags.patch
@@ -36,6 +35,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-widevine-r2.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/remove-dependency-on-ffmpeg-internals-for-start-time.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/x11-fix-mixup-between-DIP-pixel-coordinates.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/blink-disable-XML-catalogs-at-runtime.patch
         # Misc
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-r18.patch
         # Inox patchset
@@ -61,9 +61,8 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0020-launcher-branding.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0021-disable-rlz.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/9000-disable-metrics.patch)
-sha256sums=('d5ee63932ff1c8c4a5f69c834f6577e7127b416681eddd23bc54886caffd770d'
+sha256sums=('5d27a72f0cb8247343034f63fdd9747ff388c05b9fceb541668dd04fb372db1d'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
-            'ec97a018339a7037c588e1e5bd3d9b9fa59a21fa03b4f3a80e6c5ad463c2ba28'
             '71471fa4690894420f9e04a2e9a622af620d92ac2714a35f9a4c4e90fa3968dd'
             '4a533acefbbc1567b0d74a1c0903e9179b8c59c1beabe748850795815366e509'
             '7b88830c5e0e9819f514ad68aae885d427541a907e25607e47dee1b0f38975fd'
@@ -78,6 +77,7 @@ sha256sums=('d5ee63932ff1c8c4a5f69c834f6577e7127b416681eddd23bc54886caffd770d'
             '068e11a910779d39c5f223018c8f3503734cb3b303471858006cb81ed4886c1b'
             'd6af7a4afcdfce965d9ebcf177ab8189c7006c587c30e940255163db3da4b6c8'
             'e2c2754536243a60fa70541bbd4121715eccd83caa8f1fb1873bd994cd81f871'
+            '98a5c41cf9687c52ee380d2b683c95387334c76254479c347bdb733646dab815'
             'a7dbcbfc5ec18606c260df67b98fb2440fe59a4c9ede0823fc43f3bcf439887b'
             '46036bdd0ce5be85e61c1f49cd3a13fbe4395e45ae05f46ce6fb15574b60df02'
             'b9fc0089687e67453dba9190a069414f4621143349371fd523eb816e2e46662c'
@@ -116,7 +116,7 @@ declare -gA _system_libs=(
   #[libpng]=libpng            # https://crbug.com/752403#c10
   #[libvpx]=libvpx            # needs unreleased libvpx
   [libwebp]=libwebp
-  #[libxml]=libxml2           # https://crbug.com/736026
+  [libxml]=libxml2
   [libxslt]=libxslt
   [opus]=opus
   [re2]=re2
@@ -142,6 +142,9 @@ prepare() {
 
   # https://crbug.com/707721
   patch -Np1 -i ../x11-fix-mixup-between-DIP-pixel-coordinates.patch
+
+  # https://crbug.com/736026
+  patch -Np1 -i ../blink-disable-XML-catalogs-at-runtime.patch
 
   # https://crbug.com/skia/6663#c10
   patch -Np4 -i ../chromium-skia-harmony.patch
