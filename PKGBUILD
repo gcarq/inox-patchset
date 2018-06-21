@@ -35,6 +35,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-skia-harmony.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-widevine-r2.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/remove-dependency-on-ffmpeg-internals-for-start-time.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/x11-fix-mixup-between-DIP-pixel-coordinates.patch
         # Misc
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-r18.patch
         # Inox patchset
@@ -76,6 +77,7 @@ sha256sums=('d5ee63932ff1c8c4a5f69c834f6577e7127b416681eddd23bc54886caffd770d'
             'feca54ab09ac0fc9d0626770a6b899a6ac5a12173c7d0c1005bc3964ec83e7b3'
             '068e11a910779d39c5f223018c8f3503734cb3b303471858006cb81ed4886c1b'
             'd6af7a4afcdfce965d9ebcf177ab8189c7006c587c30e940255163db3da4b6c8'
+            'e2c2754536243a60fa70541bbd4121715eccd83caa8f1fb1873bd994cd81f871'
             'a7dbcbfc5ec18606c260df67b98fb2440fe59a4c9ede0823fc43f3bcf439887b'
             '46036bdd0ce5be85e61c1f49cd3a13fbe4395e45ae05f46ce6fb15574b60df02'
             'b9fc0089687e67453dba9190a069414f4621143349371fd523eb816e2e46662c'
@@ -137,6 +139,9 @@ prepare() {
 
   # https://crbug.com/731766
   patch -Np1 -i ../remove-dependency-on-ffmpeg-internals-for-start-time.patch
+
+  # https://crbug.com/707721
+  patch -Np1 -i ../x11-fix-mixup-between-DIP-pixel-coordinates.patch
 
   # https://crbug.com/skia/6663#c10
   patch -Np4 -i ../chromium-skia-harmony.patch
