@@ -5,7 +5,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=inox
-pkgver=68.0.3440.75
+pkgver=68.0.3440.106
 pkgrel=1
 _launcher_ver=6
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
@@ -16,7 +16,7 @@ depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
          'ttf-font' 'systemd' 'dbus' 'libpulse' 'pciutils' 'json-glib'
          'desktop-file-utils' 'hicolor-icon-theme')
 makedepends=('python' 'python2' 'gperf' 'yasm' 'mesa' 'ninja' 'nodejs' 'git'
-             'clang' 'lld' 'llvm' 'libva')
+             'clang' 'lld' 'gn' 'llvm' 'libva')
 optdepends=('pepper-flash: support for Flash content'
             'kdialog: needed for file dialogs in KDE'
             'gnome-keyring: for storing passwords in GNOME keyring'
@@ -61,7 +61,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0019-disable-battery-status-service.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0020-launcher-branding.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0021-disable-rlz.patch)
-sha256sums=('dc17783267853bdc0fb726363d2b8e30a0bf43b6cc2c768e1f37c92e8eb59541'
+sha256sums=('7021040635a0a0d47f699bdb22e3ef5c91482e4f51b428d1de3016da95f0e698'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
             '71471fa4690894420f9e04a2e9a622af620d92ac2714a35f9a4c4e90fa3968dd'
             '4a533acefbbc1567b0d74a1c0903e9179b8c59c1beabe748850795815366e509'
@@ -235,6 +235,7 @@ build() {
     'host_toolchain="//build/toolchain/linux/unbundle:default"'
     'clang_use_chrome_plugins=false'
     'is_official_build=true' # implies is_cfi=true on x86_64
+    'use_cfi_icall=false' # https://crbug.com/866290, breaks VA-API if enabled
     'is_debug=false'
     'treat_warnings_as_errors=false'
     'fieldtrial_testing_like_official_build=true'
@@ -272,12 +273,9 @@ build() {
     CPPFLAGS+=' -DNO_UNWIND_TABLES'
   fi
 
-  msg2 'Building GN'
-  python2 tools/gn/bootstrap/bootstrap.py -s --no-clean
   msg2 'Configuring Chromium'
-  out/Release/gn gen out/Release --args="${_flags[*]}" \
-    --script-executable=/usr/bin/python2
-
+  gn gen out/Release --args="${_flags[*]}" --script-executable=/usr/bin/python2 \
+    --fail-on-unused-args
   msg2 'Building Chromium'
   ninja -C out/Release chrome chrome_sandbox chromedriver
 }
