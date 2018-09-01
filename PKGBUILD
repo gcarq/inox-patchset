@@ -5,7 +5,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=inox
-pkgver=67.0.3396.87
+pkgver=68.0.3440.106
 pkgrel=1
 _launcher_ver=6
 pkgdesc="Chromium Spin-off to enhance privacy by disabling data transmission to Google"
@@ -16,7 +16,7 @@ depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
          'ttf-font' 'systemd' 'dbus' 'libpulse' 'pciutils' 'json-glib'
          'desktop-file-utils' 'hicolor-icon-theme')
 makedepends=('python' 'python2' 'gperf' 'yasm' 'mesa' 'ninja' 'nodejs' 'git'
-             'clang' 'lld' 'llvm' 'libva')
+             'clang' 'lld' 'gn' 'llvm' 'libva')
 optdepends=('pepper-flash: support for Flash content'
             'kdialog: needed for file dialogs in KDE'
             'gnome-keyring: for storing passwords in GNOME keyring'
@@ -29,18 +29,19 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-launcher-$_launcher_ver.tar.gz::https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver.tar.gz
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/product_logo_{16,22,24,32,48,64,128,256}.png
         # Patches from Arch Linux
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-arflags.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-ffmpeg-r1.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-skia-harmony.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-widevine-r2.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/remove-dependency-on-ffmpeg-internals-for-start-time.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/x11-fix-mixup-between-DIP-pixel-coordinates.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/blink-disable-XML-catalogs-at-runtime.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-cors-string-r0.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-ffmpeg-r1.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-libjpeg-r0.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-libwebp-shim-r0.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-widevine-r2.patch
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-skia-harmony.patch
         # Misc
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-arflags.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/chromium-vaapi-r18.patch
         # Inox patchset
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0001-fix-building-without-safebrowsing.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0002-fix-building-without-reporting.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0003-disable-autofill-download-manager.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0004-disable-google-url-tracker.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0005-disable-default-extensions.patch
@@ -59,9 +60,8 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0018-disable-first-run-behaviour.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0019-disable-battery-status-service.patch
         https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0020-launcher-branding.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0021-disable-rlz.patch
-        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/9000-disable-metrics.patch)
-sha256sums=('5d27a72f0cb8247343034f63fdd9747ff388c05b9fceb541668dd04fb372db1d'
+        https://raw.githubusercontent.com/gcarq/inox-patchset/$pkgver/0021-disable-rlz.patch)
+sha256sums=('7021040635a0a0d47f699bdb22e3ef5c91482e4f51b428d1de3016da95f0e698'
             '04917e3cd4307d8e31bfb0027a5dce6d086edb10ff8a716024fbb8bb0c7dccf1'
             '71471fa4690894420f9e04a2e9a622af620d92ac2714a35f9a4c4e90fa3968dd'
             '4a533acefbbc1567b0d74a1c0903e9179b8c59c1beabe748850795815366e509'
@@ -71,36 +71,36 @@ sha256sums=('5d27a72f0cb8247343034f63fdd9747ff388c05b9fceb541668dd04fb372db1d'
             '53a1e8da18069eb4d6ab3af9c923c22a0f020241a4839c3140e3601052ddf6ff'
             '896993987d4ef9f0ac7db454f288117316c2c80ed0b6764019afd760db222dad'
             '3df9b3bbdc07fde63d9e400954dcc6ab6e0e5454f0ef6447570eef0549337354'
-            'ebf0054a2f8ad4d7e4da438e143d8674c88a31385f409068c3729c5b222e3973'
-            'aa885330bc4180b78d915f9dfdfc3210038a0acab7b16735ea9828ab6a633bde'
-            'feca54ab09ac0fc9d0626770a6b899a6ac5a12173c7d0c1005bc3964ec83e7b3'
-            '068e11a910779d39c5f223018c8f3503734cb3b303471858006cb81ed4886c1b'
-            'd6af7a4afcdfce965d9ebcf177ab8189c7006c587c30e940255163db3da4b6c8'
             'e2c2754536243a60fa70541bbd4121715eccd83caa8f1fb1873bd994cd81f871'
             '98a5c41cf9687c52ee380d2b683c95387334c76254479c347bdb733646dab815'
-            'a7dbcbfc5ec18606c260df67b98fb2440fe59a4c9ede0823fc43f3bcf439887b'
-            '46036bdd0ce5be85e61c1f49cd3a13fbe4395e45ae05f46ce6fb15574b60df02'
-            'b9fc0089687e67453dba9190a069414f4621143349371fd523eb816e2e46662c'
-            'f639f11ced3432cb12a19528e4d9a7f1bbcb2f9fd46f2969d8d0b567e27ec407'
-            '372a17710c9ae647ad597284491c5e91ea40cc9ea3750f35531b874dfed3f728'
-            '7193573d2c4c5e9af35c5364ae6b92d714ebdd8224221cd7326a3afde5abc5a1'
-            'e06d6fb900eadeb57bcbd921e456316e117cddb58c336ba07402c3aefe825dd0'
+            'f4141e48a25a1403250e9040c18936a16250ab707064dd54103066f40c7db41c'
+            'aa885330bc4180b78d915f9dfdfc3210038a0acab7b16735ea9828ab6a633bde'
+            '6b8fc570607631d3558e99a82e92c11eeae9c960ebb0a83c13d46344d4b6adca'
+            'b368f3827ee4c47c942085e3d2cfbea43f8899b101e01500dbf6a7b01b2b29e0'
+            '02c69bb3954087db599def7f5b6d65cf8f7cf2ed81dfbdaa4bb7b51863b4df15'
+            'feca54ab09ac0fc9d0626770a6b899a6ac5a12173c7d0c1005bc3964ec83e7b3'
+            '50b90cdfb32e9b9d3cb133b9fab1cc866329e9e40e6ab60d7ed60e30da1dcc8a'
+            '3df91ef0b285de224d36144e0ea53d28e63f6032e28ad351e7264e2a3f210b82'
+            '24d7d5e39f2a63b531e0450c08da6ecf15d227f48458c440cf4d9c1307c39061'
+            'fac2f187f2e78387734acee3012adfe54be7fb0aac9c3183470da953d633ce5e'
+            'c427029235a9122677213a245bc5bc5655ca2257c7ec9f498092b55b07fa32b0'
+            '356554849b42168ca8c20ecaee1a5dcc90e264f81b0d198b2cecae7c675523cc'
+            '865ffd74a732cfcf85663208f6c90a59b36a318cc500a32cca0a4180a8d17b69'
             '50c6e2d299bfce3648d8b58c3479f03b8734fb63e36a3bb59c948c04ea71e3ab'
-            'f657866cbce253c6854cf30c9564ef59198509ed8274832d4d3e0bad303a89ca'
-            '306b29cdfd2def2353b6c4a582fb6fcc7989a6fe009412d4abf2e2daf84ff9d1'
-            '3a8979ca0cae33a836d27f825ac2e15028c2656efce2ee70c1f8ce7d094f5c1c'
+            'd97f9ed85cbd4131e7e7bca553dc79436b9c91b426072b44d220c59c1953e59b'
+            '25cc46b6a661bbcecb12840c6475287c6643258834daa99ba58b406f9914fdf1'
+            '9d0a41fd5bc7583daa3c6dbd95b0ae032675ae0992bab76b03cda8940456cf26'
             '6fdea7a737959b226165dc3b6dd347de1e09e6e237acc444116df007ba0a7c57'
             'a251a247e204e494bc88755a0cd793185aea3331d678c62432b2d57fb326e823'
             '60ecb418ff8728f67ac9617216f68dcc1ba0fa4d4e47e2da1fc4e63b5c91bfea'
             '9dfb678f76d3429f4fc3014a5de914535a7f7f64a3c185551b3f8bde9d647551'
-            '44db6f3733332167518e947c72c9661b74c757aeed1b4912f94f3f34aeea067a'
-            '7e12969dda184e24eccd6e5bf2b8244ba1336c2dc2dbf0494c153d09923723fd'
+            'e926983e8a5dd782b78ae71ddd400d96591403e3248d1eed4ec3d6824f7a9680'
+            '66fdf1174e3c13e7de7e9918ad90fbd743d3ed8b6cf542a0d5023b15ee5de7e2'
             '38583c9e1313e46e7444d990a00e64fb4a07fbb7f3d926737c97b0bfa2e44e33'
-            'a6d29b8c041e0a367ad68e817c703e03bed63bff26c47d7d94ae280af45b9457'
+            'cb2bd17fbbd9184f15eb24d3b23deca92d06cb4b9ec31bd6944504e130d69ff8'
             'e297609b4673e3b35c5843a9c3e49ab1b04bc9a02e9e178d5cee58b6ca8cda01'
             '7e8f34e146284aa63d34d50663e52a94f8cbeaaa431ba27bdc948592dd930662'
-            '80e6512b928082a0b59465e1dcbab5e6284b545933f42d262194b1a86811a243'
-            'd950ffdb1fd573f1e9049293a36025d71a1c08ad772ffe92fe4c7d1761469c4d')
+            '80e6512b928082a0b59465e1dcbab5e6284b545933f42d262194b1a86811a243')
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
@@ -137,9 +137,6 @@ prepare() {
   sed -i 's/OFFICIAL_BUILD/GOOGLE_CHROME_BUILD/' \
     tools/generate_shim_headers/generate_shim_headers.py
 
-  # https://crbug.com/731766
-  patch -Np1 -i ../remove-dependency-on-ffmpeg-internals-for-start-time.patch
-
   # https://crbug.com/707721
   patch -Np1 -i ../x11-fix-mixup-between-DIP-pixel-coordinates.patch
 
@@ -150,7 +147,10 @@ prepare() {
   patch -Np4 -i ../chromium-skia-harmony.patch
 
   # Fixes from Gentoo
+  patch -Np1 -i ../chromium-cors-string-r0.patch
   patch -Np1 -i ../chromium-ffmpeg-r1.patch
+  patch -Np1 -i ../chromium-libjpeg-r0.patch
+  patch -Np1 -i ../chromium-libwebp-shim-r0.patch
   patch -Np1 -i ../chromium-widevine-r2.patch
 
   # Remove compiler flags not supported by our system clang
@@ -167,7 +167,6 @@ prepare() {
   msg2 'Applying Inox patchset'
   # Apply patches to fix building
   patch -Np1 -i ../0001-fix-building-without-safebrowsing.patch
-  patch -Np1 -i ../0002-fix-building-without-reporting.patch
 
   # Apply Inox patches
   patch -Np1 -i ../0003-disable-autofill-download-manager.patch
@@ -188,7 +187,6 @@ prepare() {
   patch -Np1 -i ../0018-disable-first-run-behaviour.patch
   patch -Np1 -i ../0019-disable-battery-status-service.patch
   patch -Np1 -i ../0021-disable-rlz.patch
-  patch -Np1 -i ../9000-disable-metrics.patch
 
   # Force script incompatible with Python 3 to use /usr/bin/python2
   sed -i '1s|python$|&2|' third_party/dom_distiller_js/protoc_plugins/*.py
@@ -237,6 +235,7 @@ build() {
     'host_toolchain="//build/toolchain/linux/unbundle:default"'
     'clang_use_chrome_plugins=false'
     'is_official_build=true' # implies is_cfi=true on x86_64
+    'use_cfi_icall=false' # https://crbug.com/866290, breaks VA-API if enabled
     'is_debug=false'
     'treat_warnings_as_errors=false'
     'fieldtrial_testing_like_official_build=true'
@@ -274,12 +273,9 @@ build() {
     CPPFLAGS+=' -DNO_UNWIND_TABLES'
   fi
 
-  msg2 'Building GN'
-  python2 tools/gn/bootstrap/bootstrap.py -s --no-clean
   msg2 'Configuring Chromium'
-  out/Release/gn gen out/Release --args="${_flags[*]}" \
-    --script-executable=/usr/bin/python2
-
+  gn gen out/Release --args="${_flags[*]}" --script-executable=/usr/bin/python2 \
+    --fail-on-unused-args
   msg2 'Building Chromium'
   ninja -C out/Release chrome chrome_sandbox chromedriver
 }
