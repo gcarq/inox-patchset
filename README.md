@@ -1,5 +1,7 @@
 # Inox Browser (inox-patchset)
 
+## NOTE: This repository is no longer maintained. Please see [ungoogled-chromium](https://github.com/Eloston/ungoogled-chromium).
+
 Inox patchset is applied on the chromium source code and tries to prevent data transmission to Google to get a minimal Chromium based browser. The patches are split up based on features, so it's easy to patch only a subset of them.
 
 Table of Contents
